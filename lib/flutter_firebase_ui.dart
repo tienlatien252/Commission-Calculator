@@ -1,0 +1,51 @@
+export 'utils.dart';
+
+import 'package:flutter/material.dart';
+import 'login_view.dart';
+import 'utils.dart';
+
+class SignInScreen extends StatefulWidget {
+  static String tag = 'login-page';
+  SignInScreen({
+    Key key,
+    this.header,
+    this.providers,
+    this.color = Colors.white,
+  }) : super(key: key);
+
+  final String title = "AN VO";
+  final Widget header;
+  final List<ProvidersTypes> providers;
+  final Color color;
+
+  @override
+  _SignInScreenState createState() => new _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  Widget get _header => widget.header ?? new Container();
+
+  List<ProvidersTypes> get _providers =>
+      widget.providers ?? [ProvidersTypes.email];
+
+  @override
+  Widget build(BuildContext context) => new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+        elevation: 4.0,
+      ),
+      body: new Builder(
+        builder: (BuildContext context) {
+          return new Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: new BoxDecoration(color: widget.color),
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _header,
+                  new Expanded(child: new LoginView(providers: _providers)),
+                ],
+              ));
+        },
+      ));
+}
