@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "154487703908",
+    "firebase_url": "https://commissioncalculator-2446b.firebaseio.com",
+    "project_id": "commissioncalculator-2446b",
+    "storage_bucket": "commissioncalculator-2446b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154487703908:android:b6c7c03dd0151198",
+        "android_client_info": {
+          "package_name": "com.example.commissioncalculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154487703908-hfvfr7j0q6l3cd0sj6grpa51vdab2rli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.commissioncalculator",
+            "certificate_hash": "945c556d61ef9693b16c92d2373b15e06d58c519"
+          }
+        },
+        {
+          "client_id": "154487703908-u7974ue6edsmlad9mhhsacqo7621c0l2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALD-SDPkUmiWWSwnKjJ87UxGMeZ1GgaY4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154487703908-u7974ue6edsmlad9mhhsacqo7621c0l2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
