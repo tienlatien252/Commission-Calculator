@@ -8,12 +8,13 @@ class SignInScreen extends StatefulWidget {
   static String tag = 'login-page';
   SignInScreen({
     Key key,
+    this.title,
     this.header,
     this.providers,
     this.color = Colors.white,
   }) : super(key: key);
 
-  final String title = "AN VO";
+  final String title;
   final Widget header;
   final List<ProvidersTypes> providers;
   final Color color;
@@ -26,7 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget get _header => widget.header ?? new Container();
 
   List<ProvidersTypes> get _providers =>
-      widget.providers ?? [ProvidersTypes.email, ProvidersTypes.google, ProvidersTypes.facebook];
+      widget.providers ?? [ProvidersTypes.email];
 
   @override
   Widget build(BuildContext context) => new Scaffold(

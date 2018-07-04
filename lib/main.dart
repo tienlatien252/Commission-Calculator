@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
-import 'flutter_firebase_ui.dart';
+import 'welcome_page.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final routes = <String, WidgetBuilder>{
-    SignInScreen.tag: (context) => SignInScreen(),
-    HomePage.tag: (context) => HomePage(title: 'Kodeversitas'),
-  };
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kodeversitas',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        fontFamily: 'Nunito',
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      home: SignInScreen(),
-      routes: routes,
+      home: new WelcomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
