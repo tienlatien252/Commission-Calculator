@@ -3,8 +3,8 @@
     <string name="app_name">Commssion Calculator.</string>
 
     <!-- Replace "000000000000" with your Facebook App ID here. -->
-    <string name="facebook_app_id">1751054828317663</string>
+    <string name="facebook_app_id">417906932061237</string>
 
     <!-- Replace "000000000000" with your Facebook App ID here. -->
-    <string name="fb_login_protocol_scheme">fb1751054828317663</string>
+    <string name="fb_login_protocol_scheme">fb417906932061237</string>
 </resources>

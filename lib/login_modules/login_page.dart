@@ -2,6 +2,7 @@ export 'utils.dart';
 
 import 'package:flutter/material.dart';
 import 'login_view.dart';
+import 'sign_up_view.dart';
 import 'utils.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   _header,
-                  new Expanded(child: new LoginView(providers: _providers)),
+                  new Expanded(child: new LoginView(providers: _providers))
                 ],
               ));
         },

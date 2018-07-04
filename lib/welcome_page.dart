@@ -49,7 +49,6 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
         providers: [
-          ProvidersTypes.facebook,
           ProvidersTypes.google,
           ProvidersTypes.email
         ],
