@@ -26,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget get _header => widget.header ?? new Container();
 
   List<ProvidersTypes> get _providers =>
-      widget.providers ?? [ProvidersTypes.email];
+      widget.providers ?? [ProvidersTypes.email, ProvidersTypes.google, ProvidersTypes.facebook];
 
   @override
   Widget build(BuildContext context) => new Scaffold(
