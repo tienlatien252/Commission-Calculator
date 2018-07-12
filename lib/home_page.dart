@@ -4,10 +4,8 @@ import 'welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
-  static String tag = 'home-page';
-  HomePage({Key key, this.title, this.user}) : super(key: key);
+  HomePage({Key key, this.title}) : super(key: key);
   final String title;
-  final FirebaseUser user;
 
   @override
   _HomePageState createState() => new _HomePageState();
@@ -15,12 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   Future <WelcomePage> _signOut()  async{
     await FirebaseAuth.instance.signOut();
@@ -39,9 +31,6 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             new Text(
               'You have pushed the button this many times:',
-            ),
-            new Text(
-              widget.user.email,
             ),
             new Text(
               '$_counter',
