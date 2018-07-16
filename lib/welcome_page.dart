@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'app_state/middleware.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -83,6 +83,8 @@ class _WelcomePageState extends State<WelcomePage> {
     _currentUser?.getIdToken(refresh: true);
 
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+      String path = 'users/' + user.uid;
+      Firestore.instance.document(path).setData({'name': 'An Vo'});
       store.dispatch(new CheckUserAction(user));
     });
   }

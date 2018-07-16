@@ -22,15 +22,17 @@ _handleInitEmployers(Store<AppState> store) async {
 }
 
 Future<List<Employer>> _getEmployers(Store<AppState> store) async {
-  String id = store.state.currentUser.uid;
-  String pathString = 'users/' + id + '/employers';
-  QuerySnapshot stream = await Firestore.instance.collection(pathString).getDocuments();
-  if (stream.documents.length != 0) {
-    return stream.documents.map(
-      (document) {
-        return Employer(name: 'place holder', commissionRate: 0.6);
-      }
-    );
+  if (store.state.currentUser != null) {
+    String id = store.state.currentUser.uid;
+    String pathString = 'users/' + id + '/employers';
+    QuerySnapshot stream =
+        await Firestore.instance.collection(pathString).getDocuments();
+    if (stream.documents.length != 0) {
+      return stream.documents.map((DocumentSnapshot document) {
+        return Employer(name: document.data['name'], commissionRate: document.data['commission_rate']);
+      }).toList();
+    }
   }
+
   return null;
 }

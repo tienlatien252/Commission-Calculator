@@ -22,8 +22,9 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
-  Future<WelcomePage> _saveEmployersAndGoNext() async {
+  Future<WelcomePage> _saveEmployersAndGoNext(Store<AppState> store) async {
     await FirebaseAuth.instance.signOut();
+    store.dispatch(new LogoutAction());
     return new WelcomePage();
   }
 
@@ -57,11 +58,14 @@ class _EmployerSetupState extends State<EmployerSetup> {
           ],
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _saveEmployersAndGoNext,
-        tooltip: 'go to home',
-        child: new Text("Next"),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton:
+          StoreBuilder(builder: (BuildContext context, Store<AppState> store) {
+        return new FloatingActionButton(
+          onPressed: () => _saveEmployersAndGoNext(store),
+          tooltip: 'go to home',
+          child: new Text("Next"),
+        );
+      }), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
@@ -82,46 +86,43 @@ class _EmployersListViewState extends State<EmployersListView> {
   Widget employerBuilder(
       BuildContext context, List<Employer> employers, int index) {
     return new ExpansionTile(
-        leading: const Icon(Icons.store),
-        title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              new Text(employers[index].name),
-              IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: deleteEmployer(index),
-              )
-            ]),
-        children: <Widget>[
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("Comission Rate: "),
-              Text(employers[index].commissionRate.toString()),
-            ],
-          )
-        ],
+      leading: const Icon(Icons.store),
+      title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            new Text(employers[index].name),
+            IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: deleteEmployer(index),
+            )
+          ]),
+      children: <Widget>[
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Comission Rate: "),
+            Text(employers[index].commissionRate.toString()),
+          ],
+        )
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, List<Employer>>(converter: (store) {
-      Employer employer1 =
-          new Employer(name: "Star Nails", commissionRate: 0.6);
-      Employer employer2 = new Employer(name: "Sun Nails", commissionRate: 0.7);
       return store.state.employers;
     }, builder: (context, employers) {
-      if(employers != null){
-              return ListView.builder(
-          shrinkWrap: true,
-          //padding: new EdgeInsets.all(15.0),
-          //itemExtent: 20.0,
-          itemCount: employers.length,
-          itemBuilder: (BuildContext context, int index) {
-            return employerBuilder(context, employers, index);
-          });
-      } else{
+      if (employers != null) {
+        return ListView.builder(
+            shrinkWrap: true,
+            //padding: new EdgeInsets.all(15.0),
+            //itemExtent: 20.0,
+            itemCount: employers.length,
+            itemBuilder: (BuildContext context, int index) {
+              return employerBuilder(context, employers, index);
+            });
+      } else {
         return Text('empty');
       }
     });

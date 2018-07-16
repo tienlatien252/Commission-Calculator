@@ -26,6 +26,8 @@ class ChangeEmployersAction {
 class InitEmployersAction {
 }
 
+class LogoutAction{
+}
 
 
 AppState addItem(AppState state, CheckUserAction action) {
@@ -39,7 +41,8 @@ AppState reducer(AppState prev, action) {
   if (action is ChangeEmployersAction) {
     return AppState(currentUser: prev.currentUser, employers: action.employers);
   }
-  if (action is InitEmployersAction) {
+  if (action is LogoutAction){
+    return AppState();
   }
 
   return prev;
