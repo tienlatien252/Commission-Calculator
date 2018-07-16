@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'AppState.dart';
+import 'app_state/AppState.dart';
 import 'home_page.dart';
 import 'employerSetup.dart';
 import 'login_modules/login_page.dart';
@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'app_state/middleware.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +16,6 @@ final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class UserView {
   final FirebaseUser currentUser;
-
   UserView({
     this.currentUser,
   });
@@ -33,7 +33,11 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   StreamSubscription<FirebaseUser> _listener;
-  final store = new Store<AppState>(reducer, initialState: AppState());
+  final store = new Store<AppState>(
+    reducer, 
+    initialState: AppState(), 
+    middleware: [middleware].toList()
+  );
 
   @override
   void initState() {
@@ -67,6 +71,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 providers: [ProvidersTypes.google, ProvidersTypes.email],
               );
             } else {
+              store.dispatch(new InitEmployersAction());
               return new EmployerSetup(title: widget.title);
             }
           }),

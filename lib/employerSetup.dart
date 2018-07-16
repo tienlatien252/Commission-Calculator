@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'welcome_page.dart';
-import 'AppState.dart';
+import 'app_state/AppState.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'Employer.dart';
 
 class EmployersView {
   EmployersView({this.employers});
   final List<Employer> employers;
-}
-
-class Employer {
-  const Employer({this.name, this.commissionRate});
-  final String name;
-  final double commissionRate;
 }
 
 class EmployerSetup extends StatefulWidget {
@@ -34,6 +29,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
 
   Future<WelcomePage> _openAddEmployerDialog() async {
     // TODO implement the dialog
+    print("Add new Employer");
   }
 
   @override
@@ -44,14 +40,12 @@ class _EmployerSetupState extends State<EmployerSetup> {
       ),
       body: Center(
         child: new Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             new Container(
               height: 100.0,
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  //new Text('Employer\'s setup'),
                   new RaisedButton(
                     child: new Text('Add A New Employer'),
                     onPressed: _openAddEmployerDialog,
@@ -81,24 +75,55 @@ class EmployersListView extends StatefulWidget {
 }
 
 class _EmployersListViewState extends State<EmployersListView> {
+  deleteEmployer(int index) {
+    print("object");
+  }
+
+  Widget employerBuilder(
+      BuildContext context, List<Employer> employers, int index) {
+    return new ExpansionTile(
+        leading: const Icon(Icons.store),
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              new Text(employers[index].name),
+              IconButton(
+                icon: new Icon(Icons.delete),
+                onPressed: deleteEmployer(index),
+              )
+            ]),
+        children: <Widget>[
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Comission Rate: "),
+              Text(employers[index].commissionRate.toString()),
+            ],
+          )
+        ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<AppState, List<Employer>>(
-      converter: (store) {
-        Employer employer = new Employer(name: "Star Nails", commissionRate: 1.2);
-        return [employer];
-      }, 
-      builder: (context, employers) {
-        return ListView.builder(
-            shrinkWrap: true,
-            padding: new EdgeInsets.all(8.0),
-            itemExtent: 20.0,
-            itemCount: employers.length,
-            itemBuilder: (BuildContext context, int index) {
-                return new Text(employers[index].name + employers[index].commissionRate.toString());
-            }
-        );
+    return new StoreConnector<AppState, List<Employer>>(converter: (store) {
+      Employer employer1 =
+          new Employer(name: "Star Nails", commissionRate: 0.6);
+      Employer employer2 = new Employer(name: "Sun Nails", commissionRate: 0.7);
+      return store.state.employers;
+    }, builder: (context, employers) {
+      if(employers != null){
+              return ListView.builder(
+          shrinkWrap: true,
+          //padding: new EdgeInsets.all(15.0),
+          //itemExtent: 20.0,
+          itemCount: employers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return employerBuilder(context, employers, index);
+          });
+      } else{
+        return Text('empty');
       }
-    );
-  } 
+    });
+  }
 }
