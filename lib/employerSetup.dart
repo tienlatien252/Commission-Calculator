@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'welcome_page.dart';
+import 'home_page.dart';
 import 'app_state/AppState.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,10 +23,12 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
-  Future<WelcomePage> _saveEmployersAndGoNext(Store<AppState> store) async {
-    await FirebaseAuth.instance.signOut();
-    store.dispatch(new LogoutAction());
-    return new WelcomePage();
+  _saveEmployersAndGoNext(Store<AppState> store) {
+    store.dispatch(new ChangeCurrentEmployerAction(store.state.employers[0]));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
+    );
   }
 
   Future<WelcomePage> _openAddEmployerDialog() async {

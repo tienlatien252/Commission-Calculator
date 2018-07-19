@@ -10,21 +10,21 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'app_state/middleware.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'Employer.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class UserView {
   final FirebaseUser currentUser;
-  UserView({
-    this.currentUser,
-  });
+  final Employer currentEmployer;
+  UserView({this.currentUser, this.currentEmployer});
 }
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key, this.title}) : super(key: key);
-
+  WelcomePage({Key key, this.title, this.store}) : super(key: key);
   final String title;
+  final Store<AppState> store;
 
   @override
   _WelcomePageState createState() => new _WelcomePageState();
@@ -33,11 +33,6 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   StreamSubscription<FirebaseUser> _listener;
-  final store = new Store<AppState>(
-    reducer, 
-    initialState: AppState(), 
-    middleware: [middleware].toList()
-  );
 
   @override
   void initState() {
@@ -53,29 +48,29 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-      store: store,
-      child: new StoreConnector<AppState, UserView>(
-          converter: (store) => UserView(currentUser: store.state.currentUser),
-          builder: (context, user) {
-            if (user.currentUser == null) {
-              return new SignInScreen(
-                title: widget.title,
-                header: new Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32.0),
-                  child: new Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: new Text("Demo"),
-                  ),
+    return new StoreConnector<AppState, UserView>(
+        converter: (store) => UserView(
+            currentUser: store.state.currentUser,
+            currentEmployer: store.state.currentEmployer),
+        builder: (context, user) {
+          if (user.currentUser == null) {
+            return new SignInScreen(
+              title: widget.title,
+              header: new Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32.0),
+                child: new Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: new Text("Demo"),
                 ),
-                providers: [ProvidersTypes.google, ProvidersTypes.email],
-              );
-            } else {
-              store.dispatch(new InitEmployersAction());
-              return new EmployerSetup(title: widget.title);
-            }
-          }),
-    );
+              ),
+              providers: [ProvidersTypes.google, ProvidersTypes.email],
+            );
+          } else if (user.currentEmployer == null) {
+            return new EmployerSetup(title: widget.title);
+          } else {
+            return new HomePage(title: widget.title);
+          }
+        });
   }
 
   void _checkCurrentUser() async {
@@ -83,9 +78,8 @@ class _WelcomePageState extends State<WelcomePage> {
     _currentUser?.getIdToken(refresh: true);
 
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
-      String path = 'users/' + user.uid;
-      Firestore.instance.document(path).setData({'name': 'An Vo'});
-      store.dispatch(new CheckUserAction(user));
+      widget.store.dispatch(new CheckUserAction(user));
+      widget.store.dispatch(new InitEmployersAction());
     });
   }
 }

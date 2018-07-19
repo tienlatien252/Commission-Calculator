@@ -6,9 +6,10 @@ import '../Employer.dart';
 
 @immutable
 class AppState {
-  AppState({this.currentUser, this.employers});
+  AppState({this.currentUser, this.employers, this.currentEmployer});
   final FirebaseUser currentUser;
   final List<Employer> employers;
+  final Employer currentEmployer;
 
   //AppState.initialState() : items = [];
 }
@@ -21,6 +22,11 @@ class CheckUserAction {
 class ChangeEmployersAction {
   final List<Employer> employers;
   ChangeEmployersAction(this.employers);
+}
+
+class ChangeCurrentEmployerAction {
+  final Employer employer;
+  ChangeCurrentEmployerAction(this.employer);
 }
 
 class InitEmployersAction {
@@ -40,6 +46,9 @@ AppState reducer(AppState prev, action) {
   }
   if (action is ChangeEmployersAction) {
     return AppState(currentUser: prev.currentUser, employers: action.employers);
+  }
+  if (action is ChangeCurrentEmployerAction) {
+    return AppState(currentUser: prev.currentUser, employers: prev.employers, currentEmployer: action.employer);
   }
   if (action is LogoutAction){
     return AppState();
