@@ -43,6 +43,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
       ),
       body: Center(
         child: new Column(
+
           children: <Widget>[
             new Container(
               height: 100.0,
@@ -56,7 +57,9 @@ class _EmployerSetupState extends State<EmployerSetup> {
                 ],
               ),
             ),
-            new EmployersListView(),
+            new Expanded(
+              child: EmployersListView(),
+            ) 
           ],
         ),
       ),
