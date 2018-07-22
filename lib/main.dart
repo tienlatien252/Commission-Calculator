@@ -5,8 +5,9 @@ import 'home_page.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'Employer.dart';
-import 'app_state/middleware.dart';
-import 'app_state/AppState.dart';
+import 'logic/middleware.dart';
+import 'logic/app_state.dart';
+import 'logic/reducer.dart';
 
 void main() => runApp(MyApp());
 

@@ -19,9 +19,14 @@ class CheckUserAction {
   CheckUserAction(this.user);
 }
 
-class ChangeEmployersAction {
+class GetEmployersAction {
   final List<Employer> employers;
-  ChangeEmployersAction(this.employers);
+  GetEmployersAction(this.employers);
+}
+
+class AddNewEmployerAction {
+  final Employer newEmployers;
+  AddNewEmployerAction(this.newEmployers);
 }
 
 class ChangeCurrentEmployerAction {
@@ -33,26 +38,4 @@ class InitEmployersAction {
 }
 
 class LogoutAction{
-}
-
-
-AppState addItem(AppState state, CheckUserAction action) {
-  return AppState(currentUser: action.user);
-}
-
-AppState reducer(AppState prev, action) {
-  if (action is CheckUserAction) {
-    return AppState(currentUser: action.user);
-  }
-  if (action is ChangeEmployersAction) {
-    return AppState(currentUser: prev.currentUser, employers: action.employers);
-  }
-  if (action is ChangeCurrentEmployerAction) {
-    return AppState(currentUser: prev.currentUser, employers: prev.employers, currentEmployer: action.employer);
-  }
-  if (action is LogoutAction){
-    return AppState();
-  }
-
-  return prev;
 }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'welcome_page.dart';
 import 'home_page.dart';
-import 'app_state/AppState.dart';
+import 'logic/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'Employer.dart';
+import 'add_new_employer_view.dart';
 
 class EmployersView {
   EmployersView({this.employers});
@@ -23,17 +24,15 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
-  _saveEmployersAndGoNext(Store<AppState> store) {
-    store.dispatch(new ChangeCurrentEmployerAction(store.state.employers[0]));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
-    );
-  }
 
-  Future<WelcomePage> _openAddEmployerDialog() async {
+  Future<Null> _openAddEmployerDialog() async {
     // TODO implement the dialog
-    print("Add new Employer");
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return  new AddEmployerView(title: "Add New Employer");
+      }
+    );
   }
 
   @override
@@ -61,14 +60,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
           ],
         ),
       ),
-      floatingActionButton:
-          StoreBuilder(builder: (BuildContext context, Store<AppState> store) {
-        return new FloatingActionButton(
-          onPressed: () => _saveEmployersAndGoNext(store),
-          tooltip: 'go to home',
-          child: new Text("Next"),
-        );
-      }), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: new NextButton(title: widget.title)
     );
   }
 }
@@ -86,6 +78,16 @@ class _EmployersListViewState extends State<EmployersListView> {
     print("object");
   }
 
+  Future<Null> _openEditEmployerDialog() async {
+    // TODO implement the dialog
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return  new AddEmployerView(title: "Edit Employer");
+      }
+    );
+  }
+
   Widget employerBuilder(
       BuildContext context, List<Employer> employers, int index) {
     return new ExpansionTile(
@@ -94,17 +96,22 @@ class _EmployersListViewState extends State<EmployersListView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(employers[index].name),
-            IconButton(
-              icon: new Icon(Icons.delete),
-              onPressed: deleteEmployer(index),
-            )
+            Text((employers[index].commissionRate *100).toString() + "%"),
           ]),
       children: <Widget>[
         new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Text("Comission Rate: "),
-            Text(employers[index].commissionRate.toString()),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: _openEditEmployerDialog,
+            ),
+            IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: () {
+                deleteEmployer(index);
+              }
+            )
           ],
         )
       ],
@@ -126,8 +133,46 @@ class _EmployersListViewState extends State<EmployersListView> {
               return employerBuilder(context, employers, index);
             });
       } else {
-        return Text('empty');
+        return Text('No Employer');
       }
     });
+  }
+}
+
+class NextButton extends StatefulWidget {
+  NextButton({Key key, this.user, this.title}) : super(key: key);
+  final FirebaseUser user;
+  final String title;
+
+  @override
+  _NextButtonState createState() => new _NextButtonState();
+}
+
+class _NextButtonState extends State<NextButton> {
+
+  _saveEmployersAndGoNext(Store<AppState> store) {
+    if (store.state.employers == null){
+      Scaffold.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text("Please add at least one employer"),
+          ));
+      return;
+    }
+    store.dispatch(new ChangeCurrentEmployerAction(store.state.employers[0]));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
+    );
+  }
+
+    @override
+  Widget build(BuildContext context) {
+    return StoreBuilder(builder: (BuildContext context, Store<AppState> store) {
+        return new FloatingActionButton(
+          onPressed: () => _saveEmployersAndGoNext(store),
+          tooltip: 'go to home',
+          child: new Text("Next"),
+        );
+      });// This trailing c
   }
 }

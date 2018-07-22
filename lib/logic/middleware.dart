@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:redux/redux.dart';
-import 'AppState.dart';
+import 'app_state.dart';
 import '../Employer.dart';
 
 middleware(Store<AppState> store, action, NextDispatcher next) {
@@ -17,7 +17,7 @@ middleware(Store<AppState> store, action, NextDispatcher next) {
 _handleInitEmployers(Store<AppState> store) async {
   List<Employer> employers = await _getEmployers(store);
   if (employers != null) {
-    store.dispatch(new ChangeEmployersAction(employers));
+    store.dispatch(new GetEmployersAction(employers));
   }
 }
 

@@ -4,8 +4,8 @@ import 'welcome_page.dart';
 import 'Employer.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'app_state/middleware.dart';
-import 'app_state/AppState.dart';
+import 'logic/middleware.dart';
+import 'logic/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {

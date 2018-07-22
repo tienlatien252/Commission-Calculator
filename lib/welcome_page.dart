@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'app_state/AppState.dart';
+import 'logic/app_state.dart';
 import 'home_page.dart';
 import 'employerSetup.dart';
 import 'login_modules/login_page.dart';
@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'app_state/middleware.dart';
+import 'logic/middleware.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Employer.dart';
 
