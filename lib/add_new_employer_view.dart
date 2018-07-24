@@ -9,26 +9,42 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'Employer.dart';
 
-class _EmployerViewModel {
-  final Function(Employer) onAddNewEmployer;
+class _AddNewEmployerViewModel {
+  final Function() onChangeEmployers;
+  final FirebaseUser user;
 
-  _EmployerViewModel({this.onAddNewEmployer});
+  _AddNewEmployerViewModel({this.onChangeEmployers, this.user});
 }
 
 class AddEmployerView extends StatefulWidget {
-  AddEmployerView({Key key, this.title}) : super(key: key);
+  AddEmployerView({Key key, this.title, this.employer}) : super(key: key);
   final String title;
+  final Employer employer;
 
   @override
   _AddEmployerViewState createState() => new _AddEmployerViewState();
 }
 
 class _AddEmployerViewState extends State<AddEmployerView> {
-  _saveNewEmployer(Function(Employer) callback) {
+  _saveNewEmployer(Function() callback, FirebaseUser user) async {
     if (_nameController.text.length != 0) {
-      Employer newEmployer = Employer(
-        name: _nameController.text, commissionRate: _comissionRate.round() / 100);
-      callback(newEmployer);
+      String id = user.uid;
+      String pathString = 'users/' + id + '/employers';
+      Map<String, dynamic> data = {
+          'name': _nameController.text,
+          'commission_rate': _comissionRate.round() / 100,
+          'isDeleted': false
+      };
+      Future future;
+      if (widget.employer == null) {
+        future =  Firestore.instance.collection(pathString).document().setData(data);
+      } else {
+        future = Firestore.instance.collection(pathString).document(widget.employer.employerId).setData(data);
+      }
+
+      future.whenComplete((){
+        callback();
+      }).catchError((e) => print(e));
     }
 
     Navigator.pop(context);
@@ -44,7 +60,18 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   final TextEditingController _nameController = new TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _comissionRate = widget.employer != null
+        ? widget.employer.commissionRate * 100
+        : _comissionRate;
+
+    _nameController.text= widget.employer != null ? widget.employer.name : null;
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return new SimpleDialog(
       contentPadding: EdgeInsets.all(20.0),
       title: Text(widget.title),
@@ -75,21 +102,17 @@ class _AddEmployerViewState extends State<AddEmployerView> {
             )
           ],
         ),
-        StoreConnector<AppState, _EmployerViewModel>(
-          converter: (store) {
-            return new _EmployerViewModel(
-              onAddNewEmployer: (employer) => store.dispatch(AddNewEmployerAction(employer))
-            );
-          },
-          builder: (context, viewModel) {
-            return RaisedButton(
-            child: Text("Save"),
-            onPressed: () {
-              _saveNewEmployer(viewModel.onAddNewEmployer);
-            }
-          );
-          }
-        )
+        StoreConnector<AppState, _AddNewEmployerViewModel>(converter: (store) {
+          return new _AddNewEmployerViewModel(
+              onChangeEmployers: () => store.dispatch(InitEmployersAction()),
+              user: store.state.currentUser);
+        }, builder: (context, viewModel) {
+          return RaisedButton(
+              child: Text("Save"),
+              onPressed: () {
+                _saveNewEmployer(viewModel.onChangeEmployers, viewModel.user);
+              });
+        })
       ],
     );
   }

@@ -10,9 +10,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'Employer.dart';
 import 'add_new_employer_view.dart';
 
-class EmployersView {
-  EmployersView({this.employers});
+class _EmployersViewModel {
+  _EmployersViewModel(
+      {this.employers, this.onGetCurrentEmployer, this.currentUser});
   final List<Employer> employers;
+  final Function() onGetCurrentEmployer;
+  final FirebaseUser currentUser;
 }
 
 class EmployerSetup extends StatefulWidget {
@@ -24,47 +27,43 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
-
   Future<Null> _openAddEmployerDialog() async {
     // TODO implement the dialog
     await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return  new AddEmployerView(title: "Add New Employer");
-      }
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return new AddEmployerView(title: "Add New Employer");
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Employer\'s setup"),
-      ),
-      body: Center(
-        child: new Column(
-
-          children: <Widget>[
-            new Container(
-              height: 100.0,
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  new RaisedButton(
-                    child: new Text('Add A New Employer'),
-                    onPressed: _openAddEmployerDialog,
-                  ),
-                ],
-              ),
-            ),
-            new Expanded(
-              child: EmployersListView(),
-            ) 
-          ],
+        appBar: new AppBar(
+          title: new Text("Employer\'s setup"),
         ),
-      ),
-      floatingActionButton: new NextButton(title: widget.title)
-    );
+        body: Center(
+          child: new Column(
+            children: <Widget>[
+              new Container(
+                height: 100.0,
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    new RaisedButton(
+                      child: new Text('Add A New Employer'),
+                      onPressed: _openAddEmployerDialog,
+                    ),
+                  ],
+                ),
+              ),
+              new Expanded(
+                child: EmployersListView(),
+              )
+            ],
+          ),
+        ),
+        floatingActionButton: new NextButton(title: widget.title));
   }
 }
 
@@ -77,44 +76,45 @@ class EmployersListView extends StatefulWidget {
 }
 
 class _EmployersListViewState extends State<EmployersListView> {
-  deleteEmployer(int index) {
+  deleteEmployer(Employer employer) {
     print("object");
   }
 
-  Future<Null> _openEditEmployerDialog() async {
+  Future<Null> _openEditEmployerDialog(Employer employer) async {
     // TODO implement the dialog
     await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return  new AddEmployerView(title: "Edit Employer");
-      }
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return new AddEmployerView(
+              title: "Edit Employer", employer: employer);
+        });
   }
 
   Widget employerBuilder(
-      BuildContext context, List<Employer> employers, int index) {
+      BuildContext context, _EmployersViewModel viewModel, int index) {
+        List<Employer> employers = viewModel.employers;
     return new ExpansionTile(
       leading: const Icon(Icons.store),
       title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(employers[index].name),
-            Text((employers[index].commissionRate *100).toString() + "%"),
+            Text((employers[index].commissionRate * 100).toString() + "%"),
           ]),
       children: <Widget>[
         new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: _openEditEmployerDialog,
-            ),
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  _openEditEmployerDialog(employers[index]);
+                }),
             IconButton(
-              icon: new Icon(Icons.delete),
-              onPressed: () {
-                deleteEmployer(index);
-              }
-            )
+                icon: new Icon(Icons.delete),
+                onPressed: () {
+                  deleteEmployer(employers[index]);
+                })
           ],
         )
       ],
@@ -123,17 +123,18 @@ class _EmployersListViewState extends State<EmployersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<AppState, List<Employer>>(converter: (store) {
-      return store.state.employers;
-    }, builder: (context, employers) {
-      if (employers != null) {
+    return new StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
+      return _EmployersViewModel(
+        employers: store.state.employers,
+        currentUser: store.state.currentUser
+      );
+    }, builder: (context, viewModel) {
+      if (viewModel.employers != null) {
         return ListView.builder(
             shrinkWrap: true,
-            //padding: new EdgeInsets.all(15.0),
-            //itemExtent: 20.0,
-            itemCount: employers.length,
+            itemCount: viewModel.employers.length,
             itemBuilder: (BuildContext context, int index) {
-              return employerBuilder(context, employers, index);
+              return employerBuilder(context, viewModel, index);
             });
       } else {
         return Text('No Employer');
@@ -152,30 +153,34 @@ class NextButton extends StatefulWidget {
 }
 
 class _NextButtonState extends State<NextButton> {
-
-  _saveEmployersAndGoNext(Store<AppState> store) {
-    if (store.state.employers == null){
+  _saveEmployersAndGoNext(_EmployersViewModel viewModel) {
+    if (viewModel.employers == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.red,
             content: Text("Please add at least one employer"),
           ));
       return;
     }
-    store.dispatch(new ChangeCurrentEmployerAction(store.state.employers[0]));
+    viewModel.onGetCurrentEmployer();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
     );
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
-    return StoreBuilder(builder: (BuildContext context, Store<AppState> store) {
-        return new FloatingActionButton(
-          onPressed: () => _saveEmployersAndGoNext(store),
-          tooltip: 'go to home',
-          child: new Text("Next"),
-        );
-      });// This trailing c
+    return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
+      return _EmployersViewModel(
+          onGetCurrentEmployer: () => store.dispatch(
+              new ChangeCurrentEmployerAction(store.state.employers[0])),
+          employers: store.state.employers,
+          currentUser: store.state.currentUser);
+    }, builder: (BuildContext context, _EmployersViewModel viewModel) {
+      return new RaisedButton(
+        onPressed: () => _saveEmployersAndGoNext(viewModel),
+        child: new Text("Next"),
+      );
+    }); // This trailing c
   }
 }

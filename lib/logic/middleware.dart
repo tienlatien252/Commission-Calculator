@@ -26,10 +26,10 @@ Future<List<Employer>> _getEmployers(Store<AppState> store) async {
     String id = store.state.currentUser.uid;
     String pathString = 'users/' + id + '/employers';
     QuerySnapshot stream =
-        await Firestore.instance.collection(pathString).getDocuments();
+        await Firestore.instance.collection(pathString).where('isDeleted', isEqualTo: false).getDocuments();
     if (stream.documents.length != 0) {
       return stream.documents.map((DocumentSnapshot document) {
-        return Employer(name: document.data['name'], commissionRate: document.data['commission_rate']);
+        return Employer(name: document.data['name'], commissionRate: document.data['commission_rate'], employerId: document.documentID);
       }).toList();
     }
   }
