@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'welcome_page.dart';
 import 'home_page.dart';
 import 'logic/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'Employer.dart';
-import 'add_new_employer_view.dart';
+import 'add_new_employer_dialog.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(

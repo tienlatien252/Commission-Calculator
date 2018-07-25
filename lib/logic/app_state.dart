@@ -6,11 +6,11 @@ import '../Employer.dart';
 
 @immutable
 class AppState {
-  AppState({this.currentUser, this.employers, this.currentEmployer});
+  AppState({this.currentUser, this.employers, this.currentEmployer, this.currentDate});
   final FirebaseUser currentUser;
   final List<Employer> employers;
   final Employer currentEmployer;
-
+  final DateTime currentDate;
   //AppState.initialState() : items = [];
 }
 
@@ -35,6 +35,9 @@ class ChangeCurrentEmployerAction {
 }
 
 class InitEmployersAction {
+}
+
+class ChangeDateAction {
 }
 
 class LogoutAction{

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'welcome_page.dart';
 import 'home_page.dart';
 import 'logic/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
