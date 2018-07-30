@@ -39,71 +39,82 @@ class ComissionView extends StatefulWidget {
   _ComissionViewState createState() => new _ComissionViewState();
 }
 
-DateTime getDateOnly (DateTime dateAndTime){
-  return DateTime( dateAndTime.year, dateAndTime.month, dateAndTime.day);
+DateTime getDateOnly(DateTime dateAndTime) {
+  return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
 }
 
 class _ComissionViewState extends State<ComissionView> {
-  _Comission commission =
-      _Comission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-
-  void _getCommission(_CommisionViewModel viewModel) {
+  Future _getCommission(_CommisionViewModel viewModel) {
     String id = viewModel.currentUser.uid;
     String pathString = 'users/' +
         id +
         '/employers/' +
         viewModel.currentEmployer.employerId +
         '/commission';
-    Firestore.instance
+    return Firestore.instance
         .collection(pathString)
         .where('date', isEqualTo: getDateOnly(widget.date))
-        .getDocuments()
-        .then((stream) {
-      if (stream.documents.length != 0) {
-        
-        Map<String, dynamic> data = stream.documents[0].data;
-        setState(() {
-          commission = _Comission(
-              raw: data['raw'].toDouble(),
-              commission: data['commission'].toDouble(),
-              tip: data['tip'].toDouble(),
-              total: data['total'].toDouble());
-        });
-      } else {
-        Firestore.instance
-        .collection(pathString).document().setData({
-            'raw': 200,
-            'commission': 140,
-            'tip': 40,
-            'total': 180,
-            'day': getDateOnly(DateTime.now())
-        });
-      }
-    });
+        .getDocuments();
+  }
+
+  Widget _getCommissionWidget(AsyncSnapshot snapshot) {
+     _Comission commission =
+              _Comission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+    if (snapshot.data.documents.length != 0) {
+      Map<String, dynamic> retunredCommission = snapshot.data.documents[0].data;
+      commission =_Comission(
+        raw: retunredCommission['raw'].toDouble(), 
+        commission: retunredCommission['commission'].toDouble(),
+        tip: retunredCommission['tip'].toDouble(), 
+        total: retunredCommission['total'].toDouble()
+      );
+    }
+    return new Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('raw: ' + commission.raw.toString()),
+              Text('commission: ' + commission.commission.toString())
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('tip: ' + commission.tip.toString()),
+              Text('total: ' + commission.total.toString())
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _CommisionViewModel>(
-      converter: (store) {
-        return _CommisionViewModel(
-            currentUser: store.state.currentUser,
-            currentEmployer: store.state.currentEmployer);
-      },
-      builder: (BuildContext context, _CommisionViewModel viewModel) {
-        _getCommission(viewModel);
-        return new Card(
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text('commission: ' + commission.commission.toString())
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    return StoreConnector<AppState, _CommisionViewModel>(converter: (store) {
+      return _CommisionViewModel(
+          currentUser: store.state.currentUser,
+          currentEmployer: store.state.currentEmployer);
+    }, builder: (BuildContext context, _CommisionViewModel viewModel) {
+      return FutureBuilder(
+        future: _getCommission(viewModel),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return _getCommissionWidget(snapshot);
+            case ConnectionState.waiting:
+              return new CircularProgressIndicator();
+            default:
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              else
+                return new Text('Result: ${snapshot.data}');
+          }
+        },
+      );
+    });
   }
 }
