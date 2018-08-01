@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:redux/redux.dart';
+import 'dart:async';
+
 import 'app_state.dart';
-import '../Employer.dart';
+import '../models/employer.dart';
 
 middleware(Store<AppState> store, action, NextDispatcher next) {
   print(action.runtimeType);

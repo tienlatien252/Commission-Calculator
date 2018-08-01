@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'Employer.dart';
-import 'package:redux/redux.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'dart:async';
+
+import 'models/employer.dart';
 import 'logic/middleware.dart';
 import 'logic/app_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
 import 'commission_data_view.dart';
 import 'logic/app_state.dart';
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
       body: new StoreBuilder(
         builder: (context, Store<AppState> store) {
           return Center(
-              child: ComissionView(date: DateTime.now())
+              child: CommissionView(date: DateTime.now())
               );
         },
       ),

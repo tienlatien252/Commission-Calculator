@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'Employer.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'logic/middleware.dart';
-import 'logic/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'main.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
+import 'dart:async';
+import 'models/employer.dart';
+import 'logic/app_state.dart';
+import 'models/commission.dart';
 
 class _CommisionViewModel {
   _CommisionViewModel(
@@ -23,27 +22,19 @@ class _CommisionViewModel {
   final Function() onLogout;
 }
 
-class _Comission {
-  _Comission({this.raw, this.commission, this.tip, this.total});
-  final double raw;
-  final double commission;
-  final double tip;
-  final double total;
-}
-
-class ComissionView extends StatefulWidget {
-  ComissionView({Key key, this.date}) : super(key: key);
+class CommissionView extends StatefulWidget {
+  CommissionView({Key key, this.date}) : super(key: key);
   final DateTime date;
 
   @override
-  _ComissionViewState createState() => new _ComissionViewState();
+  _CommissionViewState createState() => new _CommissionViewState();
 }
 
 DateTime getDateOnly(DateTime dateAndTime) {
   return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
 }
 
-class _ComissionViewState extends State<ComissionView> {
+class _CommissionViewState extends State<CommissionView> {
   Future _getCommission(_CommisionViewModel viewModel) {
     String id = viewModel.currentUser.uid;
     String pathString = 'users/' +
@@ -58,11 +49,11 @@ class _ComissionViewState extends State<ComissionView> {
   }
 
   Widget _getCommissionWidget(AsyncSnapshot snapshot) {
-     _Comission commission =
-              _Comission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+     Commission commission =
+              Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
     if (snapshot.data.documents.length != 0) {
       Map<String, dynamic> retunredCommission = snapshot.data.documents[0].data;
-      commission =_Comission(
+      commission =Commission(
         raw: retunredCommission['raw'].toDouble(), 
         commission: retunredCommission['commission'].toDouble(),
         tip: retunredCommission['tip'].toDouble(), 

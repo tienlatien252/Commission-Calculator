@@ -2,7 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Employer.dart';
+import '../models/employer.dart';
 
 @immutable
 class AppState {
