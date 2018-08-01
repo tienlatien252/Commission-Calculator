@@ -10,6 +10,8 @@ import 'logic/app_state.dart';
 import 'main.dart';
 import 'commission_data_view.dart';
 import 'logic/app_state.dart';
+import 'models/commission.dart';
+import 'today_view.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -32,7 +34,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  int _currentIndex = 0;
+  List<Widget> _children = [
+    TodayView(),
+    new Container(
+        child: new Center(
+      child: new Text("History"),
+    )),
+    new Container(
+        child: new Center(
+      child: new Text("Calculator"),
+    ))
+  ];
 
   Future _signOut(_HomeViewModel viewModel) async {
     await FirebaseAuth.instance.signOut();
@@ -43,21 +56,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new StoreBuilder(
-        builder: (context, Store<AppState> store) {
-          return Center(
-              child: CommissionView(date: DateTime.now())
-              );
-        },
-      ),
-      floatingActionButton:
-          StoreConnector<AppState, _HomeViewModel>(converter: (Store<AppState> store) {
+      body: _children[_currentIndex],
+      floatingActionButton: StoreConnector<AppState, _HomeViewModel>(
+          converter: (Store<AppState> store) {
         return _HomeViewModel(
             onLogout: () => store.dispatch(new LogoutAction()),
             employers: store.state.employers,
@@ -67,7 +80,24 @@ class _HomePageState extends State<HomePage> {
             onPressed: () => _signOut(viewModel),
             tooltip: "log out",
             child: new Text("Logout"));
-      }), // This trailing comma makes auto-formatting nicer for build methods.
+      }),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped, // new
+        currentIndex: _currentIndex, // new
+        items: [
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            title: Text('History'),
+          ),
+          new BottomNavigationBarItem(
+              icon: Icon(Icons.assessment), title: Text('Calculator'))
+        ],
+      ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

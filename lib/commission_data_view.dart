@@ -23,8 +23,8 @@ class _CommisionViewModel {
 }
 
 class CommissionView extends StatefulWidget {
-  CommissionView({Key key, this.date}) : super(key: key);
-  final DateTime date;
+  CommissionView({Key key, this.commission}) : super(key: key);
+  final Commission commission;
 
   @override
   _CommissionViewState createState() => new _CommissionViewState();
@@ -35,32 +35,11 @@ DateTime getDateOnly(DateTime dateAndTime) {
 }
 
 class _CommissionViewState extends State<CommissionView> {
-  Future _getCommission(_CommisionViewModel viewModel) {
-    String id = viewModel.currentUser.uid;
-    String pathString = 'users/' +
-        id +
-        '/employers/' +
-        viewModel.currentEmployer.employerId +
-        '/commission';
-    return Firestore.instance
-        .collection(pathString)
-        .where('date', isEqualTo: getDateOnly(widget.date))
-        .getDocuments();
-  }
 
-  Widget _getCommissionWidget(AsyncSnapshot snapshot) {
-     Commission commission =
-              Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-    if (snapshot.data.documents.length != 0) {
-      Map<String, dynamic> retunredCommission = snapshot.data.documents[0].data;
-      commission =Commission(
-        raw: retunredCommission['raw'].toDouble(), 
-        commission: retunredCommission['commission'].toDouble(),
-        tip: retunredCommission['tip'].toDouble(), 
-        total: retunredCommission['total'].toDouble()
-      );
-    }
-    return new Card(
+  @override
+  Widget build(BuildContext context) {
+    Commission commission = widget.commission;
+     return new Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -81,31 +60,5 @@ class _CommissionViewState extends State<CommissionView> {
         ],
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, _CommisionViewModel>(converter: (store) {
-      return _CommisionViewModel(
-          currentUser: store.state.currentUser,
-          currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, _CommisionViewModel viewModel) {
-      return FutureBuilder(
-        future: _getCommission(viewModel),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return _getCommissionWidget(snapshot);
-            case ConnectionState.waiting:
-              return new CircularProgressIndicator();
-            default:
-              if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
-              else
-                return new Text('Result: ${snapshot.data}');
-          }
-        },
-      );
-    });
   }
 }
