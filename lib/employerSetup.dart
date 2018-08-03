@@ -10,13 +10,12 @@ import 'logic/app_state.dart';
 import 'models/employer.dart';
 import 'add_new_employer_dialog.dart';
 
-class EmployerViewModel {
-  EmployerViewModel(
-      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onChangeEmployers});
+class _EmployersViewModel {
+  _EmployersViewModel(
+      {this.employers, this.onGetCurrentEmployer, this.currentUser});
   final List<Employer> employers;
   final Function() onGetCurrentEmployer;
   final FirebaseUser currentUser;
-    final Function() onChangeEmployers;
 }
 
 class EmployerSetup extends StatefulWidget {
@@ -92,7 +91,7 @@ class _EmployersListViewState extends State<EmployersListView> {
   }
 
   Widget employerBuilder(
-      BuildContext context, EmployerViewModel viewModel, int index) {
+      BuildContext context, _EmployersViewModel viewModel, int index) {
         List<Employer> employers = viewModel.employers;
     return new ExpansionTile(
       leading: const Icon(Icons.store),
@@ -124,8 +123,8 @@ class _EmployersListViewState extends State<EmployersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<AppState, EmployerViewModel>(converter: (store) {
-      return EmployerViewModel(
+    return new StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
+      return _EmployersViewModel(
         employers: store.state.employers,
         currentUser: store.state.currentUser
       );
@@ -154,7 +153,7 @@ class NextButton extends StatefulWidget {
 }
 
 class _NextButtonState extends State<NextButton> {
-  _saveEmployersAndGoNext(EmployerViewModel viewModel) {
+  _saveEmployersAndGoNext(_EmployersViewModel viewModel) {
     if (viewModel.employers == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.red,
@@ -171,13 +170,13 @@ class _NextButtonState extends State<NextButton> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, EmployerViewModel>(converter: (store) {
-      return EmployerViewModel(
+    return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
+      return _EmployersViewModel(
           onGetCurrentEmployer: () => store.dispatch(
               new ChangeCurrentEmployerAction(store.state.employers[0])),
           employers: store.state.employers,
           currentUser: store.state.currentUser);
-    }, builder: (BuildContext context, EmployerViewModel viewModel) {
+    }, builder: (BuildContext context, _EmployersViewModel viewModel) {
       return new RaisedButton(
         onPressed: () => _saveEmployersAndGoNext(viewModel),
         child: new Text("Next"),
