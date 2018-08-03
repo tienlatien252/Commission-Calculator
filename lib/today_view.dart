@@ -83,7 +83,7 @@ class _TodayViewState extends State<TodayView> {
             case ConnectionState.done:
               return CommissionView(commission: _getCommissionData(snapshot));
             case ConnectionState.waiting:
-              return new CircularProgressIndicator();
+              return new Center (child:CircularProgressIndicator());
             default:
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
