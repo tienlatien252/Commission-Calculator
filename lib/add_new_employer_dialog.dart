@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'dart:async';
 import 'logic/app_state.dart';
 import 'models/employer.dart';
+import 'employerSetup.dart';
 
 class _AddNewEmployerViewModel {
   final Function() onChangeEmployers;
@@ -100,15 +101,15 @@ class _AddEmployerViewState extends State<AddEmployerView> {
             )
           ],
         ),
-        StoreConnector<AppState, _AddNewEmployerViewModel>(converter: (store) {
-          return new _AddNewEmployerViewModel(
+        StoreConnector<AppState, EmployerViewModel>(converter: (store) {
+          return new EmployerViewModel(
               onChangeEmployers: () => store.dispatch(InitEmployersAction()),
-              user: store.state.currentUser);
+              currentUser: store.state.currentUser);
         }, builder: (context, viewModel) {
           return RaisedButton(
               child: Text("Save"),
               onPressed: () {
-                _saveNewEmployer(viewModel.onChangeEmployers, viewModel.user);
+                _saveNewEmployer(viewModel.onChangeEmployers, viewModel.currentUser);
               });
         })
       ],
