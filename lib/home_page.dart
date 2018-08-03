@@ -12,6 +12,8 @@ import 'commission_data_view.dart';
 import 'logic/app_state.dart';
 import 'models/commission.dart';
 import 'today_view.dart';
+import 'drawer.dart';
+import 'add_new_employer_dialog.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -47,20 +49,22 @@ class _HomePageState extends State<HomePage> {
     ))
   ];
 
-  Future _signOut(_HomeViewModel viewModel) async {
-    await FirebaseAuth.instance.signOut();
-    viewModel.onLogout();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-    );
-  }
-
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
+
+  Future<Null> _openEditCommissionDialog(Employer employer) async {
+    // TODO implement the dialog
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new AddEmployerView(
+              title: "Edit Employer", employer: employer);
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,7 @@ class _HomePageState extends State<HomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
+      drawer: MyDrawer(),
       body: _children[_currentIndex],
       floatingActionButton: StoreConnector<AppState, _HomeViewModel>(
           converter: (Store<AppState> store) {
@@ -77,9 +82,8 @@ class _HomePageState extends State<HomePage> {
             currentUser: store.state.currentUser);
       }, builder: (BuildContext context, _HomeViewModel viewModel) {
         return FloatingActionButton(
-            onPressed: () => _signOut(viewModel),
-            tooltip: "log out",
-            child: new Text("Logout"));
+            onPressed: () => _openEditCommissionDialog(null),
+            child: new Text("Edit"));
       }),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
