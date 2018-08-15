@@ -9,12 +9,14 @@ import 'home_page.dart';
 import 'logic/app_state.dart';
 import 'models/employer.dart';
 import 'add_new_employer_dialog.dart';
+import 'employers_list_view.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(
-      {this.employers, this.onGetCurrentEmployer, this.currentUser});
+      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onGetEmployers});
   final List<Employer> employers;
   final Function() onGetCurrentEmployer;
+  final Function(List<Employer>) onGetEmployers;
   final FirebaseUser currentUser;
 }
 
@@ -67,86 +69,11 @@ class _EmployerSetupState extends State<EmployerSetup> {
   }
 }
 
-class EmployersListView extends StatefulWidget {
-  EmployersListView({Key key, this.user}) : super(key: key);
-  final FirebaseUser user;
-
-  @override
-  _EmployersListViewState createState() => new _EmployersListViewState();
-}
-
-class _EmployersListViewState extends State<EmployersListView> {
-  deleteEmployer(Employer employer) {
-    print("object");
-  }
-
-  Future<Null> _openEditEmployerDialog(Employer employer) async {
-    // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return new AddEmployerView(
-              title: "Edit Employer", employer: employer);
-        });
-  }
-
-  Widget employerBuilder(
-      BuildContext context, _EmployersViewModel viewModel, int index) {
-        List<Employer> employers = viewModel.employers;
-    return new ExpansionTile(
-      leading: const Icon(Icons.store),
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            new Text(employers[index].name),
-            Text((employers[index].commissionRate * 100).toString() + "%"),
-          ]),
-      children: <Widget>[
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  _openEditEmployerDialog(employers[index]);
-                }),
-            IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: () {
-                  deleteEmployer(employers[index]);
-                })
-          ],
-        )
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
-      return _EmployersViewModel(
-        employers: store.state.employers,
-        currentUser: store.state.currentUser
-      );
-    }, builder: (context, viewModel) {
-      if (viewModel.employers != null) {
-        return ListView.builder(
-            shrinkWrap: true,
-            itemCount: viewModel.employers.length,
-            itemBuilder: (BuildContext context, int index) {
-              return employerBuilder(context, viewModel, index);
-            });
-      } else {
-        return Text('No Employer');
-      }
-    });
-  }
-}
-
 class NextButton extends StatefulWidget {
-  NextButton({Key key, this.user, this.title}) : super(key: key);
+  NextButton({Key key, this.user, this.title, this.employers}) : super(key: key);
   final FirebaseUser user;
   final String title;
+  final List<Employer> employers;
 
   @override
   _NextButtonState createState() => new _NextButtonState();

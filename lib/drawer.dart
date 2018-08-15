@@ -52,17 +52,23 @@ class _MyDrawerState extends State<MyDrawer> {
           employers: store.state.employers,
           currentUser: store.state.currentUser);
     }, builder: (BuildContext context, _DrawerViewModel viewModel) {
+      String displayName = viewModel.currentUser.displayName == null
+          ? 'Name'
+          : viewModel.currentUser.displayName;
+      Widget accountPicture = viewModel.currentUser.photoUrl != null
+          ? new CircleAvatar(
+              backgroundColor: Colors.amber,
+              child: Image.network(viewModel.currentUser.photoUrl))
+          : new Icon(Icons.account_circle); //FlutterLogo(size: 42.0);
+
       return Drawer(
         child: ListView(
           children: <Widget>[
             Column(children: [
               UserAccountsDrawerHeader(
-                  accountName: new Text(viewModel.currentUser.displayName),
+                  accountName: new Text(displayName),
                   accountEmail: new Text(viewModel.currentUser.email),
-                  currentAccountPicture: new CircleAvatar(
-                    backgroundColor: Colors.amber,
-                    child: Image.network(viewModel.currentUser.photoUrl),
-                  ))
+                  currentAccountPicture: accountPicture)
             ]),
             Column(
               children: <Widget>[
