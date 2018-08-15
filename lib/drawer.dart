@@ -5,10 +5,9 @@ import 'package:redux/redux.dart';
 import 'dart:async';
 
 import 'models/employer.dart';
-import 'logic/middleware.dart';
 import 'logic/app_state.dart';
 import 'main.dart';
-import 'logic/app_state.dart';
+import 'employers_list_view.dart';
 
 class _DrawerViewModel {
   _DrawerViewModel(
@@ -65,28 +64,32 @@ class _MyDrawerState extends State<MyDrawer> {
         child: ListView(
           children: <Widget>[
             Column(children: [
-              UserAccountsDrawerHeader(
-                  accountName: new Text(displayName),
-                  accountEmail: new Text(viewModel.currentUser.email),
-                  currentAccountPicture: accountPicture)
-            ]),
-            Column(
-              children: <Widget>[
-                ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text('Settings'),
-                    onTap: () {
-                      _openSetting(viewModel);
-                    }),
-                ListTile(
-                    leading: const Icon(Icons.exit_to_app),
-                    title: const Text('Logout'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _signOut(viewModel);
-                    }),
-              ],
-            )
+              Column(children: [
+                UserAccountsDrawerHeader(
+                    accountName: new Text(displayName),
+                    accountEmail: new Text(viewModel.currentUser.email),
+                    currentAccountPicture: accountPicture),
+                EmployersListView(),
+                Divider()
+              ]),
+              Column(
+                children: <Widget>[
+                  ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: () {
+                        _openSetting(viewModel);
+                      }),
+                  ListTile(
+                      leading: const Icon(Icons.exit_to_app),
+                      title: const Text('Logout'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _signOut(viewModel);
+                      }),
+                ],
+              )
+            ])
           ],
         ),
       );

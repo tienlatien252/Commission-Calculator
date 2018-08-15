@@ -10,7 +10,10 @@ import 'add_new_employer_dialog.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(
-      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onGetEmployers});
+      {this.employers,
+      this.onGetCurrentEmployer,
+      this.currentUser,
+      this.onGetEmployers});
   final List<Employer> employers;
   final Function() onGetCurrentEmployer;
   final Function(List<Employer>) onGetEmployers;
@@ -41,32 +44,55 @@ class _EmployersListViewState extends State<EmployersListView> {
   }
 
   Widget employerBuilder(BuildContext context, DocumentSnapshot document) {
-    Employer employer = Employer(name: document.data['name'], commissionRate: document.data['commission_rate'], employerId: document.documentID);
-    return new ExpansionTile(
-      leading: const Icon(Icons.store),
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            new Text(employer.name),
-            Text((employer.commissionRate * 100).toString() + "%"),
-          ]),
-      children: <Widget>[
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  _openEditEmployerDialog(employer);
-                }),
-            IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: () {
-                  deleteEmployer(employer);
-                })
-          ],
-        )
-      ],
+    Employer employer = Employer(
+        name: document.data['name'],
+        commissionRate: document.data['commission_rate'],
+        employerId: document.documentID);
+    return Card(
+      child: Column(
+        children: <Widget>[
+          new ListTile(
+            leading: const Icon(Icons.store),
+            subtitle: Text((employer.commissionRate * 100).toString() + "%"),
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Text(employer.name),
+                  Row(
+                    children: <Widget>[
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _openEditEmployerDialog(employer);
+                          }),
+                      IconButton(
+                          icon: new Icon(Icons.delete),
+                          onPressed: () {
+                            deleteEmployer(employer);
+                          })
+                    ],
+                  ),
+                ]),
+            // children: <Widget>[
+            //   new Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     children: <Widget>[
+            //       IconButton(
+            //           icon: Icon(Icons.edit),
+            //           onPressed: () {
+            //             _openEditEmployerDialog(employer);
+            //           }),
+            //       IconButton(
+            //           icon: new Icon(Icons.delete),
+            //           onPressed: () {
+            //             deleteEmployer(employer);
+            //           })
+            //     ],
+            //   )
+            // ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -84,9 +110,13 @@ class _EmployersListViewState extends State<EmployersListView> {
     return null;
   }
 
-  List<Employer> getListEmployersFromSnapshot(List<DocumentSnapshot> documents){
-    return documents.map( (document) {
-      return Employer(name: document.data['name'], commissionRate: document.data['commission_rate'], employerId: document.documentID);
+  List<Employer> getListEmployersFromSnapshot(
+      List<DocumentSnapshot> documents) {
+    return documents.map((document) {
+      return Employer(
+          name: document.data['name'],
+          commissionRate: document.data['commission_rate'],
+          employerId: document.documentID);
     }).toList();
   }
 
@@ -97,18 +127,19 @@ class _EmployersListViewState extends State<EmployersListView> {
       return _EmployersViewModel(
           employers: store.state.employers,
           currentUser: store.state.currentUser,
-          onGetEmployers: (List<Employer> employers) => store.dispatch(
-              new GetEmployersAction(employers)));
+          onGetEmployers: (List<Employer> employers) =>
+              store.dispatch(new GetEmployersAction(employers)));
     }, builder: (context, viewModel) {
       return StreamBuilder(
           stream: _getEmployers(viewModel),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Center (child: new CircularProgressIndicator());
+            if (!snapshot.hasData)
+              return Center(child: new CircularProgressIndicator());
             if (snapshot.data.documents.isEmpty) return Text('No Employer');
             //List<Employer> employers = getListEmployersFromSnapshot(snapshot.data.documents);
             //viewModel.onGetEmployers(employers);
             return new ListView.builder(
-              shrinkWrap: true,
+                shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot employerSnapshot =
