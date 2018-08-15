@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import 'models/employer.dart';
@@ -31,6 +32,9 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   Future _signOut(_DrawerViewModel viewModel) async {
     await FirebaseAuth.instance.signOut();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('seen', false);
+
     viewModel.onLogout();
     Navigator.pushReplacement(
       context,

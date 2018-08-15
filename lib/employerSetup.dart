@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:redux/redux.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
 import 'home_page.dart';
@@ -80,7 +79,7 @@ class NextButton extends StatefulWidget {
 }
 
 class _NextButtonState extends State<NextButton> {
-  _saveEmployersAndGoNext(_EmployersViewModel viewModel) {
+  _saveEmployersAndGoNext(_EmployersViewModel viewModel) async {
     if (viewModel.employers == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.red,
@@ -89,6 +88,8 @@ class _NextButtonState extends State<NextButton> {
       return;
     }
     viewModel.onGetCurrentEmployer();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('seen', true);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
