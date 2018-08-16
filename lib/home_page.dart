@@ -9,6 +9,7 @@ import 'logic/app_state.dart';
 import 'today_view.dart';
 import 'drawer.dart';
 import 'add_new_employer_dialog.dart';
+import 'edit_data_view.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -55,19 +56,15 @@ class _HomePageState extends State<HomePage> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AddEmployerView(title: "Edit Employer", employer: employer);
+          return EditDataView(title: "Edit Employer");
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: MyDrawer(),
-      body: _children[_currentIndex],
-      floatingActionButton: StoreConnector<AppState, _HomeViewModel>(
+    Widget editButton;
+    if(_currentIndex == 0){
+      editButton = StoreConnector<AppState, _HomeViewModel>(
           converter: (Store<AppState> store) {
         return _HomeViewModel(
             onLogout: () => store.dispatch(new LogoutAction()),
@@ -76,8 +73,17 @@ class _HomePageState extends State<HomePage> {
       }, builder: (BuildContext context, _HomeViewModel viewModel) {
         return FloatingActionButton(
             onPressed: () => _openEditCommissionDialog(null),
-            child: Text("Edit"));
-      }),
+            child: Icon(Icons.edit));
+      });
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      drawer: MyDrawer(),
+      body: _children[_currentIndex],
+      floatingActionButton: editButton,
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new
