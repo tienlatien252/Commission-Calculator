@@ -12,8 +12,9 @@ import 'employers_list_view.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(
-      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onGetEmployers});
+      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onGetEmployers, this.currentEmployer});
   final List<Employer> employers;
+  final Employer currentEmployer;
   final Function() onGetCurrentEmployer;
   final Function(List<Employer>) onGetEmployers;
   final FirebaseUser currentUser;
@@ -59,7 +60,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
                 ),
               ),
               Expanded(
-                child: EmployersListView(),
+                child: EmployersListView(isDrawer: false,),
               )
             ],
           ),
@@ -87,7 +88,9 @@ class _NextButtonState extends State<NextButton> {
           ));
       return;
     }
-    viewModel.onGetCurrentEmployer();
+    if(viewModel.currentEmployer == null){
+      viewModel.onGetCurrentEmployer();
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('seen', true);
     Navigator.pushReplacement(
@@ -103,6 +106,7 @@ class _NextButtonState extends State<NextButton> {
           onGetCurrentEmployer: () => store.dispatch(
               ChangeCurrentEmployerAction(store.state.employers[0])),
           employers: store.state.employers,
+          currentEmployer: store.state.currentEmployer,
           currentUser: store.state.currentUser);
     }, builder: (BuildContext context, _EmployersViewModel viewModel) {
       return RaisedButton(

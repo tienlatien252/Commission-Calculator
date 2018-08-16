@@ -13,16 +13,19 @@ class _EmployersViewModel {
       {this.employers,
       this.onGetCurrentEmployer,
       this.currentUser,
-      this.onGetEmployers});
+      this.onGetEmployers,
+      this.currentEmployer});
   final List<Employer> employers;
-  final Function() onGetCurrentEmployer;
+  final Employer currentEmployer;
+  final Function(Employer) onGetCurrentEmployer;
   final Function(List<Employer>) onGetEmployers;
   final FirebaseUser currentUser;
 }
 
 class EmployersListView extends StatefulWidget {
-  EmployersListView({Key key, this.user}) : super(key: key);
+  EmployersListView({Key key, this.user, this.isDrawer}) : super(key: key);
   final FirebaseUser user;
+  final bool isDrawer;
 
   @override
   _EmployersListViewState createState() => _EmployersListViewState();
@@ -38,58 +41,58 @@ class _EmployersListViewState extends State<EmployersListView> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AddEmployerView(
-              title: "Edit Employer", employer: employer);
+          return AddEmployerView(title: "Edit Employer", employer: employer);
         });
   }
 
-  Widget employerBuilder(BuildContext context, DocumentSnapshot document) {
+  selectEmployer(_EmployersViewModel viewModel, Employer employer){
+    viewModel.onGetCurrentEmployer(employer);
+    if(widget.isDrawer){
+      Navigator.pop(context);
+    }
+  }
+
+  Widget employerBuilder(BuildContext context, DocumentSnapshot document, _EmployersViewModel viewModel) {
     Employer employer = Employer(
         name: document.data['name'],
         commissionRate: document.data['commission_rate'],
         employerId: document.documentID);
+
+    Widget employersList;
+    if (!widget.isDrawer) {
+      employersList = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+                  Text(employer.name),
+                  Row(children: <Widget>[
+        IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              _openEditEmployerDialog(employer);
+            }),
+        IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              deleteEmployer(employer);
+            })
+      ])]);
+    } else {
+      employersList = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+                  Text(employer.name)]);
+    }
+    bool isCurrentEmployer = employer.employerId == viewModel.currentEmployer.employerId;
+
     return Card(
       child: Column(
         children: <Widget>[
           ListTile(
+            onTap: () => selectEmployer(viewModel, employer),
+            selected: isCurrentEmployer,
             leading: const Icon(Icons.store),
             subtitle: Text((employer.commissionRate * 100).toString() + "%"),
-            title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(employer.name),
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            _openEditEmployerDialog(employer);
-                          }),
-                      IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            deleteEmployer(employer);
-                          })
-                    ],
-                  ),
-                ]),
-            // children: <Widget>[
-            //   Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: <Widget>[
-            //       IconButton(
-            //           icon: Icon(Icons.edit),
-            //           onPressed: () {
-            //             _openEditEmployerDialog(employer);
-            //           }),
-            //       IconButton(
-            //           icon: Icon(Icons.delete),
-            //           onPressed: () {
-            //             deleteEmployer(employer);
-            //           })
-            //     ],
-            //   )
-            // ],
+            title: employersList,
           ),
         ],
       ),
@@ -122,11 +125,13 @@ class _EmployersListViewState extends State<EmployersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _EmployersViewModel>(
-        converter: (store) {
+    return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
       return _EmployersViewModel(
           employers: store.state.employers,
           currentUser: store.state.currentUser,
+          currentEmployer: store.state.currentEmployer,
+          onGetCurrentEmployer: (Employer employer) =>
+              store.dispatch(new ChangeCurrentEmployerAction(employer)),
           onGetEmployers: (List<Employer> employers) =>
               store.dispatch(new GetEmployersAction(employers)));
     }, builder: (context, viewModel) {
@@ -144,7 +149,7 @@ class _EmployersListViewState extends State<EmployersListView> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot employerSnapshot =
                       snapshot.data.documents[index];
-                  return employerBuilder(context, employerSnapshot);
+                  return employerBuilder(context, employerSnapshot, viewModel);
                 });
           });
     });

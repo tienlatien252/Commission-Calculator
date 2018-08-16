@@ -46,6 +46,10 @@ class _MyDrawerState extends State<MyDrawer> {
     print("openSetting");
   }
 
+  _openEmployersSetting(_DrawerViewModel viewModel) {
+    print("openEmployersSetting");
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _DrawerViewModel>(
@@ -73,11 +77,17 @@ class _MyDrawerState extends State<MyDrawer> {
                     accountName: Text(displayName),
                     accountEmail: Text(viewModel.currentUser.email),
                     currentAccountPicture: accountPicture),
-                EmployersListView(),
+                EmployersListView(isDrawer: true,),
                 Divider()
               ]),
               Column(
                 children: <Widget>[
+                  ListTile(
+                      leading: const Icon(Icons.edit),
+                      title: const Text('Employers\' Settings'),
+                      onTap: () {
+                        _openEmployersSetting(viewModel);
+                      }),
                   ListTile(
                       leading: const Icon(Icons.settings),
                       title: const Text('Settings'),
