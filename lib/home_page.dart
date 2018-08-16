@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return EditDataView(title: "Edit Employer");
+          return EditDataView(title: "Edit Comission");
         });
   }
 
