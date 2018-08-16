@@ -55,11 +55,9 @@ class _HomePageState extends State<HomePage> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AddEmployerView(
-              title: "Edit Employer", employer: employer);
+          return AddEmployerView(title: "Edit Employer", employer: employer);
         });
   }
-
 
   @override
   Widget build(BuildContext context) {

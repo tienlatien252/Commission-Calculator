@@ -26,7 +26,6 @@ class _TodayViewModel {
 
 class TodayView extends StatefulWidget {
   TodayView({Key key}) : super(key: key);
-
   @override
   _TodayViewState createState() => _TodayViewState();
 }
@@ -36,9 +35,6 @@ class _TodayViewState extends State<TodayView> {
 
   Future _getCommission(_TodayViewModel viewModel) {
     String id = viewModel.currentUser.uid;
-    if (viewModel.currentEmployer == null){
-      viewModel.onGetCurrentEmployer();
-    }
 
     String pathString = 'users/' +
         id +

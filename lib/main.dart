@@ -96,8 +96,11 @@ class _MyAppState extends State<MyApp> {
                         if(!snapshot.data){
                           return EmployerSetup(title: widget.title);
                         }
-                        //store.dispatch(InitEmployersAction());
-                        //store.dispatch(ChangeCurrentEmployerAction(store.state.employers[0]));
+                        bool loading = store.state.currentEmployer == null;
+                        if(loading){
+                          //return HomePage(title: widget.title, loading: loading);
+                          return LoadingView(title: widget.title);
+                        }
                         return HomePage(title: widget.title);
                       }
                       return CircularProgressIndicator();
@@ -110,14 +113,28 @@ class _MyAppState extends State<MyApp> {
     FirebaseUser _currentUser = await _auth.currentUser();
     _currentUser?.getIdToken(refresh: true);
 
-    if(store.state.currentUser != null){
-      store.dispatch(InitEmployersAction());
-      //store.dispatch(ChangeCurrentEmployerAction(store.state.employers[0]));
-    }
+    // if(store.state.currentUser != null){
+    //   store.dispatch(InitEmployersAction(getCurrentEmployer: true));
+    // }
 
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       store.dispatch(CheckUserAction(user));
-      store.dispatch(InitEmployersAction());
+      store.dispatch(InitEmployersAction(getCurrentEmployer: true));
     });
+  }
+}
+
+class LoadingView extends StatelessWidget {
+  LoadingView({Key key, this.title}) : super(key: key);
+  final String title; 
+
+  @override
+  Widget build(BuildContext context) {
+     return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: Center(child: CircularProgressIndicator())
+     );
   }
 }

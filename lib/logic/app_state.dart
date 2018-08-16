@@ -33,6 +33,8 @@ class ChangeCurrentEmployerAction {
 }
 
 class InitEmployersAction {
+  final bool getCurrentEmployer;
+  InitEmployersAction({this.getCurrentEmployer});
 }
 
 class ChangeDateAction {

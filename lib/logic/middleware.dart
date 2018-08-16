@@ -8,15 +8,19 @@ import '../models/employer.dart';
 middleware(Store<AppState> store, action, NextDispatcher next) {
   print(action.runtimeType);
   if (action is InitEmployersAction) {
-    _handleInitEmployers(store);
+    _handleInitEmployers(store, action.getCurrentEmployer);
   }
   next(action);
 }
 
-_handleInitEmployers(Store<AppState> store) async {
+_handleInitEmployers(Store<AppState> store, bool getCurrentEmployer) async {
   List<Employer> employers = await _getEmployers(store);
   if (employers != null) {
     store.dispatch(GetEmployersAction(employers));
+    //store.dispatch(ChangeCurrentEmployerAction(employers[0]));
+    if(getCurrentEmployer){
+      store.dispatch(ChangeCurrentEmployerAction(employers[0]));
+    }
   }
 }
 
