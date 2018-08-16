@@ -25,7 +25,7 @@ class EmployersListView extends StatefulWidget {
   final FirebaseUser user;
 
   @override
-  _EmployersListViewState createState() => new _EmployersListViewState();
+  _EmployersListViewState createState() => _EmployersListViewState();
 }
 
 class _EmployersListViewState extends State<EmployersListView> {
@@ -38,7 +38,7 @@ class _EmployersListViewState extends State<EmployersListView> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return new AddEmployerView(
+          return AddEmployerView(
               title: "Edit Employer", employer: employer);
         });
   }
@@ -51,13 +51,13 @@ class _EmployersListViewState extends State<EmployersListView> {
     return Card(
       child: Column(
         children: <Widget>[
-          new ListTile(
+          ListTile(
             leading: const Icon(Icons.store),
             subtitle: Text((employer.commissionRate * 100).toString() + "%"),
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Text(employer.name),
+                  Text(employer.name),
                   Row(
                     children: <Widget>[
                       IconButton(
@@ -66,7 +66,7 @@ class _EmployersListViewState extends State<EmployersListView> {
                             _openEditEmployerDialog(employer);
                           }),
                       IconButton(
-                          icon: new Icon(Icons.delete),
+                          icon: Icon(Icons.delete),
                           onPressed: () {
                             deleteEmployer(employer);
                           })
@@ -74,7 +74,7 @@ class _EmployersListViewState extends State<EmployersListView> {
                   ),
                 ]),
             // children: <Widget>[
-            //   new Row(
+            //   Row(
             //     mainAxisAlignment: MainAxisAlignment.spaceAround,
             //     children: <Widget>[
             //       IconButton(
@@ -83,7 +83,7 @@ class _EmployersListViewState extends State<EmployersListView> {
             //             _openEditEmployerDialog(employer);
             //           }),
             //       IconButton(
-            //           icon: new Icon(Icons.delete),
+            //           icon: Icon(Icons.delete),
             //           onPressed: () {
             //             deleteEmployer(employer);
             //           })
@@ -122,7 +122,7 @@ class _EmployersListViewState extends State<EmployersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<AppState, _EmployersViewModel>(
+    return StoreConnector<AppState, _EmployersViewModel>(
         converter: (store) {
       return _EmployersViewModel(
           employers: store.state.employers,
@@ -134,11 +134,11 @@ class _EmployersListViewState extends State<EmployersListView> {
           stream: _getEmployers(viewModel),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return Center(child: new CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             if (snapshot.data.documents.isEmpty) return Text('No Employer');
             //List<Employer> employers = getListEmployersFromSnapshot(snapshot.data.documents);
             //viewModel.onGetEmployers(employers);
-            return new ListView.builder(
+            return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {

@@ -8,29 +8,29 @@ import 'utils.dart';
 
 class EmailView extends StatefulWidget {
   @override
-  _EmailViewState createState() => new _EmailViewState();
+  _EmailViewState createState() =>  _EmailViewState();
 }
 
 class _EmailViewState extends State<EmailView> {
-  final TextEditingController _controllerEmail = new TextEditingController();
+  final TextEditingController _controllerEmail =  TextEditingController();
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text(FFULocalizations.of(context).welcome),
+  Widget build(BuildContext context) =>  Scaffold(
+        appBar:  AppBar(
+          title:  Text(FFULocalizations.of(context).welcome),
           elevation: 4.0,
         ),
-        body: new Builder(
+        body:  Builder(
           builder: (BuildContext context) {
-            return new Padding(
+            return  Padding(
               padding: const EdgeInsets.all(16.0),
-              child: new Column(
+              child:  Column(
                 children: <Widget>[
-                  new TextField(
+                   TextField(
                     controller: _controllerEmail,
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
-                    decoration: new InputDecoration(
+                    decoration:  InputDecoration(
                         labelText: FFULocalizations.of(context).emailLabel),
                   ),
                 ],
@@ -39,15 +39,15 @@ class _EmailViewState extends State<EmailView> {
           },
         ),
         persistentFooterButtons: <Widget>[
-          new ButtonBar(
+           ButtonBar(
             alignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              new FlatButton(
+               FlatButton(
                   onPressed: () => _connexion(context),
-                  child: new Row(
+                  child:  Row(
                     children: <Widget>[
-                      new Text(FFULocalizations.of(context).nextButtonLabel),
+                       Text(FFULocalizations.of(context).nextButtonLabel),
                     ],
                   )),
             ],
@@ -65,8 +65,8 @@ class _EmailViewState extends State<EmailView> {
       if (providers.isEmpty) {
         bool connected = await Navigator
             .of(context)
-            .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-          return new SignUpView(_controllerEmail.text);
+            .push( MaterialPageRoute<bool>(builder: (BuildContext context) {
+          return  SignUpView(_controllerEmail.text);
         }));
 
         if (connected) {
@@ -75,8 +75,8 @@ class _EmailViewState extends State<EmailView> {
       } else if (providers.contains('password')) {
         bool connected = await Navigator
             .of(context)
-            .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-          return new PasswordView(_controllerEmail.text);
+            .push( MaterialPageRoute<bool>(builder: (BuildContext context) {
+          return  PasswordView(_controllerEmail.text);
         }));
 
         if (connected) {
@@ -99,22 +99,22 @@ class _EmailViewState extends State<EmailView> {
     return showDialog<Null>(
       context: context,
       barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) => new AlertDialog(
-            content: new SingleChildScrollView(
-                child: new ListBody(
+      builder: (BuildContext context) =>  AlertDialog(
+            content:  SingleChildScrollView(
+                child:  ListBody(
               children: <Widget>[
-                new Text(FFULocalizations
+                 Text(FFULocalizations
                     .of(context)
                     .allReadyEmailMessage(email, providerName)),
-                new SizedBox(
+                 SizedBox(
                   height: 16.0,
                 ),
-                new Column(
+                 Column(
                   children: providers.map((String p) {
-                    return new RaisedButton(
-                      child: new Row(
+                    return  RaisedButton(
+                      child:  Row(
                         children: <Widget>[
-                          new Text(_providerStringToButton(p)),
+                           Text(_providerStringToButton(p)),
                         ],
                       ),
                       onPressed: () {
@@ -126,10 +126,10 @@ class _EmailViewState extends State<EmailView> {
               ],
             )),
             actions: <Widget>[
-              new FlatButton(
-                child: new Row(
+               FlatButton(
+                child:  Row(
                   children: <Widget>[
-                    new Text(FFULocalizations.of(context).cancelButtonLabel),
+                     Text(FFULocalizations.of(context).cancelButtonLabel),
                   ],
                 ),
                 onPressed: () {

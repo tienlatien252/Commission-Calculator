@@ -2,7 +2,6 @@ export 'utils.dart';
 
 import 'package:flutter/material.dart';
 import 'login_view.dart';
-import 'sign_up_view.dart';
 import 'utils.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -21,31 +20,31 @@ class SignInScreen extends StatefulWidget {
   final Color color;
 
   @override
-  _SignInScreenState createState() => new _SignInScreenState();
+  _SignInScreenState createState() =>  _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  Widget get _header => widget.header ?? new Container();
+  Widget get _header => widget.header ??  Container();
 
   List<ProvidersTypes> get _providers =>
       widget.providers ?? [ProvidersTypes.email];
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+  Widget build(BuildContext context) =>  Scaffold(
+      appBar:  AppBar(
+        title:  Text(widget.title),
         elevation: 4.0,
       ),
-      body: new Builder(
+      body:  Builder(
         builder: (BuildContext context) {
-          return new Container(
+          return  Container(
               padding: const EdgeInsets.all(16.0),
-              decoration: new BoxDecoration(color: widget.color),
-              child: new Column(
+              decoration:  BoxDecoration(color: widget.color),
+              child:  Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   _header,
-                  new Expanded(child: new LoginView(providers: _providers))
+                   Expanded(child:  LoginView(providers: _providers))
                 ],
               ));
         },

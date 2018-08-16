@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import 'models/employer.dart';
-import 'logic/middleware.dart';
 import 'logic/app_state.dart';
-import 'main.dart';
 import 'commission_data_view.dart';
-import 'logic/app_state.dart';
 import 'models/commission.dart';
-import 'commission_data_view.dart';
+
 
 class _TodayViewModel {
   _TodayViewModel(
@@ -32,7 +28,7 @@ class TodayView extends StatefulWidget {
   TodayView({Key key}) : super(key: key);
 
   @override
-  _TodayViewState createState() => new _TodayViewState();
+  _TodayViewState createState() => _TodayViewState();
 }
 
 class _TodayViewState extends State<TodayView> {
@@ -40,6 +36,10 @@ class _TodayViewState extends State<TodayView> {
 
   Future _getCommission(_TodayViewModel viewModel) {
     String id = viewModel.currentUser.uid;
+    if (viewModel.currentEmployer == null){
+      viewModel.onGetCurrentEmployer();
+    }
+
     String pathString = 'users/' +
         id +
         '/employers/' +
@@ -74,7 +74,8 @@ class _TodayViewState extends State<TodayView> {
     return StoreConnector<AppState, _TodayViewModel>(converter: (store) {
       return _TodayViewModel(
           currentUser: store.state.currentUser,
-          currentEmployer: store.state.currentEmployer);
+          currentEmployer: store.state.currentEmployer,
+          onGetCurrentEmployer: () => store.dispatch(ChangeCurrentEmployerAction(store.state.employers[0])));
     }, builder: (BuildContext context, _TodayViewModel viewModel) {
       return FutureBuilder(
         future: _getCommission(viewModel),
@@ -83,12 +84,12 @@ class _TodayViewState extends State<TodayView> {
             case ConnectionState.done:
               return CommissionView(commission: _getCommissionData(snapshot));
             case ConnectionState.waiting:
-              return new Center (child:CircularProgressIndicator());
+              return Center (child:CircularProgressIndicator());
             default:
               if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
+                return Text('Error: ${snapshot.error}');
               else
-                return new Text('Result: ${snapshot.data}');
+                return Text('Result: ${snapshot.data}');
           }
         },
       );

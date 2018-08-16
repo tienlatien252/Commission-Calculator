@@ -16,7 +16,7 @@ middleware(Store<AppState> store, action, NextDispatcher next) {
 _handleInitEmployers(Store<AppState> store) async {
   List<Employer> employers = await _getEmployers(store);
   if (employers != null) {
-    store.dispatch(new GetEmployersAction(employers));
+    store.dispatch(GetEmployersAction(employers));
   }
 }
 

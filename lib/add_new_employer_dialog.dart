@@ -20,7 +20,7 @@ class AddEmployerView extends StatefulWidget {
   final Employer employer;
 
   @override
-  _AddEmployerViewState createState() => new _AddEmployerViewState();
+  _AddEmployerViewState createState() => _AddEmployerViewState();
 }
 
 class _AddEmployerViewState extends State<AddEmployerView> {
@@ -55,7 +55,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
     });
   }
 
-  final TextEditingController _nameController = new TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   @override
   Widget build(BuildContext context) {
 
-    return new SimpleDialog(
+    return SimpleDialog(
       contentPadding: EdgeInsets.all(20.0),
       title: Text(widget.title),
       children: <Widget>[
@@ -101,7 +101,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
           ],
         ),
         StoreConnector<AppState, _AddNewEmployerViewModel>(converter: (store) {
-          return new _AddNewEmployerViewModel(
+          return _AddNewEmployerViewModel(
               onChangeEmployers: () => store.dispatch(InitEmployersAction()),
               user: store.state.currentUser);
         }, builder: (context, viewModel) {

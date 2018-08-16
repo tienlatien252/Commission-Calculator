@@ -17,7 +17,7 @@ import 'login_modules/login_page.dart';
 void main() => runApp(MyApp());
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = new GoogleSignIn();
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class UserView {
   final FirebaseUser currentUser;
@@ -30,11 +30,11 @@ class MyApp extends StatefulWidget {
   final String title = "Commission Calculator";
 
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final store = new Store<AppState>(reducer,
+  final store = Store<AppState>(reducer,
       initialState: AppState(), middleware: [middleware].toList());
   final FirebaseAuth _auth = FirebaseAuth.instance;
   StreamSubscription<FirebaseUser> _listener;
@@ -62,9 +62,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return StoreProvider(
         store: store,
-        child: new MaterialApp(
+        child: MaterialApp(
             title: 'Commission Calculator',
-            theme: new ThemeData(
+            theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
             home: FutureBuilder(
@@ -76,14 +76,14 @@ class _MyAppState extends State<MyApp> {
                         currentEmployer: store.state.currentEmployer),
                     builder: (context, user) {
                       if (user.currentUser == null) {
-                        return new SignInScreen(
+                        return SignInScreen(
                             title: widget.title,
-                            header: new Padding(
+                            header: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 32.0),
-                              child: new Padding(
+                              child: Padding(
                                 padding: const EdgeInsets.all(32.0),
-                                child: new Text("Demo"),
+                                child: Text("Demo"),
                               ),
                             ),
                             providers: [
@@ -94,9 +94,11 @@ class _MyAppState extends State<MyApp> {
 
                       if (snapshot.hasData){
                         if(!snapshot.data){
-                          return new EmployerSetup(title: widget.title);
+                          return EmployerSetup(title: widget.title);
                         }
-                        return new HomePage(title: widget.title);
+                        //store.dispatch(InitEmployersAction());
+                        //store.dispatch(ChangeCurrentEmployerAction(store.state.employers[0]));
+                        return HomePage(title: widget.title);
                       }
                       return CircularProgressIndicator();
                     },
@@ -104,22 +106,18 @@ class _MyAppState extends State<MyApp> {
                 })));
   }
 
-  // else if (user.currentEmployer == null) {
-  //   return new EmployerSetup(title: widget.title);
-  // } else {
-  //   return new HomePage(title: widget.title);
-  // }
-
   void _checkCurrentUser() async {
     FirebaseUser _currentUser = await _auth.currentUser();
-    new Timer(new Duration(milliseconds: 200), () {
-      checkFirstSeen();
-    });
     _currentUser?.getIdToken(refresh: true);
 
+    if(store.state.currentUser != null){
+      store.dispatch(InitEmployersAction());
+      //store.dispatch(ChangeCurrentEmployerAction(store.state.employers[0]));
+    }
+
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
-      store.dispatch(new CheckUserAction(user));
-      store.dispatch(new InitEmployersAction());
+      store.dispatch(CheckUserAction(user));
+      store.dispatch(InitEmployersAction());
     });
   }
 }

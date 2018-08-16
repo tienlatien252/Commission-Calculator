@@ -11,7 +11,7 @@ class PasswordView extends StatefulWidget {
   PasswordView(this.email, {Key key}) : super(key: key);
 
   @override
-  _PasswordViewState createState() => new _PasswordViewState();
+  _PasswordViewState createState() => _PasswordViewState();
 }
 
 class _PasswordViewState extends State<PasswordView> {
@@ -21,44 +21,44 @@ class _PasswordViewState extends State<PasswordView> {
   @override
   initState() {
     super.initState();
-    _controllerEmail = new TextEditingController(text: widget.email);
-    _controllerPassword = new TextEditingController();
+    _controllerEmail = TextEditingController(text: widget.email);
+    _controllerPassword = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
     _controllerEmail.text = widget.email;
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(FFULocalizations.of(context).signInTitle),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(FFULocalizations.of(context).signInTitle),
         elevation: 4.0,
       ),
-      body: new Builder(
+      body: Builder(
         builder: (BuildContext context) {
-          return new Padding(
+          return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: new Column(
+            child: Column(
               children: <Widget>[
-                new TextField(
+                TextField(
                   controller: _controllerEmail,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
-                  decoration: new InputDecoration(
+                  decoration: InputDecoration(
                       labelText: FFULocalizations.of(context).emailLabel),
                 ),
                 //const SizedBox(height: 5.0),
-                new TextField(
+                TextField(
                   controller: _controllerPassword,
                   obscureText: true,
                   autocorrect: false,
-                  decoration: new InputDecoration(
+                  decoration: InputDecoration(
                       labelText: FFULocalizations.of(context).passwordLabel),
                 ),
-                new SizedBox(height: 16.0),
-                new Container(
+                SizedBox(height: 16.0),
+                Container(
                     alignment: Alignment.centerLeft,
-                    child: new InkWell(
-                        child: new Text(
+                    child: InkWell(
+                        child: Text(
                           FFULocalizations.of(context).troubleSigningInLabel,
                           style: Theme.of(context).textTheme.caption,
                         ),
@@ -69,15 +69,15 @@ class _PasswordViewState extends State<PasswordView> {
         },
       ),
       persistentFooterButtons: <Widget>[
-        new ButtonBar(
+        ButtonBar(
           alignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            new FlatButton(
+            FlatButton(
                 onPressed: () => _connexion(context),
-                child: new Row(
+                child: Row(
                   children: <Widget>[
-                    new Text(FFULocalizations.of(context).signInLabel),
+                    Text(FFULocalizations.of(context).signInLabel),
                   ],
                 )),
           ],
@@ -90,7 +90,7 @@ class _PasswordViewState extends State<PasswordView> {
     Navigator
         .of(context)
         .push(new MaterialPageRoute<Null>(builder: (BuildContext context) {
-      return new TroubleSignIn(_controllerEmail.text);
+      return TroubleSignIn(_controllerEmail.text);
     }));
   }
 

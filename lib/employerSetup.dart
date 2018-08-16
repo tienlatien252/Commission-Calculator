@@ -24,7 +24,7 @@ class EmployerSetup extends StatefulWidget {
   final String title;
 
   @override
-  _EmployerSetupState createState() => new _EmployerSetupState();
+  _EmployerSetupState createState() => _EmployerSetupState();
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
@@ -33,38 +33,38 @@ class _EmployerSetupState extends State<EmployerSetup> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return new AddEmployerView(title: "Add New Employer");
+          return AddEmployerView(title: "Add Employer");
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Employer\'s setup"),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Employer\'s setup"),
         ),
         body: Center(
-          child: new Column(
+          child: Column(
             children: <Widget>[
-              new Container(
+              Container(
                 height: 100.0,
-                child: new Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    new RaisedButton(
-                      child: new Text('Add A New Employer'),
+                    RaisedButton(
+                      child: Text('Add A New Employer'),
                       onPressed: _openAddEmployerDialog,
                     ),
                   ],
                 ),
               ),
-              new Expanded(
+              Expanded(
                 child: EmployersListView(),
               )
             ],
           ),
         ),
-        floatingActionButton: new NextButton(title: widget.title));
+        floatingActionButton: NextButton(title: widget.title));
   }
 }
 
@@ -75,7 +75,7 @@ class NextButton extends StatefulWidget {
   final List<Employer> employers;
 
   @override
-  _NextButtonState createState() => new _NextButtonState();
+  _NextButtonState createState() => _NextButtonState();
 }
 
 class _NextButtonState extends State<NextButton> {
@@ -101,13 +101,13 @@ class _NextButtonState extends State<NextButton> {
     return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
       return _EmployersViewModel(
           onGetCurrentEmployer: () => store.dispatch(
-              new ChangeCurrentEmployerAction(store.state.employers[0])),
+              ChangeCurrentEmployerAction(store.state.employers[0])),
           employers: store.state.employers,
           currentUser: store.state.currentUser);
     }, builder: (BuildContext context, _EmployersViewModel viewModel) {
-      return new RaisedButton(
+      return RaisedButton(
         onPressed: () => _saveEmployersAndGoNext(viewModel),
-        child: new Text("Next"),
+        child: Text("Next"),
       );
     }); // This trailing c
   }

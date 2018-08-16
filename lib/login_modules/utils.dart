@@ -41,7 +41,7 @@ class ButtonDescription extends StatelessWidget {
     String name,
     VoidCallback onSelected,
   }) {
-    return new ButtonDescription(
+    return ButtonDescription(
         label: label ?? this.label,
         labelColor: labelColor ?? this.labelColor,
         color: color ?? this.color,
@@ -53,20 +53,20 @@ class ButtonDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VoidCallback _onSelected = onSelected ?? () => {};
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.only(top: 16.0),
-      child: new RaisedButton(
+      child: RaisedButton(
           color: color,
-          child: new Row(
+          child: Row(
             children: <Widget>[
-              new Container(
+              Container(
                   padding: const EdgeInsets.only(
                       top: 8.0, bottom: 8.0, left: 16.0, right: 32.0),
-                  child: new Image.asset('assets/$logo')),
-              new Expanded(
-                child: new Text(
+                  child: Image.asset('assets/$logo')),
+              Expanded(
+                child: Text(
                   label,
-                  style: new TextStyle(color: labelColor),
+                  style: TextStyle(color: labelColor),
                 ),
               )
             ],
@@ -79,19 +79,19 @@ class ButtonDescription extends StatelessWidget {
 Map<ProvidersTypes, ButtonDescription> providersDefinitions(
         BuildContext context) =>
     {
-      ProvidersTypes.facebook: new ButtonDescription(
+      ProvidersTypes.facebook: ButtonDescription(
           color: const Color.fromRGBO(59, 87, 157, 1.0),
           logo: "fb-logo.png",
           label: FFULocalizations.of(context).signInFacebook,
           name: "Facebook",
           labelColor: Colors.white),
-      ProvidersTypes.google: new ButtonDescription(
+      ProvidersTypes.google: ButtonDescription(
           color: Colors.white,
           logo: "go-logo.png",
           label: FFULocalizations.of(context).signInGoogle,
           name: "Google",
           labelColor: Colors.grey),
-      ProvidersTypes.email: new ButtonDescription(
+      ProvidersTypes.email: ButtonDescription(
           color: const Color.fromRGBO(219, 68, 55, 1.0),
           logo: "email-logo.png",
           label: FFULocalizations.of(context).signInEmail,
@@ -104,20 +104,20 @@ Future<Null> showErrorDialog(BuildContext context, String message,
   return showDialog<Null>(
     context: context,
     barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) => new AlertDialog(
-          title: title != null ? new Text(title) : null,
-          content: new SingleChildScrollView(
-            child: new ListBody(
+    builder: (BuildContext context) => AlertDialog(
+          title: title != null ? Text(title) : null,
+          content: SingleChildScrollView(
+            child: ListBody(
               children: <Widget>[
-                new Text(message ?? FFULocalizations.of(context).errorOccurred),
+                Text(message ?? FFULocalizations.of(context).errorOccurred),
               ],
             ),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Row(
+            FlatButton(
+              child: Row(
                 children: <Widget>[
-                  new Text(FFULocalizations.of(context).cancelButtonLabel),
+                  Text(FFULocalizations.of(context).cancelButtonLabel),
                 ],
               ),
               onPressed: () {

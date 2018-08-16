@@ -12,7 +12,7 @@ AppState reducer(AppState prev, action) {
   employers = _handleAddNewEmployerAction(employers, action);
   Employer currentEmployer = _handleChangeCurrentEmployerAction(prev, action);
 
-  return new AppState(
+  return  AppState(
     currentUser: currentUser,
     employers: employers,
     currentEmployer: currentEmployer
@@ -36,7 +36,7 @@ List<Employer> _handleGetEmployersAction (AppState prev, action){
 List<Employer> _handleAddNewEmployerAction (List<Employer> employers, action){
   if(action is AddNewEmployerAction){
     if(employers == null){
-      employers = new List<Employer>();
+      employers =  List<Employer>();
     }
     employers.add(action.newEmployers);
   }

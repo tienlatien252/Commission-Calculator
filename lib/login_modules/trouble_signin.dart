@@ -10,7 +10,7 @@ class TroubleSignIn extends StatefulWidget {
   TroubleSignIn(this.email, {Key key}) : super(key: key);
 
   @override
-  _TroubleSignInState createState() => new _TroubleSignInState();
+  _TroubleSignInState createState() => _TroubleSignInState();
 }
 
 class _TroubleSignInState extends State<TroubleSignIn> {
@@ -19,34 +19,34 @@ class _TroubleSignInState extends State<TroubleSignIn> {
   @override
   initState() {
     super.initState();
-    _controllerEmail = new TextEditingController(text: widget.email);
+    _controllerEmail = TextEditingController(text: widget.email);
   }
 
   @override
   Widget build(BuildContext context) {
     _controllerEmail.text = widget.email;
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(FFULocalizations.of(context).recoverPasswordTitle),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(FFULocalizations.of(context).recoverPasswordTitle),
         elevation: 4.0,
       ),
-      body: new Builder(
+      body: Builder(
         builder: (BuildContext context) {
-          return new Padding(
+          return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: new Column(
+            child: Column(
               children: <Widget>[
-                new TextField(
+                TextField(
                   controller: _controllerEmail,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
-                  decoration: new InputDecoration(
+                  decoration: InputDecoration(
                       labelText: FFULocalizations.of(context).emailLabel),
                 ),
-                new SizedBox(height: 16.0),
-                new Container(
+                SizedBox(height: 16.0),
+                Container(
                     alignment: Alignment.centerLeft,
-                    child: new Text(
+                    child: Text(
                       FFULocalizations.of(context).recoverHelpLabel,
                       style: Theme.of(context).textTheme.caption,
                     )),
@@ -57,15 +57,15 @@ class _TroubleSignInState extends State<TroubleSignIn> {
         },
       ),
       persistentFooterButtons: <Widget>[
-        new ButtonBar(
+        ButtonBar(
           alignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            new FlatButton(
+            FlatButton(
                 onPressed: () => _send(context),
-                child: new Row(
+                child: Row(
                   children: <Widget>[
-                    new Text(FFULocalizations.of(context).sendButtonLabel),
+                    Text(FFULocalizations.of(context).sendButtonLabel),
                   ],
                 )),
           ],

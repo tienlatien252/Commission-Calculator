@@ -50,13 +50,13 @@ class FFULocalizations {
   String get errorOccurred => _translationBundle.errorOccurred;
 
   static Future<FFULocalizations> load(Locale locale) {
-    return new SynchronousFuture<FFULocalizations>(
-        new FFULocalizations(locale));
+    return SynchronousFuture<FFULocalizations>(
+        FFULocalizations(locale));
   }
 
   static FFULocalizations of(BuildContext context) {
     return Localizations.of<FFULocalizations>(context, FFULocalizations) ??
-        new _DefaultFFULocalizations();
+        _DefaultFFULocalizations();
   }
 
   static const LocalizationsDelegate<FFULocalizations> delegate =

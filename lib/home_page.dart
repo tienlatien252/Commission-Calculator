@@ -5,12 +5,7 @@ import 'package:redux/redux.dart';
 import 'dart:async';
 
 import 'models/employer.dart';
-import 'logic/middleware.dart';
 import 'logic/app_state.dart';
-import 'main.dart';
-import 'commission_data_view.dart';
-import 'logic/app_state.dart';
-import 'models/commission.dart';
 import 'today_view.dart';
 import 'drawer.dart';
 import 'add_new_employer_dialog.dart';
@@ -32,20 +27,20 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  _HomePageState createState() => new _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   List<Widget> _children = [
     TodayView(),
-    new Container(
-        child: new Center(
-      child: new Text("History"),
+    Container(
+        child: Center(
+      child: Text("History"),
     )),
-    new Container(
-        child: new Center(
-      child: new Text("Calculator"),
+    Container(
+        child: Center(
+      child: Text("Calculator"),
     ))
   ];
 
@@ -60,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return new AddEmployerView(
+          return AddEmployerView(
               title: "Edit Employer", employer: employer);
         });
   }
@@ -68,9 +63,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
       drawer: MyDrawer(),
       body: _children[_currentIndex],
@@ -83,21 +78,21 @@ class _HomePageState extends State<HomePage> {
       }, builder: (BuildContext context, _HomeViewModel viewModel) {
         return FloatingActionButton(
             onPressed: () => _openEditCommissionDialog(null),
-            child: new Text("Edit"));
+            child: Text("Edit"));
       }),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new
         items: [
-          new BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             title: Text('Home'),
           ),
-          new BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.history),
             title: Text('History'),
           ),
-          new BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(Icons.assessment), title: Text('Calculator'))
         ],
       ),

@@ -26,7 +26,7 @@ class MyDrawer extends StatefulWidget {
   MyDrawer({Key key}) : super(key: key);
 
   @override
-  _MyDrawerState createState() => new _MyDrawerState();
+  _MyDrawerState createState() => _MyDrawerState();
 }
 
 class _MyDrawerState extends State<MyDrawer> {
@@ -59,10 +59,10 @@ class _MyDrawerState extends State<MyDrawer> {
           ? 'Name'
           : viewModel.currentUser.displayName;
       Widget accountPicture = viewModel.currentUser.photoUrl != null
-          ? new CircleAvatar(
+          ? CircleAvatar(
               backgroundColor: Colors.amber,
               child: Image.network(viewModel.currentUser.photoUrl))
-          : new Icon(Icons.account_circle); //FlutterLogo(size: 42.0);
+          : Icon(Icons.account_circle); //FlutterLogo(size: 42.0);
 
       return Drawer(
         child: ListView(
@@ -70,8 +70,8 @@ class _MyDrawerState extends State<MyDrawer> {
             Column(children: [
               Column(children: [
                 UserAccountsDrawerHeader(
-                    accountName: new Text(displayName),
-                    accountEmail: new Text(viewModel.currentUser.email),
+                    accountName: Text(displayName),
+                    accountEmail: Text(viewModel.currentUser.email),
                     currentAccountPicture: accountPicture),
                 EmployersListView(),
                 Divider()
