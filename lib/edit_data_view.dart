@@ -7,6 +7,7 @@ import 'package:redux/redux.dart';
 import 'dart:async';
 import 'logic/app_state.dart';
 import 'models/employer.dart';
+import 'models/commission.dart';
 
 class _EditDataViewModel {
   final FirebaseUser currentUser;
@@ -15,32 +16,51 @@ class _EditDataViewModel {
   _EditDataViewModel({this.currentUser, this.currentEmployer});
 }
 
-class _ComissionData {
-  double raw;
-  double commission;
-  double tip;
-  double total;
-}
 
 class EditDataView extends StatefulWidget {
-  EditDataView({Key key, this.title, this.date}) : super(key: key);
+  EditDataView({Key key, this.title, this.date, this.commission}) : super(key: key);
   final String title;
   final DateTime date;
+  final Commission commission;
+
   @override
   _EditDataViewState createState() => _EditDataViewState();
 }
 
 class _EditDataViewState extends State<EditDataView> {
   final _formKey = GlobalKey<FormState>();
-  _ComissionData _comissionData = _ComissionData();
+  Commission _comissionData = Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
 
   onPresscancel() {
     Navigator.pop(context);
   }
 
-  void submit() {
+  void submit(_EditDataViewModel viewModel) {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      String id = viewModel.currentUser.uid;
+      String employerId = viewModel.currentEmployer.employerId;
+      String pathString = 'users/' + id + '/employers/' + employerId + '/commission';
+      Map<String, dynamic> data = {
+          'raw': _comissionData.raw,
+          'tip': _comissionData.tip,
+          'commission': _comissionData.commission,
+          'total': _comissionData.total,
+          'date': widget.date,
+      };
+
+      Future future;
+      if (widget.commission.id == null) {
+        future =  Firestore.instance.collection(pathString).document().setData(data);
+      } else {
+        future = Firestore.instance.collection(pathString).document(widget.commission.id).setData(data);
+      }
+      future.whenComplete(
+        () {
+          Navigator.pop(context);
+        }
+      );
     }
   }
 
@@ -56,6 +76,9 @@ class _EditDataViewState extends State<EditDataView> {
 
   @override
   Widget build(BuildContext context) {
+    double initRaw = widget.commission.id != null ? widget.commission.raw : null;
+    double initTip = widget.commission.id != null ? widget.commission.tip : null;
+
     return StoreConnector<AppState, _EditDataViewModel>(
       converter: (Store<AppState> store) {
         return _EditDataViewModel(
@@ -73,18 +96,23 @@ class _EditDataViewState extends State<EditDataView> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      initialValue: initRaw.toString(),
                         keyboardType: TextInputType.number,
                         decoration: new InputDecoration(labelText: 'Raw'),
                         validator: _validateNumber,
                         onSaved: (String value) {
                           _comissionData.raw = double.parse(value);
+                          _comissionData.commission = (_comissionData.raw * viewModel.currentEmployer.commissionRate);
+                          _comissionData.total += _comissionData.commission;
                         }),
                     TextFormField(
+                        initialValue: initTip.toString(),
                         keyboardType: TextInputType.number,
                         decoration: new InputDecoration(labelText: 'Tip'),
                         validator: _validateNumber,
                         onSaved: (String value) {
                           _comissionData.tip = double.parse(value);
+                          _comissionData.total += _comissionData.tip;
                         }),
                   ],
                 ),
@@ -98,7 +126,7 @@ class _EditDataViewState extends State<EditDataView> {
                   child: Text("Cancel"),
                 ),
                 RaisedButton(
-                  onPressed: submit,
+                  onPressed: () => submit(viewModel),
                   child: Text("Summit"),
                 )
               ],

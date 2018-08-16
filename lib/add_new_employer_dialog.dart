@@ -88,7 +88,8 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                       _comissionRate.round().toString() +
                       "%"),
                   Slider(
-                      label: "Commission",
+                      label: _comissionRate.round().toString(),
+                      divisions: 20,
                       min: 0.0,
                       max: 100.0,
                       value: _comissionRate,

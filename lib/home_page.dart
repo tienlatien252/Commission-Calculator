@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-import 'dart:async';
 
 import 'models/employer.dart';
-import 'logic/app_state.dart';
 import 'today_view.dart';
 import 'drawer.dart';
-import 'add_new_employer_dialog.dart';
-import 'edit_data_view.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -51,39 +45,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<Null> _openEditCommissionDialog(Employer employer) async {
-    // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return EditDataView(title: "Edit Comission");
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget editButton;
-    if(_currentIndex == 0){
-      editButton = StoreConnector<AppState, _HomeViewModel>(
-          converter: (Store<AppState> store) {
-        return _HomeViewModel(
-            onLogout: () => store.dispatch(new LogoutAction()),
-            employers: store.state.employers,
-            currentUser: store.state.currentUser);
-      }, builder: (BuildContext context, _HomeViewModel viewModel) {
-        return FloatingActionButton(
-            onPressed: () => _openEditCommissionDialog(null),
-            child: Icon(Icons.edit));
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       drawer: MyDrawer(),
       body: _children[_currentIndex],
-      floatingActionButton: editButton,
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new

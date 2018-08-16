@@ -20,7 +20,7 @@ class _CommissionViewState extends State<CommissionView> {
   @override
   Widget build(BuildContext context) {
     Commission commission = widget.commission;
-     return Card(
+     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
