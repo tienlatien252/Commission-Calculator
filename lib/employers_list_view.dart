@@ -82,7 +82,8 @@ class _EmployersListViewState extends State<EmployersListView> {
         children: <Widget>[
                   Text(employer.name)]);
     }
-    bool isCurrentEmployer = employer.employerId == viewModel.currentEmployer.employerId;
+    
+    bool isCurrentEmployer = viewModel.currentEmployer != null ? employer.employerId == viewModel.currentEmployer.employerId : false;
 
     return Card(
       child: Column(
