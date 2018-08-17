@@ -16,9 +16,9 @@ class _EditDataViewModel {
   _EditDataViewModel({this.currentUser, this.currentEmployer});
 }
 
-
 class EditDataView extends StatefulWidget {
-  EditDataView({Key key, this.title, this.date, this.commission}) : super(key: key);
+  EditDataView({Key key, this.title, this.date, this.commission})
+      : super(key: key);
   final String title;
   final DateTime date;
   final Commission commission;
@@ -29,38 +29,42 @@ class EditDataView extends StatefulWidget {
 
 class _EditDataViewState extends State<EditDataView> {
   final _formKey = GlobalKey<FormState>();
-  Commission _comissionData = Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
+  Commission _comissionData =
+      Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
 
   onPresscancel() {
     Navigator.pop(context);
   }
 
-  void submit(_EditDataViewModel viewModel) {
+  void onSubmit(_EditDataViewModel viewModel) {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
 
       String id = viewModel.currentUser.uid;
       String employerId = viewModel.currentEmployer.employerId;
-      String pathString = 'users/' + id + '/employers/' + employerId + '/commission';
+      String pathString =
+          'users/' + id + '/employers/' + employerId + '/commission';
       Map<String, dynamic> data = {
-          'raw': _comissionData.raw,
-          'tip': _comissionData.tip,
-          'commission': _comissionData.commission,
-          'total': _comissionData.total,
-          'date': widget.date,
+        'raw': _comissionData.raw,
+        'tip': _comissionData.tip,
+        'commission': _comissionData.commission,
+        'total': _comissionData.total,
+        'date': widget.date,
       };
 
       Future future;
       if (widget.commission.id == null) {
-        future =  Firestore.instance.collection(pathString).document().setData(data);
+        future =
+            Firestore.instance.collection(pathString).document().setData(data);
       } else {
-        future = Firestore.instance.collection(pathString).document(widget.commission.id).setData(data);
+        future = Firestore.instance
+            .collection(pathString)
+            .document(widget.commission.id)
+            .setData(data);
       }
-      future.whenComplete(
-        () {
-          Navigator.pop(context);
-        }
-      );
+      future.whenComplete(() {
+        Navigator.pop(context);
+      });
     }
   }
 
@@ -70,14 +74,16 @@ class _EditDataViewState extends State<EditDataView> {
     } catch (e) {
       return 'The field must be a number.';
     }
-  
+
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    double initRaw = widget.commission.id != null ? widget.commission.raw : null;
-    double initTip = widget.commission.id != null ? widget.commission.tip : null;
+    String initRaw =
+        widget.commission.id != null ? widget.commission.raw.toString() : "";
+    String initTip =
+        widget.commission.id != null ? widget.commission.tip.toString() : "";
 
     return StoreConnector<AppState, _EditDataViewModel>(
       converter: (Store<AppState> store) {
@@ -96,17 +102,18 @@ class _EditDataViewState extends State<EditDataView> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      initialValue: initRaw.toString(),
+                        initialValue: initRaw,
                         keyboardType: TextInputType.number,
                         decoration: new InputDecoration(labelText: 'Raw'),
                         validator: _validateNumber,
                         onSaved: (String value) {
                           _comissionData.raw = double.parse(value);
-                          _comissionData.commission = (_comissionData.raw * viewModel.currentEmployer.commissionRate);
+                          _comissionData.commission = (_comissionData.raw *
+                              viewModel.currentEmployer.commissionRate);
                           _comissionData.total += _comissionData.commission;
                         }),
                     TextFormField(
-                        initialValue: initTip.toString(),
+                        initialValue: initTip,
                         keyboardType: TextInputType.number,
                         decoration: new InputDecoration(labelText: 'Tip'),
                         validator: _validateNumber,
@@ -126,7 +133,7 @@ class _EditDataViewState extends State<EditDataView> {
                   child: Text("Cancel"),
                 ),
                 RaisedButton(
-                  onPressed: () => submit(viewModel),
+                  onPressed: () => onSubmit(viewModel),
                   child: Text("Summit"),
                 )
               ],

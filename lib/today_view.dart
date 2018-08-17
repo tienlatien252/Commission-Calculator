@@ -9,6 +9,7 @@ import 'logic/app_state.dart';
 import 'commission_data_view.dart';
 import 'models/commission.dart';
 import 'edit_data_view.dart';
+import 'date_time_view.dart';
 
 class _TodayViewModel {
   _TodayViewModel(
@@ -32,7 +33,8 @@ class TodayView extends StatefulWidget {
 
 class _TodayViewState extends State<TodayView> {
   final DateTime date = DateTime.now();
-  Commission commission = Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+  Commission commission =
+      Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
 
   Future _getCommission(_TodayViewModel viewModel) {
     String id = viewModel.currentUser.uid;
@@ -58,12 +60,11 @@ class _TodayViewState extends State<TodayView> {
     if (snapshot.data.documents.length != 0) {
       Map<String, dynamic> retunredCommission = snapshot.data.documents[0].data;
       commission = Commission(
-        raw: retunredCommission['raw'].toDouble(),
-        commission: retunredCommission['commission'].toDouble(),
-        tip: retunredCommission['tip'].toDouble(),
-        total: retunredCommission['total'].toDouble(),
-        id: snapshot.data.documents[0].documentID
-      );
+          raw: retunredCommission['raw'].toDouble(),
+          commission: retunredCommission['commission'].toDouble(),
+          tip: retunredCommission['tip'].toDouble(),
+          total: retunredCommission['total'].toDouble(),
+          id: snapshot.data.documents[0].documentID);
     }
     return commission;
   }
@@ -73,12 +74,14 @@ class _TodayViewState extends State<TodayView> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return EditDataView(title: "Edit Comission", date: getDateOnly(date), commission: commission,);
+          return EditDataView(
+            title: "Edit Comission",
+            date: getDateOnly(date),
+            commission: commission,
+          );
         });
 
-    setState(() {
-          print("");
-        });
+    setState(() {});
   }
 
   @override
@@ -97,6 +100,11 @@ class _TodayViewState extends State<TodayView> {
             case ConnectionState.done:
               return Column(
                 children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        viewModel.currentEmployer.name, style: TextStyle(fontSize: 30.0),)),
+                  OneDayView(date: date),
                   Expanded(
                       child: CommissionView(
                           commission: _getCommissionData(snapshot))),
