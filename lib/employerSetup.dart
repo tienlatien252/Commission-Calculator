@@ -12,7 +12,11 @@ import 'employers_list_view.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(
-      {this.employers, this.onGetCurrentEmployer, this.currentUser, this.onGetEmployers, this.currentEmployer});
+      {this.employers,
+      this.onGetCurrentEmployer,
+      this.currentUser,
+      this.onGetEmployers,
+      this.currentEmployer});
   final List<Employer> employers;
   final Employer currentEmployer;
   final Function() onGetCurrentEmployer;
@@ -21,8 +25,9 @@ class _EmployersViewModel {
 }
 
 class EmployerSetup extends StatefulWidget {
-  EmployerSetup({Key key, this.title}) : super(key: key);
+  EmployerSetup({Key key, this.title, this.isInitialSetting}) : super(key: key);
   final String title;
+  final bool isInitialSetting;
 
   @override
   _EmployerSetupState createState() => _EmployerSetupState();
@@ -60,20 +65,21 @@ class _EmployerSetupState extends State<EmployerSetup> {
                 ),
               ),
               Expanded(
-                child: EmployersListView(isDrawer: false,),
+                child: EmployersListView(
+                  isDrawer: false,
+                ),
               )
             ],
           ),
         ),
-        floatingActionButton: NextButton(title: widget.title));
+        floatingActionButton: NextButton(title: widget.title, isInitialSetting: widget.isInitialSetting,));
   }
 }
 
 class NextButton extends StatefulWidget {
-  NextButton({Key key, this.user, this.title, this.employers}) : super(key: key);
-  final FirebaseUser user;
+  NextButton({Key key, this.isInitialSetting, this.title}) : super(key: key);
   final String title;
-  final List<Employer> employers;
+  final bool isInitialSetting;
 
   @override
   _NextButtonState createState() => _NextButtonState();
@@ -88,23 +94,27 @@ class _NextButtonState extends State<NextButton> {
           ));
       return;
     }
-    if(viewModel.currentEmployer == null){
+    if (viewModel.currentEmployer == null) {
       viewModel.onGetCurrentEmployer();
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('seen', true);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
-    );
+    if (widget.isInitialSetting) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('seen', true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
+      );
+    } else{
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
       return _EmployersViewModel(
-          onGetCurrentEmployer: () => store.dispatch(
-              ChangeCurrentEmployerAction(store.state.employers[0])),
+          onGetCurrentEmployer: () => store
+              .dispatch(ChangeCurrentEmployerAction(store.state.employers[0])),
           employers: store.state.employers,
           currentEmployer: store.state.currentEmployer,
           currentUser: store.state.currentUser);

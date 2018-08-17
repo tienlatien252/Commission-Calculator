@@ -9,6 +9,7 @@ import 'models/employer.dart';
 import 'logic/app_state.dart';
 import 'main.dart';
 import 'employers_list_view.dart';
+import 'employerSetup.dart';
 
 class _DrawerViewModel {
   _DrawerViewModel(
@@ -48,6 +49,11 @@ class _MyDrawerState extends State<MyDrawer> {
 
   _openEmployersSetting(_DrawerViewModel viewModel) {
     print("openEmployersSetting");
+    Navigator
+        .of(context)
+        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return EmployerSetup(title: 'Employers Setup', isInitialSetting: false);
+    }));
   }
 
   @override
@@ -77,7 +83,9 @@ class _MyDrawerState extends State<MyDrawer> {
                     accountName: Text(displayName),
                     accountEmail: Text(viewModel.currentUser.email),
                     currentAccountPicture: accountPicture),
-                EmployersListView(isDrawer: true,),
+                EmployersListView(
+                  isDrawer: true,
+                ),
                 Divider()
               ]),
               Column(

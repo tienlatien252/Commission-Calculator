@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
 
                       if (snapshot.hasData){
                         if(!snapshot.data){
-                          return EmployerSetup(title: widget.title);
+                          return EmployerSetup(title: widget.title, isInitialSetting: true,);
                         }
                         bool loading = store.state.currentEmployer == null;
                         if(loading){
