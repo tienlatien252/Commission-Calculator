@@ -65,8 +65,9 @@ class _TodayViewState extends State<TodayView> {
           tip: retunredCommission['tip'].toDouble(),
           total: retunredCommission['total'].toDouble(),
           id: snapshot.data.documents[0].documentID);
+      return commission;
     }
-    return commission;
+    return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
   }
 
   Future<Null> _openEditCommissionDialog(Employer employer) async {

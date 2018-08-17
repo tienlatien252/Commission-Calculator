@@ -52,7 +52,7 @@ class _MyDrawerState extends State<MyDrawer> {
     Navigator
         .of(context)
         .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return EmployerSetup(title: 'Employers Setup', isInitialSetting: false);
+      return EmployerSetup(title: 'Manage Employers', isInitialSetting: false);
     }));
   }
 
@@ -92,7 +92,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 children: <Widget>[
                   ListTile(
                       leading: const Icon(Icons.edit),
-                      title: const Text('Employers\' Settings'),
+                      title: const Text('Manage Employers'),
                       onTap: () {
                         _openEmployersSetting(viewModel);
                       }),
