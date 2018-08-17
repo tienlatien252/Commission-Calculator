@@ -16,13 +16,12 @@ class _TodayViewModel {
       {this.employers,
       this.onGetCurrentEmployer,
       this.currentUser,
-      this.onLogout,
       this.currentEmployer});
   final List<Employer> employers;
   final Employer currentEmployer;
   final Function() onGetCurrentEmployer;
   final FirebaseUser currentUser;
-  final Function() onLogout;
+
 }
 
 class TodayView extends StatefulWidget {

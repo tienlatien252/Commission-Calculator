@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'models/employer.dart';
 import 'today_view.dart';
 import 'drawer.dart';
+import 'history_view.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -29,10 +30,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   List<Widget> _children = [
     TodayView(),
-    Container(
-        child: Center(
-      child: Text("History"),
-    )),
+    HistoryView(),
     Container(
         child: Center(
       child: Text("Calculator"),
