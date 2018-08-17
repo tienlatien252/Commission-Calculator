@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'models/employer.dart';
 import 'today_view.dart';
 import 'drawer.dart';
-import 'history_view.dart';
+import 'history_page/history_view.dart';
 
 class _HomeViewModel {
   _HomeViewModel(

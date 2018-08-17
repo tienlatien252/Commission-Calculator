@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'dart:async';
-import 'logic/app_state.dart';
-import 'models/employer.dart';
+import '../logic/app_state.dart';
+import '../models/employer.dart';
 import 'add_new_employer_dialog.dart';
 
 class _EmployersViewModel {

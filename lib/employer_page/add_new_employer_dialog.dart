@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'dart:async';
-import 'logic/app_state.dart';
-import 'models/employer.dart';
+import '../logic/app_state.dart';
+import '../models/employer.dart';
 
 class _AddNewEmployerViewModel {
   final Function() onChangeEmployers;

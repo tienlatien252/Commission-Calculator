@@ -6,7 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
-import 'employerSetup.dart';
+import 'employer_page/employerSetup.dart';
 import 'home_page.dart';
 import 'models/employer.dart';
 import 'logic/middleware.dart';

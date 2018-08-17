@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import 'models/employer.dart';
-import 'logic/app_state.dart';
-import 'models/commission.dart';
+import '../models/employer.dart';
+import '../logic/app_state.dart';
+import '../models/commission.dart';
 
 class _HistoryViewModel {
   _HistoryViewModel({this.currentUser, this.currentEmployer});
@@ -37,22 +37,22 @@ class _HistoryViewState extends State<HistoryView> {
       CheckedPopupMenuItem<ViewOption>(
         checked: _checked[ViewOption.day.index],
         value: ViewOption.day,
-        child: const Text('Day'),
+        child: const Text('Day', style: TextStyle(fontSize: 20.0)),
       ),
       CheckedPopupMenuItem<ViewOption>(
         checked: _checked[ViewOption.week.index],
         value: ViewOption.week,
-        child: const Text('Week'),
+        child: const Text('Week', style: TextStyle(fontSize: 20.0)),
       ),
       CheckedPopupMenuItem<ViewOption>(
         checked: _checked[ViewOption.month.index],
         value: ViewOption.month,
-        child: const Text('Month'),
+        child: const Text('Month', style: TextStyle(fontSize: 20.0)),
       ),
       CheckedPopupMenuItem<ViewOption>(
         checked: _checked[ViewOption.year.index],
         value: ViewOption.year,
-        child: const Text('Year'),
+        child: const Text('Year', style: TextStyle(fontSize: 20.0)),
       ),
     ];
 

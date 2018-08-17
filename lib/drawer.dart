@@ -8,8 +8,8 @@ import 'dart:async';
 import 'models/employer.dart';
 import 'logic/app_state.dart';
 import 'main.dart';
-import 'employers_list_view.dart';
-import 'employerSetup.dart';
+import 'employer_page/employers_list_view.dart';
+import 'employer_page/employerSetup.dart';
 
 class _DrawerViewModel {
   _DrawerViewModel(
