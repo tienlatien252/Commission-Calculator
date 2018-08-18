@@ -85,18 +85,17 @@ class _EmployersListViewState extends State<EmployersListView> {
     
     bool isCurrentEmployer = viewModel.currentEmployer != null ? employer.employerId == viewModel.currentEmployer.employerId : false;
 
-    return Card(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            onTap: () => selectEmployer(viewModel, employer),
-            selected: isCurrentEmployer,
-            leading: const Icon(Icons.store),
-            subtitle: Text((employer.commissionRate * 100).toString() + "%"),
-            title: employersList,
-          ),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        ListTile(
+          onTap: () => selectEmployer(viewModel, employer),
+          selected: isCurrentEmployer,
+          leading: const Icon(Icons.store),
+          subtitle: Text((employer.commissionRate * 100).toString() + "%"),
+          title: employersList,
+        ),
+        Divider()
+      ],
     );
   }
 

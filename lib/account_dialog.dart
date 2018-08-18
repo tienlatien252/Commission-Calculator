@@ -49,11 +49,12 @@ class _AccountDialogState extends State<AccountDialog> {
 
   _openEmployersSetting(_DrawerViewModel viewModel) {
     print("openEmployersSetting");
-    Navigator
-        .of(context)
-        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return EmployerSetup(title: 'Manage Employers', isInitialSetting: false);
-    }));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => EmployerSetup(
+              title: 'Manage Employers', isInitialSetting: false)),
+    );
   }
 
   @override
@@ -85,10 +86,12 @@ class _AccountDialogState extends State<AccountDialog> {
                     accountName: Text(displayName),
                     accountEmail: Text(viewModel.currentUser.email),
                     currentAccountPicture: accountPicture),
+                ListTile(
+                    title: const Text('Employers List', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),),
+                    ),
                 EmployersListView(
                   isDrawer: true,
                 ),
-                Divider()
               ]),
               Column(
                 children: <Widget>[
