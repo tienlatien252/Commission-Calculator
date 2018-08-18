@@ -39,6 +39,17 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
     }
   }
 
+  onPressBackButton(){
+    setState(() {
+          date = date.subtract(Duration(days: 1));
+        });
+  }
+  onPressNextButton(){
+    setState(() {
+          date = date.add(Duration(days: 1));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _HistoryDayModeViewModel>(
@@ -78,6 +89,14 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
               child: DayEditView(
             date: date,
             commission: commission,
+            nextButton: IconButton(
+              icon: Icon(Icons.keyboard_arrow_right),
+              onPressed: onPressNextButton,
+            ),
+            backButton: IconButton(
+              icon: Icon(Icons.keyboard_arrow_left),
+              onPressed: onPressBackButton,
+            )
           ))
         ],
       );

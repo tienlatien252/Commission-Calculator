@@ -32,14 +32,14 @@ class _CommissionViewState extends State<CommissionView> {
   @override
   Widget build(BuildContext context) {
     Commission commission = widget.commission;
-    return Container(
+    return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Row(
+              Column(
                 children: <Widget>[
                   Text(
                     'raw:',
@@ -48,16 +48,16 @@ class _CommissionViewState extends State<CommissionView> {
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.raw.toString(),
-                          style: TextStyle(fontSize: 30.0)))
+                          style: TextStyle(fontSize: 20.0)))
                 ],
               ),
-              Row(
+              Column(
                 children: <Widget>[
                   Text('commission:', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.commission.toString(),
-                          style: TextStyle(fontSize: 30.0)))
+                          style: TextStyle(fontSize: 20.0)))
                 ],
               )
             ],
@@ -65,22 +65,22 @@ class _CommissionViewState extends State<CommissionView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Row(
+              Column(
                 children: <Widget>[
                   Text('tip:', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.tip.toString(),
-                          style: TextStyle(fontSize: 30.0)))
+                          style: TextStyle(fontSize: 20.0)))
                 ],
               ),
-              Row(
+              Column(
                 children: <Widget>[
                   Text('total:', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.total.toString(),
-                          style: TextStyle(fontSize: 30.0)))
+                          style: TextStyle(fontSize: 20.0)))
                 ],
               )
             ],
@@ -92,9 +92,13 @@ class _CommissionViewState extends State<CommissionView> {
 }
 
 class DayEditView extends StatefulWidget {
-  DayEditView({Key key, this.date, this.commission}) : super(key: key);
+  DayEditView(
+      {Key key, this.date, this.commission, this.nextButton, this.backButton})
+      : super(key: key);
   final DateTime date;
   final Commission commission;
+  final Widget nextButton;
+  final Widget backButton;
 
   @override
   _DayEditViewState createState() => _DayEditViewState();
@@ -162,11 +166,20 @@ class _DayEditViewState extends State<DayEditView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               commission = _getCommissionData(snapshot);
+              Widget dataAndButton = widget.backButton != null
+                  ? Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        widget.backButton,
+                        CommissionView(commission: commission),
+                        widget.nextButton
+                      ],
+                    ))
+                  : CommissionView(commission: commission);
               return Column(
                 children: <Widget>[
-                  Expanded(
-                      child: CommissionView(
-                          commission: commission)),
+                  dataAndButton,
                   Container(
                     alignment: AlignmentDirectional.bottomEnd,
                     padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
