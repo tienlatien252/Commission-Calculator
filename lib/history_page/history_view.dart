@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../models/employer.dart';
 import '../logic/app_state.dart';
 import '../models/commission.dart';
+import 'history_day_mode_view.dart';
 
 class _HistoryViewModel {
   _HistoryViewModel({this.currentUser, this.currentEmployer});
@@ -59,10 +60,7 @@ class _HistoryViewState extends State<HistoryView> {
     List<Widget> rangeType = [
       Container(
           padding: EdgeInsets.all(10.0),
-          child: Text(
-            'Day',
-            style: TextStyle(fontSize: 20.0),
-          )),
+          child: Text('Day', style: TextStyle(fontSize: 20.0))),
       Container(
           padding: EdgeInsets.all(10.0),
           child: Text('Week', style: TextStyle(fontSize: 20.0))),
@@ -73,6 +71,22 @@ class _HistoryViewState extends State<HistoryView> {
           padding: EdgeInsets.all(10.0),
           child: Text('Year', style: TextStyle(fontSize: 20.0))),
     ];
+
+    List<Widget> historyModeViewsArray = [
+      Container(
+          padding: EdgeInsets.all(10.0),
+          child: HistoryDayModeView()),
+      Container(
+          padding: EdgeInsets.all(10.0),
+          child: Text('Week', style: TextStyle(fontSize: 20.0))),
+      Container(
+          padding: EdgeInsets.all(10.0),
+          child: Text('Month', style: TextStyle(fontSize: 20.0))),
+      Container(
+          padding: EdgeInsets.all(10.0),
+          child: Text('Year', style: TextStyle(fontSize: 20.0))),
+    ];
+
 
     return StoreConnector<AppState, _HistoryViewModel>(
       converter: (store) {
@@ -112,6 +126,7 @@ class _HistoryViewState extends State<HistoryView> {
                     )
                   ],
                 )),
+            Expanded(child: historyModeViewsArray[_selection.index],)
           ],
         );
       },

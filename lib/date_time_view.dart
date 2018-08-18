@@ -10,13 +10,6 @@ class OneDayView extends StatelessWidget {
   Widget build(BuildContext context) {
     var formatter = new DateFormat.yMMMMEEEEd();
     String formatted = formatter.format(date);
-
-    return Container(
-      color: Colors.greenAccent,
-      padding: EdgeInsets.all(10.0),
-          child: Center(
-        child: Text(formatted, style: TextStyle(fontSize: 20.0)),
-      ),
-    );
+    return Text(formatted, style: TextStyle(fontSize: 20.0));
   }
 }

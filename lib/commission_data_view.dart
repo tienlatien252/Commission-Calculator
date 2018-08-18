@@ -92,16 +92,16 @@ class _CommissionViewState extends State<CommissionView> {
 }
 
 class DayEditView extends StatefulWidget {
-  DayEditView({Key key, this.date}) : super(key: key);
+  DayEditView({Key key, this.date, this.commission}) : super(key: key);
   final DateTime date;
+  final Commission commission;
 
   @override
   _DayEditViewState createState() => _DayEditViewState();
 }
 
 class _DayEditViewState extends State<DayEditView> {
-  Commission commission =
-      Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+  Commission commission;
 
   Future _getCommission(_DayEditViewModel viewModel) {
     String id = viewModel.currentUser.uid;
@@ -128,6 +128,7 @@ class _DayEditViewState extends State<DayEditView> {
           tip: retunredCommission['tip'].toDouble(),
           total: retunredCommission['total'].toDouble(),
           id: snapshot.data.documents[0].documentID);
+
       return commission;
     }
     return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
@@ -160,11 +161,12 @@ class _DayEditViewState extends State<DayEditView> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
+              commission = _getCommissionData(snapshot);
               return Column(
                 children: <Widget>[
                   Expanded(
                       child: CommissionView(
-                          commission: _getCommissionData(snapshot))),
+                          commission: commission)),
                   Container(
                     alignment: AlignmentDirectional.bottomEnd,
                     padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
