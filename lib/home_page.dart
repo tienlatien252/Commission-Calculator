@@ -5,6 +5,7 @@ import 'models/employer.dart';
 import 'today_view.dart';
 import 'drawer.dart';
 import 'history_page/history_view.dart';
+import 'account_dialog.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -43,13 +44,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _openAddEntryDialog() {
+  Navigator.of(context).push(new MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return new AccountDialog();
+      },
+    fullscreenDialog: true
+  ));
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: _openAddEntryDialog,
+          )
+        ],
       ),
-      drawer: MyDrawer(),
+      //drawer: MyDrawer(),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
