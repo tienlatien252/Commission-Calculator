@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import 'models/employer.dart';
 import 'today_view.dart';
+import 'logic/app_state.dart';
 import 'drawer.dart';
 import 'history_page/history_view.dart';
 import 'account_dialog.dart';
@@ -45,13 +47,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openAddEntryDialog() {
-  Navigator.of(context).push(new MaterialPageRoute<Null>(
-      builder: (BuildContext context) {
-        return new AccountDialog();
-      },
-    fullscreenDialog: true
-  ));
-}
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new AccountDialog();
+        },
+        fullscreenDialog: true));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +60,21 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: _openAddEntryDialog,
-          )
+          StoreConnector<AppState, _HomeViewModel>(converter: (store) {
+            return _HomeViewModel(currentUser: store.state.currentUser);
+          }, builder: (BuildContext context, _HomeViewModel viewModel) {
+            Widget accountIcon = Icon(Icons.account_circle);
+            if (viewModel.currentUser.photoUrl != null) {
+              accountIcon = CircleAvatar(
+                backgroundImage: NetworkImage(viewModel.currentUser.photoUrl),
+                maxRadius: 16.0,
+              );
+            }
+            return IconButton(
+              icon: accountIcon,
+              onPressed: _openAddEntryDialog,
+            );
+          }),
         ],
       ),
       //drawer: MyDrawer(),

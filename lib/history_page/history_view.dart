@@ -6,6 +6,7 @@ import '../models/employer.dart';
 import '../logic/app_state.dart';
 import '../models/commission.dart';
 import 'history_day_mode_view.dart';
+import 'history_week_mode_view.dart';
 
 class _HistoryViewModel {
   _HistoryViewModel({this.currentUser, this.currentEmployer});
@@ -46,15 +47,13 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     List<Widget> historyModeViewsArray = [
-      Container(padding: EdgeInsets.all(10.0), child: HistoryDayModeView()),
+      Container(child: HistoryDayModeView()),
+      Container(child: HistoryWeekModeView()),
       Container(
-          padding: EdgeInsets.all(10.0),
-          child: Text('Week', style: TextStyle(fontSize: 20.0))),
-      Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(top: 10.0),
           child: Text('Month', style: TextStyle(fontSize: 20.0))),
       Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(top: 10.0),
           child: Text('Year', style: TextStyle(fontSize: 20.0))),
     ];
 

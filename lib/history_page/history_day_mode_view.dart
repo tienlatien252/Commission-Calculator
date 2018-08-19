@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import '../models/employer.dart';
@@ -7,12 +9,17 @@ import '../logic/app_state.dart';
 import '../commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
+import '../edit_data_view.dart';
 
 class _HistoryDayModeViewModel {
-  _HistoryDayModeViewModel({this.currentEmployer});
+  _HistoryDayModeViewModel({this.currentUser, this.currentEmployer});
 
   final Employer currentEmployer;
+  final FirebaseUser currentUser;
 }
+
+
+
 
 class HistoryDayModeView extends StatefulWidget {
   HistoryDayModeView({Key key}) : super(key: key);
@@ -39,15 +46,16 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
     }
   }
 
-  onPressBackButton(){
+  onPressBackButton() {
     setState(() {
-          date = date.subtract(Duration(days: 1));
-        });
+      date = date.subtract(Duration(days: 1));
+    });
   }
-  onPressNextButton(){
+
+  onPressNextButton() {
     setState(() {
-          date = date.add(Duration(days: 1));
-        });
+      date = date.add(Duration(days: 1));
+    });
   }
 
   @override
@@ -61,43 +69,37 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
         children: <Widget>[
           Container(
               color: Colors.greenAccent,
-              padding: EdgeInsets.all(10.0),
+              //padding: EdgeInsets.all(10.0),
               child: Center(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    FlatButton(
-                        child: Column(
-                          children: <Widget>[
-                            Text("Select Date"),
-                            Icon(Icons.calendar_today, color: Colors.red,)
-                          ],
-                        ),
-                        onPressed: () => onPressCalender(context)),
-                    // IconButton(
-                    //   icon: Icon(Icons.calendar_today),
-                    //   color: Colors.red,
-                    //   onPressed: () => onPressCalender(context),
-                    // ),
-                    OneDayView(
-                      date: date,
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: OneDayView(
+                        date: date,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      color: Colors.red,
+                      onPressed: () => onPressCalender(context),
                     ),
                   ],
                 ),
               )),
           Expanded(
               child: DayEditView(
-            date: date,
-            commission: commission,
-            nextButton: IconButton(
-              icon: Icon(Icons.keyboard_arrow_right),
-              onPressed: onPressNextButton,
-            ),
-            backButton: IconButton(
-              icon: Icon(Icons.keyboard_arrow_left),
-              onPressed: onPressBackButton,
-            )
-          ))
+                  date: date,
+                  commission: commission,
+                  nextButton: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_right),
+                    onPressed: onPressNextButton,
+                  ),
+                  backButton: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_left),
+                    onPressed: onPressBackButton,
+                  )))
         ],
       );
     });

@@ -31,18 +31,20 @@ class _TodayViewState extends State<TodayView> {
       return Column(
         children: <Widget>[
           Container(
-              padding: EdgeInsets.all(10.0),
+            alignment: AlignmentDirectional.centerStart,
+              padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
               child: Text(
                 viewModel.currentEmployer.name,
                 style: TextStyle(fontSize: 30.0),
               )),
           Container(
-      color: Colors.greenAccent,
-      padding: EdgeInsets.all(10.0),
-          child: Center(
-        child: OneDayView(date: date,),
-      ),
-    ),
+            alignment: AlignmentDirectional.centerStart,
+            color: Colors.greenAccent,
+            padding: EdgeInsets.fromLTRB(10.0, 13.0, 10.0, 13.0),
+            child: OneDayView(
+              date: date,
+            ),
+          ),
           Expanded(child: DayEditView(date: date))
         ],
       );

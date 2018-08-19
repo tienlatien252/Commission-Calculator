@@ -71,8 +71,8 @@ class _AccountDialogState extends State<AccountDialog> {
           : viewModel.currentUser.displayName;
       Widget accountPicture = viewModel.currentUser.photoUrl != null
           ? CircleAvatar(
-              backgroundColor: Colors.amber,
-              child: Image.network(viewModel.currentUser.photoUrl))
+              //backgroundColor: Colors.amber,
+              child: Image.network(viewModel.currentUser.photoUrl),)
           : Icon(Icons.account_circle); //FlutterLogo(size: 42.0);
       return Scaffold(
         appBar: AppBar(

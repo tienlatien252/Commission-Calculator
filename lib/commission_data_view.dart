@@ -42,22 +42,22 @@ class _CommissionViewState extends State<CommissionView> {
               Column(
                 children: <Widget>[
                   Text(
-                    'raw:',
+                    'Raw',
                     style: TextStyle(fontSize: 20.0),
                   ),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.raw.toString(),
-                          style: TextStyle(fontSize: 20.0)))
+                          style: TextStyle(fontSize: 30.0)))
                 ],
               ),
               Column(
                 children: <Widget>[
-                  Text('commission:', style: TextStyle(fontSize: 20.0)),
+                  Text('Commission', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.commission.toString(),
-                          style: TextStyle(fontSize: 20.0)))
+                          style: TextStyle(fontSize: 30.0)))
                 ],
               )
             ],
@@ -67,20 +67,20 @@ class _CommissionViewState extends State<CommissionView> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text('tip:', style: TextStyle(fontSize: 20.0)),
+                  Text('Tip', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.tip.toString(),
-                          style: TextStyle(fontSize: 20.0)))
+                          style: TextStyle(fontSize: 30.0)))
                 ],
               ),
               Column(
                 children: <Widget>[
-                  Text('total:', style: TextStyle(fontSize: 20.0)),
+                  Text('Total', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.total.toString(),
-                          style: TextStyle(fontSize: 20.0)))
+                          style: TextStyle(fontSize: 30.0)))
                 ],
               )
             ],
@@ -90,6 +90,7 @@ class _CommissionViewState extends State<CommissionView> {
     );
   }
 }
+
 
 class DayEditView extends StatefulWidget {
   DayEditView(
