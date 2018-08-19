@@ -47,7 +47,7 @@ class _CommissionViewState extends State<CommissionView> {
                   ),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text("\$" + commission.raw.toString(),
+                      child: Text("\$" + commission.raw.toStringAsFixed(2),
                           style: TextStyle(fontSize: 30.0)))
                 ],
               ),
@@ -56,7 +56,7 @@ class _CommissionViewState extends State<CommissionView> {
                   Text('Commission', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text("\$" + commission.commission.toString(),
+                      child: Text("\$" + commission.commission.toStringAsFixed(2),
                           style: TextStyle(fontSize: 30.0)))
                 ],
               )
@@ -70,7 +70,7 @@ class _CommissionViewState extends State<CommissionView> {
                   Text('Tip', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text("\$" + commission.tip.toString(),
+                      child: Text("\$" + commission.tip.toStringAsFixed(2),
                           style: TextStyle(fontSize: 30.0)))
                 ],
               ),
@@ -79,7 +79,7 @@ class _CommissionViewState extends State<CommissionView> {
                   Text('Total', style: TextStyle(fontSize: 20.0)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text("\$" + commission.total.toString(),
+                      child: Text("\$" + commission.total.toStringAsFixed(2),
                           style: TextStyle(fontSize: 30.0)))
                 ],
               )
