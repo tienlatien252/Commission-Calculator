@@ -7,6 +7,7 @@ import '../logic/app_state.dart';
 import '../models/commission.dart';
 import 'history_day_mode_view.dart';
 import 'history_week_mode_view.dart';
+import 'history_month_mode_view.dart';
 
 class _HistoryViewModel {
   _HistoryViewModel({this.currentUser, this.currentEmployer});
@@ -49,9 +50,7 @@ class _HistoryViewState extends State<HistoryView> {
     List<Widget> historyModeViewsArray = [
       Container(child: HistoryDayModeView()),
       Container(child: HistoryWeekModeView()),
-      Container(
-          padding: EdgeInsets.only(top: 10.0),
-          child: Text('Month', style: TextStyle(fontSize: 20.0))),
+      Container(child: HistoryMonthModeView()),
       Container(
           padding: EdgeInsets.only(top: 10.0),
           child: Text('Year', style: TextStyle(fontSize: 20.0))),
