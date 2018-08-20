@@ -12,14 +12,8 @@ import 'employer_page/employers_list_view.dart';
 import 'employer_page/employerSetup.dart';
 
 class _DrawerViewModel {
-  _DrawerViewModel(
-      {this.employers,
-      this.onGetCurrentEmployer,
-      this.currentUser,
-      this.onLogout});
-  final List<Employer> employers;
-  final Function() onGetCurrentEmployer;
-  final FirebaseUser currentUser;
+  _DrawerViewModel({this.onLogout});
+
   final Function() onLogout;
 }
 
@@ -43,11 +37,11 @@ class _AccountDialogState extends State<AccountDialog> {
     );
   }
 
-  _openSetting(_DrawerViewModel viewModel) {
+  _openSetting() {
     print("openSetting");
   }
 
-  _openEmployersSetting(_DrawerViewModel viewModel) {
+  _openEmployersSetting() {
     print("openEmployersSetting");
     Navigator.pushReplacement(
       context,
@@ -59,67 +53,89 @@ class _AccountDialogState extends State<AccountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _DrawerViewModel>(
-        converter: (Store<AppState> store) {
-      return _DrawerViewModel(
-          onLogout: () => store.dispatch(new LogoutAction()),
-          employers: store.state.employers,
-          currentUser: store.state.currentUser);
-    }, builder: (BuildContext context, _DrawerViewModel viewModel) {
-      String displayName = viewModel.currentUser.displayName == null
-          ? 'Name'
-          : viewModel.currentUser.displayName;
-      Widget accountPicture = viewModel.currentUser.photoUrl != null
-          ? CircleAvatar(
-              //backgroundColor: Colors.amber,
-              child: Image.network(viewModel.currentUser.photoUrl),)
-          : Icon(Icons.account_circle); //FlutterLogo(size: 42.0);
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Account"),
-        ),
-        body: ListView(
-          children: <Widget>[
-            Column(children: [
-              Column(children: [
-                UserAccountsDrawerHeader(
-                    accountName: Text(displayName),
-                    accountEmail: Text(viewModel.currentUser.email),
-                    currentAccountPicture: accountPicture),
-                ListTile(
-                    title: const Text('Employers List', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),),
-                    ),
-                EmployersListView(
-                  isDrawer: true,
-                ),
-              ]),
-              Column(
+    return FutureBuilder(
+      future: FirebaseAuth.instance.currentUser(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            FirebaseUser currentUser = snapshot.data;
+            String displayName = currentUser.displayName == null
+                ? 'Name'
+                : currentUser.displayName;
+            Widget accountPicture = currentUser.photoUrl != null
+                ? CircleAvatar(
+                    //backgroundColor: Colors.amber,
+                    child: Image.network(currentUser.photoUrl),
+                  )
+                : Icon(Icons.account_circle);
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("Account"),
+              ),
+              body: ListView(
                 children: <Widget>[
-                  ListTile(
-                      leading: const Icon(Icons.edit),
-                      title: const Text('Manage Employers'),
-                      onTap: () {
-                        _openEmployersSetting(viewModel);
-                      }),
-                  ListTile(
-                      leading: const Icon(Icons.settings),
-                      title: const Text('Settings'),
-                      onTap: () {
-                        _openSetting(viewModel);
-                      }),
-                  ListTile(
-                      leading: const Icon(Icons.exit_to_app),
-                      title: const Text('Logout'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _signOut(viewModel);
-                      }),
+                  Column(children: [
+                    Column(children: [
+                      UserAccountsDrawerHeader(
+                          accountName: Text(displayName),
+                          accountEmail: Text(currentUser.email),
+                          currentAccountPicture: accountPicture),
+                      ListTile(
+                        title: const Text(
+                          'Employers List',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                        ),
+                      ),
+                      EmployersListView(
+                        isDrawer: true,
+                      ),
+                    ]),
+                    StoreConnector<AppState, _DrawerViewModel>(
+                        converter: (Store<AppState> store) {
+                      return _DrawerViewModel(
+                          onLogout: () => store.dispatch(new LogoutAction()));
+                    }, builder:
+                            (BuildContext context, _DrawerViewModel viewModel) {
+                      //FlutterLogo(size: 42.0);
+                      return Column(
+                        children: <Widget>[
+                          ListTile(
+                              leading: const Icon(Icons.edit),
+                              title: const Text('Manage Employers'),
+                              onTap: () {
+                                _openEmployersSetting();
+                              }),
+                          ListTile(
+                              leading: const Icon(Icons.settings),
+                              title: const Text('Settings'),
+                              onTap: () {
+                                _openSetting();
+                              }),
+                          ListTile(
+                              leading: const Icon(Icons.exit_to_app),
+                              title: const Text('Logout'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                _signOut(viewModel);
+                              }),
+                        ],
+                      );
+                    }),
+                  ])
                 ],
-              )
-            ])
-          ],
-        ),
-      );
-    });
+              ),
+            );
+
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          default:
+            if (snapshot.hasError)
+              return Text('Error: ${snapshot.error}');
+            else
+              return Text('Result: ${snapshot.data}');
+        }
+      },
+    );
   }
 }
