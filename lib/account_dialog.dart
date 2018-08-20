@@ -18,23 +18,16 @@ class _DrawerViewModel {
 }
 
 class AccountDialog extends StatefulWidget {
-  AccountDialog({Key key}) : super(key: key);
+  AccountDialog({Key key, this.onSignedOut}) : super(key: key);
+  final VoidCallback onSignedOut;
 
   @override
   _AccountDialogState createState() => _AccountDialogState();
 }
 
 class _AccountDialogState extends State<AccountDialog> {
-  Future _signOut(_DrawerViewModel viewModel) async {
-    await FirebaseAuth.instance.signOut();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('seen', false);
-
-    viewModel.onLogout();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-    );
+  _signOut(_DrawerViewModel viewModel) {
+    Navigator.pop(context, true);
   }
 
   _openSetting() {
@@ -116,7 +109,7 @@ class _AccountDialogState extends State<AccountDialog> {
                               leading: const Icon(Icons.exit_to_app),
                               title: const Text('Logout'),
                               onTap: () {
-                                Navigator.pop(context);
+                                //Navigator.pop(context);
                                 _signOut(viewModel);
                               }),
                         ],

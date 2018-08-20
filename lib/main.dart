@@ -13,6 +13,7 @@ import 'logic/middleware.dart';
 import 'logic/app_state.dart';
 import 'logic/reducer.dart';
 import 'login_modules/login_page.dart';
+import 'root_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,16 +56,10 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: SignInScreen(
-                store: store,
-                title: widget.title,
-                header: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Text("Demo"),
-                  ),
-                ))));
+            home: RootPage(
+              store: store,
+              title: widget.title,
+            )));
   }
 }
 
