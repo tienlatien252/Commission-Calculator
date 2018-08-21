@@ -68,20 +68,22 @@ class _CalculatorPageState extends State<CalculatorPage> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverPersistentHeader(
-                  delegate: _SliverTopBarDelegate(TimeRangePickerView(
-                onPickEndDate: () => onPickEndDate(context),
-                onPickStartDate: () => onPickStartDate(context),
-                startDate: startDate,
-                endDate: endDate,
-              ))),
+                  floating: false,
+                  delegate: _SliverTopBarDelegate(
+                      TimeRangePickerView(
+                        onPickEndDate: () => onPickEndDate(context),
+                        onPickStartDate: () => onPickStartDate(context),
+                        startDate: startDate,
+                        endDate: endDate,
+                      ),
+                      viewModel: viewModel)),
             ];
           },
           body: //Text('sample')
-          CustomDataView(
+              CustomDataView(
             startDate: startDate,
             endDate: endDate,
-          )
-          );
+          ));
     });
   }
 }
@@ -112,16 +114,12 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text("Start:"),
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: ShortOneDayView(
-                    date: widget.startDate,
-                  ),
-                ),
-              ],
+            Text("Start Date:"),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: ShorterOneDayView(
+                date: widget.startDate,
+              ),
             ),
             IconButton(
               icon: Icon(Icons.calendar_today),
@@ -134,16 +132,12 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text("End:"),
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: ShortOneDayView(
-                    date: widget.endDate,
-                  ),
-                ),
-              ],
+            Text("End Date:"),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: ShorterOneDayView(
+                date: widget.endDate,
+              ),
             ),
             IconButton(
               icon: Icon(Icons.calendar_today),
@@ -320,7 +314,7 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
     }
 
     return ExpansionTile(
-      leading: ShortOneDayView(date: widget.listCommissions[index].date),
+      leading: ShorterOneDayView(date: widget.listCommissions[index].date),
       title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -341,20 +335,29 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
 }
 
 class _SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverTopBarDelegate(this._timeRangePicker);
+  _SliverTopBarDelegate(this._timeRangePicker, {this.viewModel});
   final TimeRangePickerView _timeRangePicker;
+  final __CalculatorPageViewModel viewModel;
 
   @override
-  double get minExtent => 150.0;
+  double get minExtent => 170.0;
   @override
-  double get maxExtent => 150.0;
+  double get maxExtent => 170.0;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
-      child: _timeRangePicker,
-    );
+    return Column(children: <Widget>[
+      Container(
+          alignment: AlignmentDirectional.centerStart,
+          padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
+          child: Text(
+            viewModel.currentEmployer.name,
+            style: TextStyle(fontSize: 30.0),
+          )),
+      _timeRangePicker
+    ]);
   }
+
   @override
   bool shouldRebuild(_SliverTopBarDelegate oldDelegate) {
     return false;
