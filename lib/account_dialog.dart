@@ -58,46 +58,78 @@ class _AccountDialogState extends State<AccountDialog> {
               appBar: AppBar(
                 title: Text("Account"),
               ),
-              body: ListView(
+              body: Column(
                 children: <Widget>[
-                  Column(children: [
-                    Column(children: [
-                      UserAccountsDrawerHeader(
-                          accountName: Text(displayName),
-                          accountEmail: Text(currentUser.email),
-                          currentAccountPicture: accountPicture),
-                      ListTile(
-                        title: const Text(
-                          'Employers List',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.0),
-                        ),
-                      ),
-                      EmployersListView(
-                        isDrawer: true,
-                      ),
-                    ]),
-                    Column(
-                      children: <Widget>[
-                        ListTile(
-                            leading: const Icon(Icons.edit),
-                            title: const Text('Manage Employers'),
-                            onTap: () {
-                              _openEmployersSetting();
-                            }),
-                        ListTile(
-                            leading: const Icon(Icons.settings),
-                            title: const Text('Settings'),
-                            onTap: () {
-                              _openSetting();
-                            }),
-                        ListTile(
-                            leading: const Icon(Icons.exit_to_app),
-                            title: const Text('Logout'),
-                            onTap: _signOut),
-                      ],
-                    )
-                  ])
+                  UserAccountsDrawerHeader(
+                      accountName: Text(displayName),
+                      accountEmail: Text(currentUser.email),
+                      currentAccountPicture: accountPicture),
+                  ListTile(
+                    title: const Text(
+                      'Employers List',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                  ),
+                  Expanded(
+                    child: EmployersListView(
+                      isDrawer: true,
+                    ),
+                  ),
+                  ListTile(
+                      leading: const Icon(Icons.edit),
+                      title: const Text('Manage Employers'),
+                      onTap: () {
+                        _openEmployersSetting();
+                      }),
+                  ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: () {
+                        _openSetting();
+                      }),
+                  ListTile(
+                      leading: const Icon(Icons.exit_to_app),
+                      title: const Text('Logout'),
+                      onTap: _signOut),
+                  //ListView(children: [
+                  // Column(children: [
+                  //   UserAccountsDrawerHeader(
+                  //       accountName: Text(displayName),
+                  //       accountEmail: Text(currentUser.email),
+                  //       currentAccountPicture: accountPicture),
+                  //   ListTile(
+                  //     title: const Text(
+                  //       'Employers List',
+                  //       style: TextStyle(
+                  //           fontWeight: FontWeight.bold, fontSize: 20.0),
+                  //     ),
+                  //   ),
+                  //   EmployersListView(
+                  //     isDrawer: true,
+                  //   ),
+                  // ]),
+                  // Column(
+                  //   children: <Widget>[
+                  //     ListTile(
+                  //         leading: const Icon(Icons.edit),
+                  //         title: const Text('Manage Employers'),
+                  //         onTap: () {
+                  //           _openEmployersSetting();
+                  //         }),
+                  //     ListTile(
+                  //         leading: const Icon(Icons.settings),
+                  //         title: const Text('Settings'),
+                  //         onTap: () {
+                  //           _openSetting();
+                  //         }),
+                  //     ListTile(
+                  //         leading: const Icon(Icons.exit_to_app),
+                  //         title: const Text('Logout'),
+                  //         onTap: _signOut),
+                  //   ],
+                  // )
+                  //])
                 ],
               ),
             );

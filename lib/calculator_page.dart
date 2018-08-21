@@ -64,27 +64,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
       return __CalculatorPageViewModel(
           currentEmployer: store.state.currentEmployer);
     }, builder: (BuildContext context, __CalculatorPageViewModel viewModel) {
-      return Column(
-        children: <Widget>[
-          Container(
-              alignment: AlignmentDirectional.centerStart,
-              padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
-              child: Text(
-                viewModel.currentEmployer.name,
-                style: TextStyle(fontSize: 30.0),
-              )),
-          TimeRangePickerView(
-            onPickEndDate: () => onPickEndDate(context),
-            onPickStartDate: () => onPickStartDate(context),
-            startDate: startDate,
-            endDate: endDate,
-          ),
+      return NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverPersistentHeader(
+                  delegate: _SliverTopBarDelegate(TimeRangePickerView(
+                onPickEndDate: () => onPickEndDate(context),
+                onPickStartDate: () => onPickStartDate(context),
+                startDate: startDate,
+                endDate: endDate,
+              ))),
+            ];
+          },
+          body: //Text('sample')
           CustomDataView(
             startDate: startDate,
             endDate: endDate,
           )
-        ],
-      );
+          );
     });
   }
 }
@@ -154,7 +151,7 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
               onPressed: () => widget.onPickEndDate(),
             ),
           ],
-        ))
+        )),
       ],
     );
   }
@@ -170,7 +167,8 @@ class CustomDataView extends StatefulWidget {
 }
 
 class _CustomDataViewState extends State<CustomDataView> {
-  Commission commission;
+  Commission totalCommission;
+  List<Commission> listCommissions;
 
   Future _getCommission(__CalculatorPageViewModel viewModel) {
     String id = viewModel.currentUser.uid;
@@ -190,22 +188,33 @@ class _CustomDataViewState extends State<CustomDataView> {
         .getDocuments();
   }
 
-  Commission _getCommissionData(AsyncSnapshot snapshot) {
+  List<Commission> _getAllCommissionsData(AsyncSnapshot snapshot) {
+    totalCommission =
+        Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+    listCommissions = List<Commission>();
     if (snapshot.data.documents.length != 0) {
-      commission = Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
       List<DocumentSnapshot> retunredCommissions = snapshot.data.documents;
 
       retunredCommissions.forEach((commissionData) {
-        commission.raw += commissionData.data['raw'].toDouble();
-        commission.commission += commissionData.data['commission'].toDouble();
-        commission.tip += commissionData.data['tip'].toDouble();
-        commission.total += commissionData.data['total'].toDouble();
-        commission.id == commissionData.documentID;
+        listCommissions.add(Commission(
+            commission: commissionData.data['raw'].toDouble(),
+            raw: commissionData.data['commission'].toDouble(),
+            tip: commissionData.data['tip'].toDouble(),
+            total: commissionData.data['total'].toDouble(),
+            date: commissionData.data['date'],
+            id: commissionData.documentID));
+        totalCommission.raw += commissionData.data['raw'].toDouble();
+        totalCommission.commission +=
+            commissionData.data['commission'].toDouble();
+        totalCommission.tip += commissionData.data['tip'].toDouble();
+        totalCommission.total += commissionData.data['total'].toDouble();
+        totalCommission.id == commissionData.documentID;
       });
-
-      return commission;
     }
-    return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+
+    listCommissions.add(totalCommission);
+    listCommissions = listCommissions.reversed.toList();
+    return listCommissions;
   }
 
   @override
@@ -221,8 +230,10 @@ class _CustomDataViewState extends State<CustomDataView> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              commission = _getCommissionData(snapshot);
-              return CommissionView(commission: commission);
+              listCommissions = _getAllCommissionsData(snapshot);
+              return AllCommissionsView(
+                listCommissions: listCommissions,
+              );
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             default:
@@ -234,5 +245,118 @@ class _CustomDataViewState extends State<CustomDataView> {
         },
       );
     });
+  }
+}
+
+class AllCommissionsView extends StatefulWidget {
+  AllCommissionsView({Key key, this.listCommissions}) : super(key: key);
+  final List<Commission> listCommissions;
+
+  @override
+  _AllCommissionsViewState createState() => _AllCommissionsViewState();
+}
+
+DateTime getDateOnly(DateTime dateAndTime) {
+  return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
+}
+
+class _AllCommissionsViewState extends State<AllCommissionsView> {
+  Widget dataBuilder(BuildContext context, int index) {
+    if (index == 0) {
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Result:',
+              style: TextStyle(fontSize: 25.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text('Commission', style: TextStyle(fontSize: 12.0)),
+                    Text(
+                        widget.listCommissions[index].commission
+                            .toStringAsFixed(2),
+                        style: TextStyle(fontSize: 20.0)),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text('Total', style: TextStyle(fontSize: 12.0)),
+                    Text(widget.listCommissions[index].total.toStringAsFixed(2),
+                        style: TextStyle(fontSize: 20.0)),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text('Commission', style: TextStyle(fontSize: 12.0)),
+                    Text(
+                        widget.listCommissions[index].commission
+                            .toStringAsFixed(2),
+                        style: TextStyle(fontSize: 20.0)),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text('Total', style: TextStyle(fontSize: 12.0)),
+                    Text(widget.listCommissions[index].total.toStringAsFixed(2),
+                        style: TextStyle(fontSize: 20.0)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ExpansionTile(
+      leading: ShortOneDayView(date: widget.listCommissions[index].date),
+      title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(widget.listCommissions[index].total.toStringAsFixed(2))
+          ]),
+      children: <Widget>[Text('place holder')],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: widget.listCommissions.length,
+      itemBuilder: dataBuilder,
+    );
+  }
+}
+
+class _SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverTopBarDelegate(this._timeRangePicker);
+  final TimeRangePickerView _timeRangePicker;
+
+  @override
+  double get minExtent => 150.0;
+  @override
+  double get maxExtent => 150.0;
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      child: _timeRangePicker,
+    );
+  }
+  @override
+  bool shouldRebuild(_SliverTopBarDelegate oldDelegate) {
+    return false;
   }
 }
