@@ -10,26 +10,27 @@ import '../commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
 
-class __HistoryMonthModeViewModel {
-  __HistoryMonthModeViewModel({this.currentUser, this.currentEmployer});
+class __HistoryYearModeViewModel {
+  __HistoryYearModeViewModel({this.currentUser, this.currentEmployer});
 
   final FirebaseUser currentUser;
   final Employer currentEmployer;
 }
 
-class HistoryMonthModeView extends StatefulWidget {
-  HistoryMonthModeView({Key key}) : super(key: key);
+class HistoryYearModeView extends StatefulWidget {
+  HistoryYearModeView({Key key}) : super(key: key);
   @override
-  _HistoryMonthModeViewState createState() => _HistoryMonthModeViewState();
+  _HistoryYearModeViewState createState() => _HistoryYearModeViewState();
 }
 
-class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
+class _HistoryYearModeViewState extends State<HistoryYearModeView> {
   DateTime date = DateTime.now();
   Commission commission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
 
   Future<Null> onPressCalender(BuildContext context) async {
     final datePicked = await showDatePicker(
+      initialDatePickerMode: DatePickerMode.year,
         context: context,
         initialDate: date,
         lastDate: DateTime.now(),
@@ -44,23 +45,23 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
 
   onPressBackButton() {
     setState(() {
-      date = DateTime(date.year,date.month-1);
+      date = DateTime(date.year -1);
     });
   }
 
   onPressNextButton() {
     setState(() {
-      date = DateTime(date.year,date.month+1);
+      date = DateTime(date.year +1);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, __HistoryMonthModeViewModel>(
+    return StoreConnector<AppState, __HistoryYearModeViewModel>(
         converter: (store) {
-      return __HistoryMonthModeViewModel(
+      return __HistoryYearModeViewModel(
           currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __HistoryMonthModeViewModel viewModel) {
+    }, builder: (BuildContext context, __HistoryYearModeViewModel viewModel) {
       return Column(
         children: <Widget>[
           Container(
@@ -72,7 +73,7 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.all(10.0),
-                      child: MonthStringView(
+                      child: YearStringView(
                         date: date,
                       ),
                     ),
@@ -85,7 +86,7 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
                 ),
               )),
           Expanded(
-              child: MonthDataView(
+              child: YearDataView(
                   date: date,
                   commission: commission,
                   nextButton: IconButton(
@@ -102,8 +103,8 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
   }
 }
 
-class MonthDataView extends StatefulWidget {
-  MonthDataView(
+class YearDataView extends StatefulWidget {
+  YearDataView(
       {Key key, this.date, this.commission, this.nextButton, this.backButton})
       : super(key: key);
   final DateTime date;
@@ -112,16 +113,16 @@ class MonthDataView extends StatefulWidget {
   final Widget backButton;
 
   @override
-  _MonthDataViewState createState() => _MonthDataViewState();
+  _YearDataViewState createState() => _YearDataViewState();
 }
 
-class _MonthDataViewState extends State<MonthDataView> {
+class _YearDataViewState extends State<YearDataView> {
   Commission commission;
 
-  Future _getCommission(__HistoryMonthModeViewModel viewModel) {
+  Future _getCommission(__HistoryYearModeViewModel viewModel) {
     String id = viewModel.currentUser.uid;
-    DateTime beginMonth = getDateOnly(beginOfMonth(widget.date));
-    DateTime endMonth = getDateOnly(endOfMonth(widget.date));
+    DateTime beginYear = getDateOnly(beginOfYear(widget.date));
+    DateTime endYear = getDateOnly(endOfYear(widget.date));
 
     String pathString = 'users/' +
         id +
@@ -131,8 +132,8 @@ class _MonthDataViewState extends State<MonthDataView> {
 
     return Firestore.instance
         .collection(pathString)
-        .where('date', isGreaterThanOrEqualTo: beginMonth)
-        .where('date', isLessThanOrEqualTo: endMonth)
+        .where('date', isGreaterThanOrEqualTo: beginYear)
+        .where('date', isLessThanOrEqualTo: endYear)
         .getDocuments();
   }
 
@@ -156,12 +157,12 @@ class _MonthDataViewState extends State<MonthDataView> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, __HistoryMonthModeViewModel>(
+    return StoreConnector<AppState, __HistoryYearModeViewModel>(
         converter: (store) {
-      return __HistoryMonthModeViewModel(
+      return __HistoryYearModeViewModel(
           currentUser: store.state.currentUser,
           currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __HistoryMonthModeViewModel viewModel) {
+    }, builder: (BuildContext context, __HistoryYearModeViewModel viewModel) {
       return FutureBuilder(
         future: _getCommission(viewModel),
         builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -8,6 +8,7 @@ import '../models/commission.dart';
 import 'history_day_mode_view.dart';
 import 'history_week_mode_view.dart';
 import 'history_month_mode_view.dart';
+import 'history_year_mode_view.dart';
 
 class _HistoryViewModel {
   _HistoryViewModel({this.currentUser, this.currentEmployer});
@@ -51,9 +52,7 @@ class _HistoryViewState extends State<HistoryView> {
       Container(child: HistoryDayModeView()),
       Container(child: HistoryWeekModeView()),
       Container(child: HistoryMonthModeView()),
-      Container(
-          padding: EdgeInsets.only(top: 10.0),
-          child: Text('Year', style: TextStyle(fontSize: 20.0))),
+      Container(child: HistoryYearModeView()),
     ];
 
     return StoreConnector<AppState, _HistoryViewModel>(

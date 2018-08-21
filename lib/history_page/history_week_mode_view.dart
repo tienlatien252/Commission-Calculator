@@ -34,7 +34,7 @@ class _HistoryWeekModeViewState extends State<HistoryWeekModeView> {
         context: context,
         initialDate: date,
         lastDate: DateTime.now(),
-        firstDate: DateTime(2016));
+        firstDate: DateTime(date.year -5));
 
     if (datePicked != null && datePicked != date) {
       setState(() {
