@@ -57,8 +57,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, __CalculatorPageViewModel>(
@@ -75,76 +73,97 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 viewModel.currentEmployer.name,
                 style: TextStyle(fontSize: 30.0),
               )),
-          Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("Start:"),
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: ShortOneDayView(
-                          date: startDate,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    color: Colors.red,
-                    onPressed: () => onPickStartDate(context),
-                  ),
-                ],
-              )),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("End:"),
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: ShortOneDayView(
-                          date: endDate,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    color: Colors.red,
-                    onPressed: () => onPickEndDate(context),
-                  ),
-                ],
-              )),
-          // Expanded(
-          //     child: CustomDataView(
-          //         date: date,
-          //         commission: commission,
-          //         nextButton: IconButton(
-          //           icon: Icon(Icons.keyboard_arrow_right),
-          //           onPressed: onPressNextButton,
-          //         ),
-          //         backButton: IconButton(
-          //           icon: Icon(Icons.keyboard_arrow_left),
-          //           onPressed: onPressBackButton,
-          //         )))
+          TimeRangePickerView(
+            onPickEndDate: () => onPickEndDate(context),
+            onPickStartDate: () => onPickStartDate(context),
+            startDate: startDate,
+            endDate: endDate,
+          ),
+          CustomDataView(
+            startDate: startDate,
+            endDate: endDate,
+          )
         ],
       );
     });
   }
 }
 
-class CustomDataView extends StatefulWidget {
-  CustomDataView(
-      {Key key, this.date, this.commission, this.nextButton, this.backButton})
+class TimeRangePickerView extends StatefulWidget {
+  TimeRangePickerView(
+      {Key key,
+      @required this.onPickStartDate,
+      @required this.onPickEndDate,
+      @required this.startDate,
+      @required this.endDate})
       : super(key: key);
-  final DateTime date;
-  final Commission commission;
-  final Widget nextButton;
-  final Widget backButton;
+  final Function onPickStartDate;
+  final Function onPickEndDate;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  @override
+  _TimeRangePickerViewState createState() => _TimeRangePickerViewState();
+}
+
+class _TimeRangePickerViewState extends State<TimeRangePickerView> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("Start:"),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: ShortOneDayView(
+                    date: widget.startDate,
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              color: Colors.red,
+              onPressed: () => widget.onPickStartDate(),
+            ),
+          ],
+        )),
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("End:"),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: ShortOneDayView(
+                    date: widget.endDate,
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              color: Colors.red,
+              onPressed: () => widget.onPickEndDate(),
+            ),
+          ],
+        ))
+      ],
+    );
+  }
+}
+
+class CustomDataView extends StatefulWidget {
+  CustomDataView({Key key, this.startDate, this.endDate}) : super(key: key);
+  final DateTime startDate;
+  final DateTime endDate;
 
   @override
   _CustomDataViewState createState() => _CustomDataViewState();
@@ -155,8 +174,8 @@ class _CustomDataViewState extends State<CustomDataView> {
 
   Future _getCommission(__CalculatorPageViewModel viewModel) {
     String id = viewModel.currentUser.uid;
-    DateTime beginYear = getDateOnly(beginOfYear(widget.date));
-    DateTime endYear = getDateOnly(endOfYear(widget.date));
+    DateTime formatedStartDate = getDateOnly(widget.startDate);
+    DateTime formatedEndDate = getDateOnly(widget.endDate);
 
     String pathString = 'users/' +
         id +
@@ -166,8 +185,8 @@ class _CustomDataViewState extends State<CustomDataView> {
 
     return Firestore.instance
         .collection(pathString)
-        .where('date', isGreaterThanOrEqualTo: beginYear)
-        .where('date', isLessThanOrEqualTo: endYear)
+        .where('date', isGreaterThanOrEqualTo: formatedStartDate)
+        .where('date', isLessThanOrEqualTo: formatedEndDate)
         .getDocuments();
   }
 
@@ -203,22 +222,7 @@ class _CustomDataViewState extends State<CustomDataView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               commission = _getCommissionData(snapshot);
-              Widget dataAndButton = widget.backButton != null
-                  ? Expanded(
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        widget.backButton,
-                        CommissionView(commission: commission),
-                        widget.nextButton
-                      ],
-                    ))
-                  : CommissionView(commission: commission);
-              return Column(
-                children: <Widget>[
-                  dataAndButton,
-                ],
-              );
+              return CommissionView(commission: commission);
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             default:
