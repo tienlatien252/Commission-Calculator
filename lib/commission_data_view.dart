@@ -110,7 +110,6 @@ class _DayEditViewState extends State<DayEditView> {
 
   Future _getCommission(_DayEditViewModel viewModel) {
     String id = viewModel.currentUser.uid;
-
     String pathString = 'users/' +
         id +
         '/employers/' +

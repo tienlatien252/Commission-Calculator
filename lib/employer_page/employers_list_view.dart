@@ -45,14 +45,15 @@ class _EmployersListViewState extends State<EmployersListView> {
         });
   }
 
-  selectEmployer(_EmployersViewModel viewModel, Employer employer){
+  selectEmployer(_EmployersViewModel viewModel, Employer employer) {
     viewModel.onGetCurrentEmployer(employer);
-    if(widget.isDrawer){
+    if (widget.isDrawer) {
       Navigator.pop(context);
     }
   }
 
-  Widget employerBuilder(BuildContext context, DocumentSnapshot document, _EmployersViewModel viewModel) {
+  Widget employerBuilder(BuildContext context, DocumentSnapshot document,
+      _EmployersViewModel viewModel) {
     Employer employer = Employer(
         name: document.data['name'],
         commissionRate: document.data['commission_rate'],
@@ -61,29 +62,31 @@ class _EmployersListViewState extends State<EmployersListView> {
     Widget employersList;
     if (!widget.isDrawer) {
       employersList = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-                  Text(employer.name),
-                  Row(children: <Widget>[
-        IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              _openEditEmployerDialog(employer);
-            }),
-        IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              deleteEmployer(employer);
-            })
-      ])]);
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(employer.name),
+            Row(children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    _openEditEmployerDialog(employer);
+                  }),
+              IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    deleteEmployer(employer);
+                  })
+            ])
+          ]);
     } else {
       employersList = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-                  Text(employer.name)]);
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[Text(employer.name)]);
     }
-    
-    bool isCurrentEmployer = viewModel.currentEmployer != null ? employer.employerId == viewModel.currentEmployer.employerId : false;
+
+    bool isCurrentEmployer = viewModel.currentEmployer != null
+        ? employer.employerId == viewModel.currentEmployer.employerId
+        : false;
 
     return Column(
       children: <Widget>[

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import '../models/employer.dart';
@@ -9,7 +8,6 @@ import '../logic/app_state.dart';
 import '../commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
-import '../edit_data_view.dart';
 
 class _HistoryDayModeViewModel {
   _HistoryDayModeViewModel({this.currentUser, this.currentEmployer});
@@ -17,9 +15,6 @@ class _HistoryDayModeViewModel {
   final Employer currentEmployer;
   final FirebaseUser currentUser;
 }
-
-
-
 
 class HistoryDayModeView extends StatefulWidget {
   HistoryDayModeView({Key key}) : super(key: key);
@@ -37,7 +32,7 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
         context: context,
         initialDate: date,
         lastDate: DateTime.now(),
-        firstDate: DateTime(2016));
+        firstDate: DateTime(date.year -5));
 
     if (datePicked != null && datePicked != date) {
       setState(() {

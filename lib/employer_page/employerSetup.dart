@@ -25,9 +25,10 @@ class _EmployersViewModel {
 }
 
 class EmployerSetup extends StatefulWidget {
-  EmployerSetup({Key key, this.title, this.isInitialSetting}) : super(key: key);
+  EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup}) : super(key: key);
   final String title;
   final bool isInitialSetting;
+  final VoidCallback seenSetup;
 
   @override
   _EmployerSetupState createState() => _EmployerSetupState();
@@ -72,14 +73,15 @@ class _EmployerSetupState extends State<EmployerSetup> {
             ],
           ),
         ),
-        floatingActionButton: NextButton(title: widget.title, isInitialSetting: widget.isInitialSetting,));
+        floatingActionButton: NextButton(title: widget.title, isInitialSetting: widget.isInitialSetting, seenSetup: widget.seenSetup,));
   }
 }
 
 class NextButton extends StatefulWidget {
-  NextButton({Key key, this.isInitialSetting, this.title}) : super(key: key);
+  NextButton({Key key, this.isInitialSetting, this.title, this.seenSetup}) : super(key: key);
   final String title;
   final bool isInitialSetting;
+  final VoidCallback seenSetup;
 
   @override
   _NextButtonState createState() => _NextButtonState();
@@ -100,10 +102,7 @@ class _NextButtonState extends State<NextButton> {
     if (widget.isInitialSetting) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('seen', true);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(title: widget.title)),
-      );
+      widget.seenSetup();
     } else{
       Navigator.pop(context);
     }

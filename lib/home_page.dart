@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/employer.dart';
 import 'today_view.dart';
@@ -22,8 +23,9 @@ class _HomeViewModel {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
   final String title;
+  final VoidCallback onSignedOut;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -46,12 +48,21 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _openAddEntryDialog() {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return new AccountDialog();
-        },
-        fullscreenDialog: true));
+  void _openAddEntryDialog(_HomeViewModel viewModel) async {
+    bool justLogOut = await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) {
+              return new AccountDialog(onSignedOut: widget.onSignedOut);
+            },
+            fullscreenDialog: true));
+    if (justLogOut != null && justLogOut) {
+      widget.onSignedOut();
+      viewModel.onLogout();
+      await FirebaseAuth.instance.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('seen', false);
+    }
   }
 
   @override
@@ -61,7 +72,9 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
         actions: <Widget>[
           StoreConnector<AppState, _HomeViewModel>(converter: (store) {
-            return _HomeViewModel(currentUser: store.state.currentUser);
+            return _HomeViewModel(
+                currentUser: store.state.currentUser,
+                onLogout: () => store.dispatch(new LogoutAction()));
           }, builder: (BuildContext context, _HomeViewModel viewModel) {
             Widget accountIcon = Icon(Icons.account_circle);
             if (viewModel.currentUser.photoUrl != null) {
@@ -72,7 +85,7 @@ class _HomePageState extends State<HomePage> {
             }
             return IconButton(
               icon: accountIcon,
-              onPressed: _openAddEntryDialog,
+              onPressed: () => _openAddEntryDialog(viewModel),
             );
           }),
         ],

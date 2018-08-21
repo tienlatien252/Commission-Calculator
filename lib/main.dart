@@ -13,6 +13,7 @@ import 'logic/middleware.dart';
 import 'logic/app_state.dart';
 import 'logic/reducer.dart';
 import 'login_modules/login_page.dart';
+import 'root_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,102 +37,38 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final store = Store<AppState>(reducer,
       initialState: AppState(), middleware: [middleware].toList());
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  StreamSubscription<FirebaseUser> _listener;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkCurrentUser();
-  }
-
-  @override
-  void dispose() {
-    _listener.cancel();
-    super.dispose();
-  }
-
-  Future checkFirstSeen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen = (prefs.getBool('seen') ?? false);
-
-    return _seen;
-  }
 
   @override
   Widget build(BuildContext context) {
     return StoreProvider(
         store: store,
         child: MaterialApp(
+            routes: <String, WidgetBuilder>{
+              '/InitEmployerSetup': (BuildContext context) => EmployerSetup(
+                    title: widget.title,
+                    isInitialSetting: true,
+                  ),
+              '/loading': (BuildContext context) =>
+                  LoadingView(title: widget.title),
+              '/home': (BuildContext context) => HomePage(title: widget.title),
+            },
             title: 'Commission Calculator',
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: FutureBuilder(
-                future: checkFirstSeen(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  return StoreConnector<AppState, UserView>(
-                    converter: (store) => UserView(
-                        currentUser: store.state.currentUser,
-                        currentEmployer: store.state.currentEmployer),
-                    builder: (context, user) {
-                      if (user.currentUser == null) {
-                        return SignInScreen(
-                            title: widget.title,
-                            header: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 32.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(32.0),
-                                child: Text("Demo"),
-                              ),
-                            ),
-                            providers: [
-                              ProvidersTypes.google,
-                              ProvidersTypes.email
-                            ]);
-                      }
-
-                      if (snapshot.hasData){
-                        if(!snapshot.data){
-                          return EmployerSetup(title: widget.title, isInitialSetting: true,);
-                        }
-                        bool loading = store.state.currentEmployer == null;
-                        if(loading){
-                          //return HomePage(title: widget.title, loading: loading);
-                          return LoadingView(title: widget.title);
-                        }
-                        return HomePage(title: widget.title);
-                      }
-                      return CircularProgressIndicator();
-                    },
-                  );
-                })));
-  }
-
-  void _checkCurrentUser() async {
-    FirebaseUser _currentUser = await _auth.currentUser();
-    _currentUser?.getIdToken(refresh: true);
-
-    // if(store.state.currentUser != null){
-    //   store.dispatch(InitEmployersAction(getCurrentEmployer: true));
-    // }
-
-    _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
-      store.dispatch(CheckUserAction(user));
-      store.dispatch(InitEmployersAction(getCurrentEmployer: true));
-    });
+            home: RootPage(
+              store: store,
+              title: widget.title,
+            )));
   }
 }
 
 class LoadingView extends StatelessWidget {
   LoadingView({Key key, this.title}) : super(key: key);
-  final String title; 
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
-          body: Center(child: CircularProgressIndicator())
-     );
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
