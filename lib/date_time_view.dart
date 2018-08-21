@@ -48,6 +48,19 @@ class OneDayView extends StatelessWidget {
   }
 }
 
+
+class ShortOneDayView extends StatelessWidget {
+  ShortOneDayView({Key key, this.date}) : super(key: key);
+  final DateTime date;
+  final formatter = new DateFormat.yMMMEd();
+
+  @override
+  Widget build(BuildContext context) {
+    String formatted = formatter.format(date);
+    return Text(formatted, style: TextStyle(fontSize: 20.0));
+  }
+}
+
 class WeekStringView extends StatelessWidget {
   WeekStringView({Key key, this.date}) : super(key: key);
   final formatter = new DateFormat.MMMMd();

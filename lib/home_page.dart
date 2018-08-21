@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'models/employer.dart';
 import 'today_view.dart';
 import 'logic/app_state.dart';
-import 'drawer.dart';
 import 'history_page/history_view.dart';
 import 'account_dialog.dart';
+import 'calculator_page.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -36,10 +36,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _children = [
     TodayView(),
     HistoryView(),
-    Container(
-        child: Center(
-      child: Text("Calculator"),
-    ))
+    CalculatorPage()
   ];
 
   void onTabTapped(int index) {
