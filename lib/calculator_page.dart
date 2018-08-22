@@ -9,8 +9,8 @@ import 'logic/app_state.dart';
 import 'models/commission.dart';
 import 'date_time_view.dart';
 
-class __CalculatorPageViewModel {
-  __CalculatorPageViewModel({this.currentUser, this.currentEmployer});
+class CalculatorPageViewModel {
+  CalculatorPageViewModel({this.currentUser, this.currentEmployer});
 
   final FirebaseUser currentUser;
   final Employer currentEmployer;
@@ -57,7 +57,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
   }
 
-  Future _getCommission(__CalculatorPageViewModel viewModel) {
+  Future _getCommission(CalculatorPageViewModel viewModel) {
     String id = viewModel.currentUser.uid;
     DateTime formatedStartDate = getDateOnly(startDate);
     DateTime formatedEndDate = getDateOnly(endDate);
@@ -107,12 +107,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, __CalculatorPageViewModel>(
+    return StoreConnector<AppState, CalculatorPageViewModel>(
         converter: (store) {
-      return __CalculatorPageViewModel(
+      return CalculatorPageViewModel(
         currentUser: store.state.currentUser,
           currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __CalculatorPageViewModel viewModel) {
+    }, builder: (BuildContext context, CalculatorPageViewModel viewModel) {
       return FutureBuilder(
         future: _getCommission(viewModel),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -201,7 +201,7 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
 class _SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverTopBarDelegate(this._timeRangePicker, {this.viewModel});
   final TimeRangePickerView _timeRangePicker;
-  final __CalculatorPageViewModel viewModel;
+  final CalculatorPageViewModel viewModel;
 
   @override
   double get minExtent => 170.0;

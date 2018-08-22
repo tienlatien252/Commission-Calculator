@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dart:async';
 import 'employer_page/employerSetup.dart';
 import 'home_page.dart';
 import 'models/employer.dart';
 import 'logic/middleware.dart';
 import 'logic/app_state.dart';
 import 'logic/reducer.dart';
-import 'login_modules/login_page.dart';
 import 'root_page.dart';
 
 void main() => runApp(MyApp());
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class UserView {
   final FirebaseUser currentUser;

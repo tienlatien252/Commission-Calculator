@@ -7,7 +7,7 @@ import 'dart:async';
 import 'models/commission.dart';
 import 'models/employer.dart';
 import 'logic/app_state.dart';
-import 'edit_data_view.dart';
+import 'edit_data_dialog.dart';
 
 class _DayEditViewModel {
   _DayEditViewModel({this.currentUser, this.currentEmployer});

@@ -9,7 +9,6 @@ import '../logic/app_state.dart';
 import '../commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
-import '../edit_data_view.dart';
 
 class __HistoryWeekModeViewModel {
   __HistoryWeekModeViewModel({this.currentUser, this.currentEmployer});
@@ -153,20 +152,6 @@ class _WeekDataViewState extends State<WeekDataView> {
       return commission;
     }
     return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-  }
-
-  Future<Null> _openEditCommissionDialog(Employer employer) async {
-    // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return EditDataView(
-            title: "Edit Comission",
-            date: getDateOnly(widget.date),
-            commission: commission,
-          );
-        });
-    setState(() {});
   }
 
   @override

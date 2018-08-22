@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
-import '../home_page.dart';
 import '../logic/app_state.dart';
 import '../models/employer.dart';
 import 'add_new_employer_dialog.dart';
