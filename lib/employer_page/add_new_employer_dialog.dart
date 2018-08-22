@@ -103,7 +103,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
         ),
         StoreConnector<AppState, _AddNewEmployerViewModel>(converter: (store) {
           return _AddNewEmployerViewModel(
-              onChangeEmployers: () => store.dispatch(InitEmployersAction()),
+              onChangeEmployers: () => store.dispatch(InitEmployersAction(getCurrentEmployer: false)),
               user: store.state.currentUser);
         }, builder: (context, viewModel) {
           return RaisedButton(

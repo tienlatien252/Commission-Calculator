@@ -7,6 +7,7 @@ import 'dart:async';
 import '../logic/app_state.dart';
 import '../models/employer.dart';
 import 'add_new_employer_dialog.dart';
+import 'delete_employer_dialog.dart';
 
 class _EmployersViewModel {
   _EmployersViewModel(
@@ -32,9 +33,7 @@ class EmployersListView extends StatefulWidget {
 }
 
 class _EmployersListViewState extends State<EmployersListView> {
-  deleteEmployer(Employer employer) {
-    print("delete");
-  }
+
 
   Future<Null> _openEditEmployerDialog(Employer employer) async {
     // TODO implement the dialog
@@ -42,6 +41,15 @@ class _EmployersListViewState extends State<EmployersListView> {
         context: context,
         builder: (BuildContext context) {
           return AddEmployerView(title: "Edit Employer", employer: employer);
+        });
+  }
+
+  Future<Null> _openDeleteEmployerDialog(Employer employer) async {
+    // TODO implement the dialog
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DeleteEmployerDialogView(employer: employer);
         });
   }
 
@@ -74,7 +82,7 @@ class _EmployersListViewState extends State<EmployersListView> {
               IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    deleteEmployer(employer);
+                    _openDeleteEmployerDialog(employer);
                   })
             ])
           ]);
