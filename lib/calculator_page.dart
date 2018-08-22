@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'models/employer.dart';
 import 'logic/app_state.dart';
-import 'commission_data_view.dart';
 import 'models/commission.dart';
 import 'date_time_view.dart';
 
@@ -28,6 +27,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   DateTime endDate = DateTime.now();
   Commission totalCommission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+  List<Commission> listCommissions;
 
   Future<Null> onPickStartDate(BuildContext context) async {
     final datePicked = await showDatePicker(
@@ -57,130 +57,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
   }
 
-  _onChangeTotalCommission(Commission commission) {
-    setState(() {
-      totalCommission = commission;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, __CalculatorPageViewModel>(
-        converter: (store) {
-      return __CalculatorPageViewModel(
-          currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __CalculatorPageViewModel viewModel) {
-      return NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverPersistentHeader(
-                  delegate: _SliverTopBarDelegate(
-                      TimeRangePickerView(
-                        onPickEndDate: () => onPickEndDate(context),
-                        onPickStartDate: () => onPickStartDate(context),
-                        startDate: startDate,
-                        endDate: endDate,
-                      ),
-                      viewModel: viewModel)),
-              SliverPersistentHeader(
-                pinned: true,
-                floating: false,
-                  delegate: _SliverResultDelegate(SmallCommissionsView(commission: totalCommission,))),
-            ];
-          },
-          body: //Text('sample')
-              CustomDataView(
-            onchangeTotalCommission: _onChangeTotalCommission,
-            startDate: startDate,
-            endDate: endDate,
-          ));
-    });
-  }
-}
-
-class TimeRangePickerView extends StatefulWidget {
-  TimeRangePickerView(
-      {Key key,
-      @required this.onPickStartDate,
-      @required this.onPickEndDate,
-      @required this.startDate,
-      @required this.endDate})
-      : super(key: key);
-  final Function onPickStartDate;
-  final Function onPickEndDate;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  @override
-  _TimeRangePickerViewState createState() => _TimeRangePickerViewState();
-}
-
-class _TimeRangePickerViewState extends State<TimeRangePickerView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("Start Date:"),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.startDate,
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickStartDate(),
-            ),
-          ],
-        )),
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("End Date:"),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.endDate,
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickEndDate(),
-            ),
-          ],
-        )),
-      ],
-    );
-  }
-}
-
-class CustomDataView extends StatefulWidget {
-  CustomDataView(
-      {Key key, this.startDate, this.endDate, this.onchangeTotalCommission})
-      : super(key: key);
-  final DateTime startDate;
-  final DateTime endDate;
-  final Function(Commission) onchangeTotalCommission;
-
-  @override
-  _CustomDataViewState createState() => _CustomDataViewState();
-}
-
-class _CustomDataViewState extends State<CustomDataView> {
-  Commission totalCommission;
-  List<Commission> listCommissions;
-
   Future _getCommission(__CalculatorPageViewModel viewModel) {
     String id = viewModel.currentUser.uid;
-    DateTime formatedStartDate = getDateOnly(widget.startDate);
-    DateTime formatedEndDate = getDateOnly(widget.endDate);
+    DateTime formatedStartDate = getDateOnly(startDate);
+    DateTime formatedEndDate = getDateOnly(endDate);
 
     String pathString = 'users/' +
         id +
@@ -217,7 +97,7 @@ class _CustomDataViewState extends State<CustomDataView> {
         totalCommission.id == commissionData.documentID;
       });
     }
-    //widget.onchangeTotalCommission(totalCommission);
+
     listCommissions = listCommissions.reversed.toList();
     return {
       'listCommissions': listCommissions,
@@ -230,7 +110,7 @@ class _CustomDataViewState extends State<CustomDataView> {
     return StoreConnector<AppState, __CalculatorPageViewModel>(
         converter: (store) {
       return __CalculatorPageViewModel(
-          currentUser: store.state.currentUser,
+        currentUser: store.state.currentUser,
           currentEmployer: store.state.currentEmployer);
     }, builder: (BuildContext context, __CalculatorPageViewModel viewModel) {
       return FutureBuilder(
@@ -241,10 +121,30 @@ class _CustomDataViewState extends State<CustomDataView> {
               Map map = _getAllCommissionsData(snapshot);
               listCommissions = map['listCommissions'];
               totalCommission = map['totalCommission'];
-              return AllCommissionsView(
-                listCommissions: listCommissions,
-                totalCommission: totalCommission,
-              );
+              return NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverPersistentHeader(
+                          delegate: _SliverTopBarDelegate(
+                              TimeRangePickerView(
+                                onPickEndDate: () => onPickEndDate(context),
+                                onPickStartDate: () => onPickStartDate(context),
+                                startDate: startDate,
+                                endDate: endDate,
+                              ),
+                              viewModel: viewModel)),
+                      SliverPersistentHeader(
+                          pinned: true,
+                          floating: false,
+                          delegate: _SliverResultDelegate(SmallCommissionsView(
+                            commission: totalCommission,
+                          ))),
+                    ];
+                  },
+                  body: //Text('sample')
+                  AllCommissionsView(listCommissions: listCommissions,
+                  ));
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             default:
@@ -340,7 +240,7 @@ class _SliverResultDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Colors.greenAccent,
+      color: Colors.blueGrey,
       child: Column(
         children: <Widget>[
           Text(
@@ -411,6 +311,69 @@ class SmallCommissionsView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TimeRangePickerView extends StatefulWidget {
+  TimeRangePickerView(
+      {Key key,
+      @required this.onPickStartDate,
+      @required this.onPickEndDate,
+      @required this.startDate,
+      @required this.endDate})
+      : super(key: key);
+  final Function onPickStartDate;
+  final Function onPickEndDate;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  @override
+  _TimeRangePickerViewState createState() => _TimeRangePickerViewState();
+}
+
+class _TimeRangePickerViewState extends State<TimeRangePickerView> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text("Start Date:"),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: ShorterOneDayView(
+                date: widget.startDate,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              color: Colors.red,
+              onPressed: () => widget.onPickStartDate(),
+            ),
+          ],
+        )),
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text("End Date:"),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: ShorterOneDayView(
+                date: widget.endDate,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              color: Colors.red,
+              onPressed: () => widget.onPickEndDate(),
+            ),
+          ],
+        )),
+      ],
     );
   }
 }
