@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-import 'models/employer.dart';
-import 'logic/app_state.dart';
-import 'models/commission.dart';
-import 'date_time_view.dart';
+import '../models/employer.dart';
+import '../logic/app_state.dart';
+import '../models/commission.dart';
+import '../date_time_view.dart';
 
 class CalculatorPageViewModel {
   CalculatorPageViewModel({this.currentUser, this.currentEmployer});

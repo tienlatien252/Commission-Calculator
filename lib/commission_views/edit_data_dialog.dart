@@ -5,9 +5,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 import 'dart:async';
-import 'logic/app_state.dart';
-import 'models/employer.dart';
-import 'models/commission.dart';
+import '../logic/app_state.dart';
+import '../models/employer.dart';
+import '../models/commission.dart';
 
 class _EditDataViewModel {
   final FirebaseUser currentUser;

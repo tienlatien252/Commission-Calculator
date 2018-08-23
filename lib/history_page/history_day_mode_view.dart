@@ -5,7 +5,7 @@ import 'dart:async';
 
 import '../models/employer.dart';
 import '../logic/app_state.dart';
-import '../commission_data_view.dart';
+import '../commission_views/commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
 

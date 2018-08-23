@@ -4,9 +4,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-import 'models/commission.dart';
-import 'models/employer.dart';
-import 'logic/app_state.dart';
+import '../models/commission.dart';
+import '../models/employer.dart';
+import '../logic/app_state.dart';
 import 'edit_data_dialog.dart';
 
 class _DayEditViewModel {

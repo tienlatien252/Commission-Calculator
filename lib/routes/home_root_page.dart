@@ -3,10 +3,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
-import 'employer_page/employerSetup.dart';
-import 'home_page.dart';
-import 'models/employer.dart';
-import 'logic/app_state.dart';
+import '../employer_page/employerSetup.dart';
+import '../home_page.dart';
+import '../models/employer.dart';
+import '../logic/app_state.dart';
 
 class _HomeRootPageViewModel {
   _HomeRootPageViewModel({this.currentEmployer});

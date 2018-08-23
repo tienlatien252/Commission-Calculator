@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import 'models/employer.dart';
-import 'logic/app_state.dart';
-import 'commission_data_view.dart';
-import 'date_time_view.dart';
+import '../models/employer.dart';
+import '../logic/app_state.dart';
+import '../commission_views/commission_data_view.dart';
+import '../date_time_view.dart';
 
 class _TodayViewModel {
   _TodayViewModel({this.currentEmployer});

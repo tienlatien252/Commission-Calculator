@@ -9,7 +9,7 @@ import 'models/employer.dart';
 import 'logic/middleware.dart';
 import 'logic/app_state.dart';
 import 'logic/reducer.dart';
-import 'root_page.dart';
+import 'routes/root_page.dart';
 
 void main() => runApp(MyApp());
 

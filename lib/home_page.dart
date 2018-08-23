@@ -4,11 +4,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/employer.dart';
-import 'today_view.dart';
+import 'commission_views/today_view.dart';
 import 'logic/app_state.dart';
 import 'history_page/history_view.dart';
 import 'account_dialog.dart';
-import 'calculator_page.dart';
+import 'calculator_page/calculator_page.dart';
 
 class _HomeViewModel {
   _HomeViewModel(

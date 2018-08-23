@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 
-import 'logic/app_state.dart';
-import 'login_modules/login_page.dart';
+import '../logic/app_state.dart';
+import '../login_modules/login_page.dart';
 import 'home_root_page.dart';
 
 class RootPage extends StatefulWidget {
