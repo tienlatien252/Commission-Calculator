@@ -7,7 +7,10 @@ import 'dart:async';
 import '../models/employer.dart';
 import '../logic/app_state.dart';
 import '../models/commission.dart';
-import '../date_time_view.dart';
+import 'slivers.dart';
+import 'small_commisison_widget.dart';
+import 'all_commission_view.dart';
+import 'time_range_picker_widget.dart';
 
 class CalculatorPageViewModel {
   CalculatorPageViewModel({this.currentUser, this.currentEmployer});
@@ -126,7 +129,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return <Widget>[
                       SliverPersistentHeader(
-                          delegate: _SliverTopBarDelegate(
+                          delegate: SliverTopBarDelegate(
                               TimeRangePickerView(
                                 onPickEndDate: () => onPickEndDate(context),
                                 onPickStartDate: () => onPickStartDate(context),
@@ -137,7 +140,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       SliverPersistentHeader(
                           pinned: true,
                           floating: false,
-                          delegate: _SliverResultDelegate(SmallCommissionsView(
+                          delegate: SliverResultDelegate(SmallCommissionsView(
                             commission: totalCommission,
                           ))),
                     ];
@@ -156,224 +159,5 @@ class _CalculatorPageState extends State<CalculatorPage> {
         },
       );
     });
-  }
-}
-
-class AllCommissionsView extends StatefulWidget {
-  AllCommissionsView({Key key, this.listCommissions, this.totalCommission})
-      : super(key: key);
-  final Commission totalCommission;
-  final List<Commission> listCommissions;
-
-  @override
-  _AllCommissionsViewState createState() => _AllCommissionsViewState();
-}
-
-DateTime getDateOnly(DateTime dateAndTime) {
-  return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
-}
-
-class _AllCommissionsViewState extends State<AllCommissionsView> {
-  Widget dataBuilder(BuildContext context, int index) {
-    return ExpansionTile(
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ShorterOneDayView(date: widget.listCommissions[index].date),
-            Text('Details')
-          ]),
-      children: <Widget>[
-        SmallCommissionsView(commission: widget.listCommissions[index])
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.listCommissions.length,
-      itemBuilder: dataBuilder,
-    );
-  }
-}
-
-class _SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverTopBarDelegate(this._timeRangePicker, {this.viewModel});
-  final TimeRangePickerView _timeRangePicker;
-  final CalculatorPageViewModel viewModel;
-
-  @override
-  double get minExtent => 170.0;
-  @override
-  double get maxExtent => 170.0;
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Column(children: <Widget>[
-      Container(
-          alignment: AlignmentDirectional.centerStart,
-          padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
-          child: Text(
-            viewModel.currentEmployer.name,
-            style: TextStyle(fontSize: 30.0),
-          )),
-      _timeRangePicker
-    ]);
-  }
-
-  @override
-  bool shouldRebuild(_SliverTopBarDelegate oldDelegate) {
-    return false;
-  }
-}
-
-class _SliverResultDelegate extends SliverPersistentHeaderDelegate {
-  _SliverResultDelegate(this.resultCommission);
-  final SmallCommissionsView resultCommission;
-
-  @override
-  double get minExtent => 120.0;
-  @override
-  double get maxExtent => 120.0;
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.blueGrey,
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Result',
-            style: TextStyle(fontSize: 25.0),
-          ),
-          resultCommission,
-          //Text('Detail', style: TextStyle(fontSize: 25.0))
-        ],
-      ),
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverResultDelegate oldDelegate) {
-    return false;
-  }
-}
-
-class SmallCommissionsView extends StatelessWidget {
-  SmallCommissionsView({Key key, this.commission}) : super(key: key);
-  final Commission commission;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text('Raw', style: TextStyle(fontSize: 12.0)),
-                  Text(commission.raw.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 20.0)),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text('Commission', style: TextStyle(fontSize: 12.0)),
-                  Text(commission.commission.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 20.0)),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text('Tip', style: TextStyle(fontSize: 12.0)),
-                  Text(commission.tip.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 20.0)),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text('Total', style: TextStyle(fontSize: 12.0)),
-                  Text(commission.total.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 20.0)),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TimeRangePickerView extends StatefulWidget {
-  TimeRangePickerView(
-      {Key key,
-      @required this.onPickStartDate,
-      @required this.onPickEndDate,
-      @required this.startDate,
-      @required this.endDate})
-      : super(key: key);
-  final Function onPickStartDate;
-  final Function onPickEndDate;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  @override
-  _TimeRangePickerViewState createState() => _TimeRangePickerViewState();
-}
-
-class _TimeRangePickerViewState extends State<TimeRangePickerView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("Start Date:"),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.startDate,
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickStartDate(),
-            ),
-          ],
-        )),
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("End Date:"),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.endDate,
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickEndDate(),
-            ),
-          ],
-        )),
-      ],
-    );
   }
 }
