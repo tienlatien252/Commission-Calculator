@@ -13,6 +13,13 @@ import 'routes/root_page.dart';
 
 void main() => runApp(MyApp());
 
+const String APP_ID = '1:154487703908:android:b6c7c03dd0151198';
+
+// final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+//   testDevices: APP_ID != null ? [APP_ID] : null,
+//   keywords: ['Games', 'Puzzles'],
+// );
+
 class UserView {
   final FirebaseUser currentUser;
   final Employer currentEmployer;
@@ -30,6 +37,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final store = Store<AppState>(reducer,
       initialState: AppState(), middleware: [middleware].toList());
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

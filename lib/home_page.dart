@@ -9,6 +9,7 @@ import 'logic/app_state.dart';
 import 'history_page/history_view.dart';
 import 'account_dialog.dart';
 import 'calculator_page/calculator_page.dart';
+import 'main.dart';
 
 class _HomeViewModel {
   _HomeViewModel(
@@ -33,16 +34,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  List<Widget> _children = [
-    TodayView(),
-    HistoryView(),
-    CalculatorPage()
-  ];
+  List<Widget> _children = [TodayView(), HistoryView(), CalculatorPage()];
+
+  // BannerAd bannerAd;
+
+  // BannerAd buildBanner() {
+  //   return BannerAd(
+  //       adUnitId: BannerAd.testAdUnitId,
+  //       size: AdSize.smartBanner,
+  //       listener: (MobileAdEvent event) {
+  //         print(event);
+  //       });
+  // }
 
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // FirebaseAdMob.instance.initialize(appId: APP_ID);
+    // bannerAd = buildBanner()..load();
   }
 
   void _openAddEntryDialog(_HomeViewModel viewModel) async {
@@ -64,6 +79,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // bannerAd..show();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
