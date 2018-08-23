@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 import 'employer_page/employerSetup.dart';
 import 'home_page.dart';
@@ -15,10 +16,10 @@ void main() => runApp(MyApp());
 
 const String APP_ID = '1:154487703908:android:b6c7c03dd0151198';
 
-// final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-//   testDevices: APP_ID != null ? [APP_ID] : null,
-//   keywords: ['Games', 'Puzzles'],
-// );
+final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  testDevices: APP_ID != null ? [APP_ID] : null,
+  keywords: ['Games', 'Puzzles'],
+);
 
 class UserView {
   final FirebaseUser currentUser;

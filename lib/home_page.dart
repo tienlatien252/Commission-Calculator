@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 import 'models/employer.dart';
 import 'commission_views/today_view.dart';
@@ -36,16 +37,17 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   List<Widget> _children = [TodayView(), HistoryView(), CalculatorPage()];
 
-  // BannerAd bannerAd;
+  BannerAd bannerAd;
+  InterstitialAd interstitialAd;
 
-  // BannerAd buildBanner() {
-  //   return BannerAd(
-  //       adUnitId: BannerAd.testAdUnitId,
-  //       size: AdSize.smartBanner,
-  //       listener: (MobileAdEvent event) {
-  //         print(event);
-  //       });
-  // }
+  BannerAd buildBanner() {
+    return BannerAd(
+        adUnitId: BannerAd.testAdUnitId,
+        size: AdSize.smartBanner,
+        listener: (MobileAdEvent event) {
+          print(event);
+        });
+  }
 
   void onTabTapped(int index) {
     setState(() {
@@ -56,8 +58,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // FirebaseAdMob.instance.initialize(appId: APP_ID);
-    // bannerAd = buildBanner()..load();
+    FirebaseAdMob.instance.initialize(appId: APP_ID);
+    bannerAd = buildBanner()..load();
+  }
+
+  
+  @override
+  void dispose() {
+    bannerAd?.dispose();
+    interstitialAd?.dispose();
+    super.dispose();
   }
 
   void _openAddEntryDialog(_HomeViewModel viewModel) async {
@@ -77,9 +87,24 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  InterstitialAd buildInterstitial() {
+    return InterstitialAd(
+        adUnitId: InterstitialAd.testAdUnitId,
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.failedToLoad) {
+            interstitialAd..load();
+          } else if (event == MobileAdEvent.closed) {
+            interstitialAd = buildInterstitial()..load();
+          }
+
+          print(event);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // bannerAd..show();
+    bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
