@@ -28,7 +28,7 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: FlatButton(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            color: Theme.of(context).primaryColorLight,
+            color: Color.fromARGB(255, 76,183,219),
             onPressed: () => widget.onPickStartDate(),
             child: Row(
               children: <Widget>[
@@ -50,10 +50,10 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
         ),
         SizedBox(height: 5.0),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
           child: FlatButton(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            color: Theme.of(context).primaryColorLight,
+            color: Color.fromARGB(255, 76,183,219),
             onPressed: () => widget.onPickEndDate(),
             child: Row(
               children: <Widget>[

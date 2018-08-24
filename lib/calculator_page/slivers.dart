@@ -27,7 +27,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
       child: Column(children: <Widget>[
         Container(
             alignment: AlignmentDirectional.centerStart,
-            padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
+            padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 8.0),
             child: Text(
               viewModel.currentEmployer.name,
               style: TextStyle(fontSize: 30.0),
