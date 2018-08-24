@@ -57,13 +57,14 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+          //color: Colors.white,
           color: Theme.of(context).primaryColorDark,
           borderRadius: BorderRadius.circular(15.0)),
       child: Column(
         children: <Widget>[
           Text(
             'Result',
-            style: TextStyle(fontSize: 25.0),
+            style: TextStyle(fontSize: 25.0, color: Colors.white),
           ),
           resultCommission,
           //Text('Detail', style: TextStyle(fontSize: 25.0))

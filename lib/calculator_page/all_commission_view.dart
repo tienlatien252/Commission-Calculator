@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../models/commission.dart';
@@ -22,10 +21,14 @@ DateTime getDateOnly(DateTime dateAndTime) {
 class _AllCommissionsViewState extends State<AllCommissionsView> {
   Widget dataBuilder(BuildContext context, int index) {
     return Container(
-      color: Colors.white,
+      decoration: ShapeDecoration(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        color: Colors.white,
+      ),
       margin: EdgeInsets.fromLTRB(15.0, 6.0, 15.0, 6.0),
       //padding: EdgeInsets.all(10.0),
-          child: ExpansionTile(
+      child: ExpansionTile(
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
