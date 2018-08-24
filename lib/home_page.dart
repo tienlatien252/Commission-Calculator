@@ -62,7 +62,6 @@ class _HomePageState extends State<HomePage> {
     bannerAd = buildBanner()..load();
   }
 
-  
   @override
   void dispose() {
     bannerAd?.dispose();
@@ -104,7 +103,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bannerAd..show(anchorOffset: 50.0);
+    //bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -135,6 +134,7 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _currentIndex, // new
         items: [
           BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColorLight,
             icon: Icon(Icons.home),
             title: Text('Home'),
           ),

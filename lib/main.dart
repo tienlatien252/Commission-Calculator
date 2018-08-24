@@ -60,7 +60,9 @@ class _MyAppState extends State<MyApp> {
             },
             title: 'Commission Calculator',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primaryColorDark: Color.fromRGBO(0, 147, 196, 1.0),
+              primaryColorLight: Color.fromRGBO(139, 246, 255, 1.0),
+              primaryColor: Color.fromRGBO(79, 195, 247, 1.0),
             ),
             home: RootPage(
               store: store,

@@ -39,7 +39,6 @@ class _TodayViewState extends State<TodayView> {
               )),
           Container(
             alignment: AlignmentDirectional.centerStart,
-            color: Colors.greenAccent,
             padding: EdgeInsets.fromLTRB(10.0, 13.0, 10.0, 13.0),
             child: OneDayView(
               date: date,

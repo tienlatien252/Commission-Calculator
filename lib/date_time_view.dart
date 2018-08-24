@@ -50,26 +50,30 @@ class OneDayView extends StatelessWidget {
 
 
 class ShortOneDayView extends StatelessWidget {
-  ShortOneDayView({Key key, this.date}) : super(key: key);
+  ShortOneDayView({Key key, this.date, this.textColor}) : super(key: key);
   final DateTime date;
   final formatter = new DateFormat.yMMMEd();
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
+    Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
-    return Text(formatted, style: TextStyle(fontSize: 20.0));
+    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 
 class ShorterOneDayView extends StatelessWidget {
-  ShorterOneDayView({Key key, this.date}) : super(key: key);
+  ShorterOneDayView({Key key, this.date, this.textColor}) : super(key: key);
   final DateTime date;
   final formatter = new DateFormat.yMMMd();
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
+    Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
-    return Text(formatted, style: TextStyle(fontSize: 20.0));
+    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 

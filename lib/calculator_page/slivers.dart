@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'calculator_page.dart';
@@ -11,22 +10,25 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
   final CalculatorPageViewModel viewModel;
 
   @override
-  double get minExtent => 170.0;
+  double get minExtent => 165.0;
   @override
-  double get maxExtent => 170.0;
+  double get maxExtent => 165.0;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Column(children: <Widget>[
-      Container(
-          alignment: AlignmentDirectional.centerStart,
-          padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
-          child: Text(
-            viewModel.currentEmployer.name,
-            style: TextStyle(fontSize: 30.0),
-          )),
-      _timeRangePicker
-    ]);
+    return Container(
+      color: Theme.of(context).primaryColorDark,
+      child: Column(children: <Widget>[
+        Container(
+            alignment: AlignmentDirectional.centerStart,
+            padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
+            child: Text(
+              viewModel.currentEmployer.name,
+              style: TextStyle(fontSize: 30.0),
+            )),
+        _timeRangePicker
+      ]),
+    );
   }
 
   @override
@@ -47,7 +49,7 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Colors.blueGrey,
+      color: Theme.of(context).primaryColorLight,
       child: Column(
         children: <Widget>[
           Text(

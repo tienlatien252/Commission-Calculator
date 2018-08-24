@@ -6,6 +6,7 @@ class SmallCommissionsView extends StatelessWidget {
   SmallCommissionsView({Key key, this.commission}) : super(key: key);
   final Commission commission;
 
+
   @override
   Widget build(BuildContext context) {
     return Container(

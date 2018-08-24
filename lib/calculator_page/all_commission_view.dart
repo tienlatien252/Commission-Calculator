@@ -21,16 +21,21 @@ DateTime getDateOnly(DateTime dateAndTime) {
 
 class _AllCommissionsViewState extends State<AllCommissionsView> {
   Widget dataBuilder(BuildContext context, int index) {
-    return ExpansionTile(
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ShorterOneDayView(date: widget.listCommissions[index].date),
-            Text('Details')
-          ]),
-      children: <Widget>[
-        SmallCommissionsView(commission: widget.listCommissions[index])
-      ],
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.all(3.0),
+      //padding: EdgeInsets.all(10.0),
+          child: ExpansionTile(
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ShorterOneDayView(date: widget.listCommissions[index].date),
+              Text('Details')
+            ]),
+        children: <Widget>[
+          SmallCommissionsView(commission: widget.listCommissions[index])
+        ],
+      ),
     );
   }
 

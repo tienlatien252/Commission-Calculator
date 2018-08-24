@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
 
 import '../date_time_view.dart';
-
-
 
 class TimeRangePickerView extends StatefulWidget {
   TimeRangePickerView(
@@ -28,41 +25,57 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
     return Column(
       children: <Widget>[
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: FlatButton(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            color: Theme.of(context).primaryColorLight,
+            onPressed: () => widget.onPickStartDate(),
             child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+              children: <Widget>[
+            Icon(
+              Icons.calendar_today,
+            ),
+            SizedBox(width: 10.0,),
             Text("Start Date:"),
             Container(
               padding: EdgeInsets.all(10.0),
               child: ShorterOneDayView(
                 date: widget.startDate,
+                textColor: Colors.white,
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickStartDate(),
+              ],
             ),
-          ],
-        )),
+          ),
+        ),
+        SizedBox(height: 5.0),
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: FlatButton(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            color: Theme.of(context).primaryColorLight,
+            onPressed: () => widget.onPickEndDate(),
             child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("End Date:"),
+              children: <Widget>[
+            Icon(
+              Icons.calendar_today,
+            ),
+            SizedBox(width: 10.0,),
+            Text(
+              "End Date:",
+              //style: TextStyle(color: Colors.white),
+            ),
             Container(
               padding: EdgeInsets.all(10.0),
               child: ShorterOneDayView(
                 date: widget.endDate,
+                textColor: Colors.white,
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              color: Colors.red,
-              onPressed: () => widget.onPickEndDate(),
+              ],
             ),
-          ],
-        )),
+          ),
+        ),
       ],
     );
   }
