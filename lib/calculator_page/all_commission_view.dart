@@ -23,7 +23,7 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
   Widget dataBuilder(BuildContext context, int index) {
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.all(3.0),
+      margin: EdgeInsets.fromLTRB(15.0, 6.0, 15.0, 6.0),
       //padding: EdgeInsets.all(10.0),
           child: ExpansionTile(
         title: Row(

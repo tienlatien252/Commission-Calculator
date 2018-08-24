@@ -17,7 +17,12 @@ class _DayEditViewModel {
 }
 
 class CommissionView extends StatefulWidget {
-  CommissionView({Key key, @required this.commission, this.stringFontSize, this.numberFontSize}) : super(key: key);
+  CommissionView(
+      {Key key,
+      @required this.commission,
+      this.stringFontSize,
+      this.numberFontSize})
+      : super(key: key);
   final Commission commission;
   final double stringFontSize;
   final double numberFontSize;
@@ -34,13 +39,14 @@ class _CommissionViewState extends State<CommissionView> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    double numberFontSize = widget.numberFontSize != null ? widget.numberFontSize : 30.0;
-    double stringFontSize = widget.stringFontSize != null ? widget.stringFontSize : 20.0;
+    double numberFontSize =
+        widget.numberFontSize != null ? widget.numberFontSize : 30.0;
+    double stringFontSize =
+        widget.stringFontSize != null ? widget.stringFontSize : 20.0;
     Commission commission = widget.commission;
     return Expanded(
       child: Column(
@@ -63,10 +69,12 @@ class _CommissionViewState extends State<CommissionView> {
               ),
               Column(
                 children: <Widget>[
-                  Text('Commission', style: TextStyle(fontSize: stringFontSize)),
+                  Text('Commission',
+                      style: TextStyle(fontSize: stringFontSize)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text("\$" + commission.commission.toStringAsFixed(2),
+                      child: Text(
+                          "\$" + commission.commission.toStringAsFixed(2),
                           style: TextStyle(fontSize: numberFontSize)))
                 ],
               )
@@ -100,7 +108,6 @@ class _CommissionViewState extends State<CommissionView> {
     );
   }
 }
-
 
 class DayEditView extends StatefulWidget {
   DayEditView(
@@ -179,7 +186,7 @@ class _DayEditViewState extends State<DayEditView> {
               Widget dataAndButton = widget.backButton != null
                   ? Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         widget.backButton,
                         CommissionView(commission: commission),
