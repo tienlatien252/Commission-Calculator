@@ -17,7 +17,13 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme.of(context).primaryColorDark,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.only(
+                bottomLeft: const Radius.circular(10.0),
+                bottomRight: const Radius.circular(10.0))),
+        color: Theme.of(context).primaryColorDark,
+      ),
       child: Column(children: <Widget>[
         Container(
             alignment: AlignmentDirectional.centerStart,
@@ -42,14 +48,17 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
   final SmallCommissionsView resultCommission;
 
   @override
-  double get minExtent => 120.0;
+  double get minExtent => 130.0;
   @override
-  double get maxExtent => 120.0;
+  double get maxExtent => 130.0;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme.of(context).primaryColorLight,
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: Theme.of(context).primaryColorDark,
+          borderRadius: BorderRadius.circular(15.0)),
       child: Column(
         children: <Widget>[
           Text(
