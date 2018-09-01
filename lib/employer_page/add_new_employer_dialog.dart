@@ -52,6 +52,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
       }
 
       future.whenComplete(() {
+        FocusScope.of(context).detach();
         callback();
         Navigator.pop(context);
       }).catchError((e) => print(e));
@@ -67,6 +68,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   }
 
   onPresscancel() {
+    FocusScope.of(context).detach();
     Navigator.pop(context);
   }
 
@@ -110,6 +112,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                   title: Form(
                     key: _formKey,
                     child: TextFormField(
+                        autofocus: true,
                         style: TextStyle(fontSize: 25.0, color: Colors.black),
                         initialValue: initName,
                         decoration: new InputDecoration(labelText: 'Name'),
@@ -124,7 +127,9 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                 ),
                 ListTile(
                     leading: Icon(Icons.check_circle_outline),
-                    title: Text("Commission Rate", style: TextStyle(fontSize: 25.0, color: Colors.black54)),
+                    title: Text("Commission Rate",
+                        style:
+                            TextStyle(fontSize: 25.0, color: Colors.black54)),
                     trailing: new Text(
                       "$_comissionRate %",
                       style: TextStyle(fontSize: 25.0, color: Colors.black),
