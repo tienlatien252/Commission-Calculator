@@ -33,15 +33,17 @@ class EmployersListView extends StatefulWidget {
 }
 
 class _EmployersListViewState extends State<EmployersListView> {
-
-
   Future<Null> _openEditEmployerDialog(Employer employer) async {
-    // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddEmployerView(title: "Edit Employer", employer: employer);
-        });
+    await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) {
+              return AddEmployerView(
+                  title: "Edit Employer", employer: employer);
+            },
+            fullscreenDialog: true));
+
+    setState(() {});
   }
 
   Future<Null> _openDeleteEmployerDialog(Employer employer) async {

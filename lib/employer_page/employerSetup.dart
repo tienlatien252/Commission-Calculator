@@ -34,14 +34,19 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
+
   Future<Null> _openAddEmployerDialog() async {
-    // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddEmployerView(title: "Add Employer");
-        });
+    await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) {
+              return AddEmployerView(title: "Add Employer");
+            },
+            fullscreenDialog: true));
+
+    setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
