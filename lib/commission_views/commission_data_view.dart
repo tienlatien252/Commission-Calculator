@@ -59,7 +59,8 @@ class _CommissionViewState extends State<CommissionView> {
                 children: <Widget>[
                   Text(
                     'Raw',
-                    style: TextStyle(fontSize: stringFontSize, color: Colors.black54),
+                    style: TextStyle(
+                        fontSize: stringFontSize, color: Colors.black54),
                   ),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
@@ -70,7 +71,8 @@ class _CommissionViewState extends State<CommissionView> {
               Column(
                 children: <Widget>[
                   Text('Commission',
-                      style: TextStyle(fontSize: stringFontSize, color: Colors.black54)),
+                      style: TextStyle(
+                          fontSize: stringFontSize, color: Colors.black54)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text(
@@ -85,7 +87,9 @@ class _CommissionViewState extends State<CommissionView> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text('Tip', style: TextStyle(fontSize: stringFontSize, color: Colors.black54)),
+                  Text('Tip',
+                      style: TextStyle(
+                          fontSize: stringFontSize, color: Colors.black54)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.tip.toStringAsFixed(2),
@@ -94,7 +98,9 @@ class _CommissionViewState extends State<CommissionView> {
               ),
               Column(
                 children: <Widget>[
-                  Text('Total', style: TextStyle(fontSize: stringFontSize, color: Colors.black54)),
+                  Text('Total',
+                      style: TextStyle(
+                          fontSize: stringFontSize, color: Colors.black54)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                       child: Text("\$" + commission.total.toStringAsFixed(2),
@@ -155,17 +161,28 @@ class _DayEditViewState extends State<DayEditView> {
     return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
   }
 
-  Future<Null> _openEditCommissionDialog(Employer employer) async {
+  Future<Null> _openEditCommissionDialog() async {
     // TODO implement the dialog
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return EditDataView(
-            title: "Edit Comission",
-            date: getDateOnly(widget.date),
-            commission: commission,
-          );
-        });
+    // await showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return EditDataView(
+    //         title: "Edit Comission",
+    //         date: getDateOnly(widget.date),
+    //         commission: commission,
+    //       );
+    //     });
+    await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) {
+              return EditDataView(
+                title: "Edit Comission",
+                date: getDateOnly(widget.date),
+                commission: commission,
+              );
+            },
+            fullscreenDialog: true));
 
     setState(() {});
   }
@@ -201,7 +218,7 @@ class _DayEditViewState extends State<DayEditView> {
                     alignment: AlignmentDirectional.bottomEnd,
                     padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
                     child: FloatingActionButton(
-                        onPressed: () => _openEditCommissionDialog(null),
+                        onPressed: () => _openEditCommissionDialog(),
                         child: Icon(Icons.edit)),
                   )
                 ],

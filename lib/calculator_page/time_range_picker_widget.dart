@@ -27,6 +27,7 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: FlatButton(
+            splashColor: Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             color: Color.fromARGB(255, 76,183,219),
             onPressed: () => widget.onPickStartDate(),

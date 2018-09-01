@@ -92,53 +92,83 @@ class _EditDataViewState extends State<EditDataView> {
             currentUser: store.state.currentUser);
       },
       builder: (BuildContext context, _EditDataViewModel viewModel) {
-        return SimpleDialog(
-          title: Text(widget.title),
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                        initialValue: initRaw,
-                        keyboardType: TextInputType.number,
-                        decoration: new InputDecoration(labelText: 'Raw'),
-                        validator: _validateNumber,
-                        onSaved: (String value) {
-                          _comissionData.raw = double.parse(value);
-                          _comissionData.commission = (_comissionData.raw *
-                              viewModel.currentEmployer.commissionRate);
-                          _comissionData.total += _comissionData.commission;
-                        }),
-                    TextFormField(
-                        initialValue: initTip,
-                        keyboardType: TextInputType.number,
-                        decoration: new InputDecoration(labelText: 'Tip'),
-                        validator: _validateNumber,
-                        onSaved: (String value) {
-                          _comissionData.tip = double.parse(value);
-                          _comissionData.total += _comissionData.tip;
-                        }),
-                  ],
-                ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(widget.title),
+          ),
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              InkWell(
+                onTap: onPresscancel,
+                child: Container(
+                    padding: EdgeInsets.all(15.0),
+                    margin: EdgeInsets.all(10.0),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      color: Theme.of(context).primaryColorDark.withAlpha(100),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    )),
+              ),
+              InkWell(
+                onTap: () => onSubmit(viewModel),
+                child: Container(
+                    padding: EdgeInsets.all(15.0),
+                    margin: EdgeInsets.all(10.0),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    child: Text(
+                      "Save",
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    )),
+              ),
+            ],
+          ),
+          body: Container(
+            padding: EdgeInsets.all(20.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                      style: TextStyle(fontSize: 25.0, color: Colors.black),
+                      initialValue: initRaw,
+                      keyboardType: TextInputType.number,
+                      decoration: new InputDecoration(
+                        prefixText: '\$',
+                        labelText: 'Raw',
+                      ),
+                      validator: _validateNumber,
+                      onSaved: (String value) {
+                        _comissionData.raw = double.parse(value);
+                        _comissionData.commission = (_comissionData.raw *
+                            viewModel.currentEmployer.commissionRate);
+                        _comissionData.total += _comissionData.commission;
+                      }),
+                  TextFormField(
+                      initialValue: initTip,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(fontSize: 25.0, color: Colors.black),
+                      decoration: new InputDecoration(
+                        prefixText: '\$',
+                        labelText: 'Tip',
+                      ),
+                      validator: _validateNumber,
+                      onSaved: (String value) {
+                        _comissionData.tip = double.parse(value);
+                        _comissionData.total += _comissionData.tip;
+                      }),
+                ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: onPresscancel,
-                  child: Text("Cancel"),
-                ),
-                RaisedButton(
-                  onPressed: () => onSubmit(viewModel),
-                  child: Text("Summit"),
-                )
-              ],
-            )
-          ],
+          ),
         );
       },
     );
