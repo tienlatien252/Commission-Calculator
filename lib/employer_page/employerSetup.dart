@@ -24,7 +24,8 @@ class _EmployersViewModel {
 }
 
 class EmployerSetup extends StatefulWidget {
-  EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup}) : super(key: key);
+  EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})
+      : super(key: key);
   final String title;
   final bool isInitialSetting;
   final VoidCallback seenSetup;
@@ -34,7 +35,6 @@ class EmployerSetup extends StatefulWidget {
 }
 
 class _EmployerSetupState extends State<EmployerSetup> {
-
   Future<Null> _openAddEmployerDialog() async {
     await Navigator.push(
         context,
@@ -46,7 +46,6 @@ class _EmployerSetupState extends State<EmployerSetup> {
 
     setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +61,29 @@ class _EmployerSetupState extends State<EmployerSetup> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    RaisedButton(
-                      child: Text('Add A New Employer'),
+                    FloatingActionButton(
+                      child: Icon(Icons.add),
                       onPressed: _openAddEmployerDialog,
                     ),
+                    // InkWell(
+                    //   onTap: _openAddEmployerDialog,
+                    //   child: Container(
+                    //       padding: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    //       margin: EdgeInsets.all(10.0),
+                    //       decoration: ShapeDecoration(
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(10.0)),
+                    //         color: Theme
+                    //             .of(context)
+                    //             .primaryColorDark
+                    //             .withAlpha(100),
+                    //       ),
+                    //       child: Text(
+                    //         "Add A New Employer",
+                    //         style:
+                    //             TextStyle(fontSize: 20.0, color: Colors.white),
+                    //       )),
+                    // ),
                   ],
                 ),
               ),
@@ -77,12 +95,17 @@ class _EmployerSetupState extends State<EmployerSetup> {
             ],
           ),
         ),
-        floatingActionButton: NextButton(title: widget.title, isInitialSetting: widget.isInitialSetting, seenSetup: widget.seenSetup,));
+        floatingActionButton: NextButton(
+          title: widget.title,
+          isInitialSetting: widget.isInitialSetting,
+          seenSetup: widget.seenSetup,
+        ));
   }
 }
 
 class NextButton extends StatefulWidget {
-  NextButton({Key key, this.isInitialSetting, this.title, this.seenSetup}) : super(key: key);
+  NextButton({Key key, this.isInitialSetting, this.title, this.seenSetup})
+      : super(key: key);
   final String title;
   final bool isInitialSetting;
   final VoidCallback seenSetup;
@@ -107,7 +130,7 @@ class _NextButtonState extends State<NextButton> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('seen', true);
       widget.seenSetup();
-    } else{
+    } else {
       Navigator.pop(context);
     }
   }
@@ -122,9 +145,20 @@ class _NextButtonState extends State<NextButton> {
           currentEmployer: store.state.currentEmployer,
           currentUser: store.state.currentUser);
     }, builder: (BuildContext context, _EmployersViewModel viewModel) {
-      return RaisedButton(
-        onPressed: () => _saveEmployersAndGoNext(viewModel),
-        child: Text("Next"),
+      return InkWell(
+        onTap: () => _saveEmployersAndGoNext(viewModel),
+        child: Container(
+            padding: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+            margin: EdgeInsets.all(10.0),
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              color: Theme.of(context).primaryColorDark.withAlpha(100),
+            ),
+            child: Text(
+              "Done",
+              style: TextStyle(fontSize: 20.0, color: Colors.white),
+            )),
       );
     }); // This trailing c
   }

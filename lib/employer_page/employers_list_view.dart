@@ -97,18 +97,37 @@ class _EmployersListViewState extends State<EmployersListView> {
     bool isCurrentEmployer = viewModel.currentEmployer != null
         ? employer.employerId == viewModel.currentEmployer.employerId
         : false;
-
-    return Column(
-      children: <Widget>[
-        ListTile(
+    if (widget.isDrawer) {
+      return Container(
+        decoration: ShapeDecoration(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.fromLTRB(1.0, 6.0, 1.0, 6.0),
+        child: ListTile(
           onTap: () => selectEmployer(viewModel, employer),
           selected: isCurrentEmployer,
           leading: const Icon(Icons.store),
           subtitle: Text((employer.commissionRate * 100).toString() + "%"),
           title: employersList,
         ),
-        Divider()
-      ],
+      );
+    }
+    return Container(
+      decoration: ShapeDecoration(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        color: Colors.white,
+      ),
+      margin: EdgeInsets.fromLTRB(15.0, 6.0, 15.0, 6.0),
+      child: ListTile(
+        onTap: () => selectEmployer(viewModel, employer),
+        selected: isCurrentEmployer,
+        leading: const Icon(Icons.store),
+        subtitle: Text((employer.commissionRate * 100).toString() + "%"),
+        title: employersList,
+      ),
     );
   }
 

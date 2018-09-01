@@ -35,7 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  List<Widget> _children = [TodayView(), HistoryView(), CalculatorPage()];
+  
 
   BannerAd bannerAd;
   InterstitialAd interstitialAd;
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _children = [TodayView(), HistoryView(), CalculatorPage()];
     //bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
       appBar: AppBar(
