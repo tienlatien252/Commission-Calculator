@@ -33,6 +33,7 @@ class _EditDataViewState extends State<EditDataView> {
       Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
 
   onPresscancel() {
+    FocusScope.of(context).detach();
     Navigator.pop(context);
   }
 
@@ -63,6 +64,7 @@ class _EditDataViewState extends State<EditDataView> {
             .setData(data);
       }
       future.whenComplete(() {
+        FocusScope.of(context).detach();
         Navigator.pop(context);
       });
     }
@@ -138,6 +140,7 @@ class _EditDataViewState extends State<EditDataView> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                      autofocus: true,
                       style: TextStyle(fontSize: 25.0, color: Colors.black),
                       initialValue: initRaw,
                       keyboardType: TextInputType.number,
