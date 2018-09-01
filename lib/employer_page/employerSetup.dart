@@ -153,7 +153,7 @@ class _NextButtonState extends State<NextButton> {
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              color: Theme.of(context).primaryColorDark.withAlpha(100),
+              color: Theme.of(context).primaryColorDark,
             ),
             child: Text(
               "Done",
