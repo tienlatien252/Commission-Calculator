@@ -87,10 +87,10 @@ class _HistoryWeekModeViewState extends State<HistoryWeekModeView> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text("Date:"),
+                    Text("Week:"),
                     Container(
                       padding: EdgeInsets.all(10.0),
-                      child: OneDayView(
+                      child: WeekStringView(
                         date: date,
                         textColor: Colors.white,
                       ),

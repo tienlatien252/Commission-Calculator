@@ -46,10 +46,10 @@ class OneDayView extends StatelessWidget {
   Widget build(BuildContext context) {
     String formatted = formatter.format(date);
     Color realTextColor = textColor != null ? textColor : Colors.black;
-    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
+    return Text(formatted,
+        style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
-
 
 class ShortOneDayView extends StatelessWidget {
   ShortOneDayView({Key key, this.date, this.textColor}) : super(key: key);
@@ -61,7 +61,8 @@ class ShortOneDayView extends StatelessWidget {
   Widget build(BuildContext context) {
     Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
-    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
+    return Text(formatted,
+        style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 
@@ -75,24 +76,27 @@ class ShorterOneDayView extends StatelessWidget {
   Widget build(BuildContext context) {
     Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
-    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
+    return Text(formatted,
+        style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 
 class WeekStringView extends StatelessWidget {
-  WeekStringView({Key key, this.date}) : super(key: key);
+  WeekStringView({Key key, this.date, this.textColor}) : super(key: key);
   final formatter = new DateFormat.MMMMd();
   final DateTime date;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
+    Color realTextColor = textColor != null ? textColor : Colors.black;
     return Row(
       children: <Widget>[
         Text(formatter.format(beginOfWeek(date)),
-            style: TextStyle(fontSize: 20.0)),
-        Text("-"),
+            style: TextStyle(fontSize: 20.0, color: realTextColor)),
+        Text("-", style: TextStyle(color: realTextColor)),
         Text(formatter.format(endOfWeek(date)),
-            style: TextStyle(fontSize: 20.0)),
+            style: TextStyle(fontSize: 20.0, color: realTextColor)),
       ],
     );
   }

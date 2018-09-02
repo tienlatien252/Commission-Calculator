@@ -33,7 +33,7 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
         context: context,
         initialDate: date,
         lastDate: DateTime.now(),
-        firstDate: DateTime(date.year -5));
+        firstDate: DateTime(date.year - 5));
 
     if (datePicked != null && datePicked != date) {
       setState(() {
@@ -44,13 +44,13 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
 
   onPressBackButton() {
     setState(() {
-      date = DateTime(date.year,date.month-1);
+      date = DateTime(date.year, date.month - 1);
     });
   }
 
   onPressNextButton() {
     setState(() {
-      date = DateTime(date.year,date.month+1);
+      date = DateTime(date.year, date.month + 1);
     });
   }
 
@@ -85,17 +85,22 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
                 ),
               )),
           Expanded(
-              child: MonthDataView(
-                  date: date,
-                  commission: commission,
-                  nextButton: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_right),
-                    onPressed: onPressNextButton,
-                  ),
-                  backButton: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_left),
-                    onPressed: onPressBackButton,
-                  )))
+              child: Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
+            child: MonthDataView(
+                date: date,
+                commission: commission,
+                nextButton: IconButton(
+                  icon: Icon(Icons.keyboard_arrow_right),
+                  onPressed: onPressNextButton,
+                ),
+                backButton: IconButton(
+                  icon: Icon(Icons.keyboard_arrow_left),
+                  onPressed: onPressBackButton,
+                )),
+          ))
         ],
       );
     });
