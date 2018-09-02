@@ -37,14 +37,16 @@ DateTime secondEndOfWeek(DateTime date) {
 }
 
 class OneDayView extends StatelessWidget {
-  OneDayView({Key key, this.date}) : super(key: key);
+  OneDayView({Key key, this.date, this.textColor}) : super(key: key);
   final DateTime date;
+  final Color textColor;
   final formatter = new DateFormat.yMMMMEEEEd();
 
   @override
   Widget build(BuildContext context) {
     String formatted = formatter.format(date);
-    return Text(formatted, style: TextStyle(fontSize: 20.0));
+    Color realTextColor = textColor != null ? textColor : Colors.black;
+    return Text(formatted, style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 

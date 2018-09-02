@@ -32,7 +32,7 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
         context: context,
         initialDate: date,
         lastDate: DateTime.now(),
-        firstDate: DateTime(date.year -5));
+        firstDate: DateTime(date.year - 5));
 
     if (datePicked != null && datePicked != date) {
       setState(() {
@@ -63,38 +63,59 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
       return Column(
         children: <Widget>[
           Container(
-              color: Colors.greenAccent,
-              //padding: EdgeInsets.all(10.0),
-              child: Center(
+            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.only(
+                      bottomLeft: const Radius.circular(10.0),
+                      bottomRight: const Radius.circular(10.0))),
+              color: Theme.of(context).primaryColorDark,
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                color: Color.fromARGB(255, 76, 183, 219),
+                onPressed: () => onPressCalender(context),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    Icon(
+                      Icons.calendar_today,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text("Date:"),
                     Container(
                       padding: EdgeInsets.all(10.0),
                       child: OneDayView(
                         date: date,
+                        textColor: Colors.white,
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.calendar_today),
-                      color: Colors.red,
-                      onPressed: () => onPressCalender(context),
                     ),
                   ],
                 ),
-              )),
+              ),
+            ),
+          ),
           Expanded(
-              child: DayEditView(
-                  date: date,
-                  commission: commission,
-                  nextButton: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_right),
-                    onPressed: onPressNextButton,
-                  ),
-                  backButton: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_left),
-                    onPressed: onPressBackButton,
-                  )))
+              child: Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
+            child: DayEditView(
+                date: date,
+                commission: commission,
+                nextButton: IconButton(
+                  icon: Icon(Icons.keyboard_arrow_right),
+                  onPressed: onPressNextButton,
+                ),
+                backButton: IconButton(
+                  icon: Icon(Icons.keyboard_arrow_left),
+                  onPressed: onPressBackButton,
+                )),
+          ))
         ],
       );
     });

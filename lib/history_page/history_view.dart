@@ -66,32 +66,44 @@ class _HistoryViewState extends State<HistoryView> {
           children: <Widget>[
             Container(
                 padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorDark,
+                  //borderRadius: BorderRadius.circular(15.0)
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
                       viewModel.currentEmployer.name,
-                      style: TextStyle(fontSize: 30.0),
+                      style: TextStyle(fontSize: 30.0, color: Colors.white),
                     ),
-                    DropdownButton(
-                      value: _value,
-                      items: _values.map((String value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Row(
-                            children: <Widget>[
-                              Icon(Icons.date_range),
-                              Container(
-                                  padding:
-                                      EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                                  child: Text(value))
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String value) {
-                        _onChange(value);
-                      },
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10.0, 3.0, 10.0, 3.0),
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        color: Colors.white,
+                      ),
+                      child: DropdownButton(
+                        value: _value,
+                        items: _values.map((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.date_range),
+                                Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                        10.0, 0.0, 10.0, 0.0),
+                                    child: Text(value))
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String value) {
+                          _onChange(value);
+                        },
+                      ),
                     )
                   ],
                 )),
