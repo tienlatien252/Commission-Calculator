@@ -103,13 +103,15 @@ class WeekStringView extends StatelessWidget {
 }
 
 class MonthStringView extends StatelessWidget {
-  MonthStringView({Key key, this.date}) : super(key: key);
+  MonthStringView({Key key, this.date, this.textColor}) : super(key: key);
   final formatter = new DateFormat.yMMMM();
   final DateTime date;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    return Text(formatter.format(date), style: TextStyle(fontSize: 20.0));
+    Color realTextColor = textColor != null ? textColor : Colors.black;
+    return Text(formatter.format(date), style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 
