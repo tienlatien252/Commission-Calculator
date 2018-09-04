@@ -78,22 +78,23 @@ class _HistoryYearModeViewState extends State<HistoryYearModeView> {
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                color: Color.fromARGB(255, 76, 183, 219),
+                color: Theme.of(context).buttonColor,
                 onPressed: () => onPressCalender(context),
                 child: Row(
                   children: <Widget>[
                     Icon(
                       Icons.calendar_today,
+                      color: Colors.black54,
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text("Year:"),
+                    Text("Year:", style: TextStyle(color: Colors.black54)),
                     Container(
                       padding: EdgeInsets.all(10.0),
                       child: YearStringView(
                         date: date,
-                        textColor: Colors.white,
+                        textColor: Colors.black,
                       ),
                     ),
                   ],
@@ -196,11 +197,17 @@ class _YearDataViewState extends State<YearDataView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         widget.backButton,
-                        CommissionView(commission: commission),
+                        CommissionView(
+                            commission: commission,),
                         widget.nextButton
                       ],
                     ))
-                  : CommissionView(commission: commission);
+                  : Expanded(
+                      child: CommissionView(
+                      commission: commission,
+                      numberFontSize: 30.0,
+                      stringFontSize: 15.0,
+                    ));
               return Column(
                 children: <Widget>[
                   dataAndButton,

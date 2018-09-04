@@ -77,22 +77,23 @@ class _HistoryWeekModeViewState extends State<HistoryWeekModeView> {
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                color: Color.fromARGB(255, 76, 183, 219),
+                color: Theme.of(context).buttonColor,
                 onPressed: () => onPressCalender(context),
                 child: Row(
                   children: <Widget>[
                     Icon(
                       Icons.calendar_today,
+                      color: Colors.black54,
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text("Week:"),
+                    Text("Week:", style: TextStyle(color: Colors.black54)),
                     Container(
                       padding: EdgeInsets.all(10.0),
                       child: WeekStringView(
                         date: date,
-                        textColor: Colors.white,
+                        textColor: Colors.black,
                       ),
                     ),
                   ],

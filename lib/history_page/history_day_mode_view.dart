@@ -76,22 +76,24 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                color: Color.fromARGB(255, 76, 183, 219),
+                //color: Color.fromARGB(255, 76, 183, 219),
+                color: Theme.of(context).buttonColor,
                 onPressed: () => onPressCalender(context),
                 child: Row(
                   children: <Widget>[
                     Icon(
                       Icons.calendar_today,
+                      color: Colors.black54,
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text("Date:"),
+                    Text("Date:", style: TextStyle(color: Colors.black54),),
                     Container(
                       padding: EdgeInsets.all(10.0),
-                      child: OneDayView(
+                      child: ShortOneDayView(
                         date: date,
-                        textColor: Colors.white,
+                        textColor: Colors.black,
                       ),
                     ),
                   ],
