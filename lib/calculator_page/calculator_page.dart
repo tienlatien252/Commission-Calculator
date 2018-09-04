@@ -11,6 +11,7 @@ import 'slivers.dart';
 import 'small_commisison_widget.dart';
 import 'all_commission_view.dart';
 import 'time_range_picker_widget.dart';
+import '../commission_views/commission_data_view.dart';
 
 class CalculatorPageViewModel {
   CalculatorPageViewModel({this.currentUser, this.currentEmployer});
@@ -141,6 +142,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           pinned: true,
                           floating: false,
                           delegate: SliverResultDelegate(SmallCommissionsView(
+                            numberColor: Colors.white,
+                            stringColor: Colors.white70,
                             commission: totalCommission,
                           ))),
                     ];

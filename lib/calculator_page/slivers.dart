@@ -30,7 +30,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
             padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 8.0),
             child: Text(
               viewModel.currentEmployer.name,
-              style: TextStyle(fontSize: 30.0),
+              style: TextStyle(fontSize: 30.0, color: Colors.white),
             )),
         _timeRangePicker
       ]),
@@ -64,9 +64,9 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
         children: <Widget>[
           Text(
             'Result',
-            style: TextStyle(fontSize: 25.0, color: Colors.white),
+            style: TextStyle(fontSize: 30.0, color: Theme.of(context).accentColor),
           ),
-          resultCommission,
+          Container(child: resultCommission),
           //Text('Detail', style: TextStyle(fontSize: 25.0))
         ],
       ),

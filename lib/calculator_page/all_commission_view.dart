@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
 import 'small_commisison_widget.dart';
+import '../commission_views/commission_data_view.dart';
 
 class AllCommissionsView extends StatefulWidget {
   AllCommissionsView({Key key, this.listCommissions, this.totalCommission})
@@ -12,10 +13,6 @@ class AllCommissionsView extends StatefulWidget {
 
   @override
   _AllCommissionsViewState createState() => _AllCommissionsViewState();
-}
-
-DateTime getDateOnly(DateTime dateAndTime) {
-  return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
 }
 
 class _AllCommissionsViewState extends State<AllCommissionsView> {
