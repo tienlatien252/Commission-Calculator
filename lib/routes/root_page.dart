@@ -28,7 +28,7 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     FirebaseAuth.instance.currentUser().then((userId) {
-      if(userId != null){
+      if (userId != null) {
         widget.store.dispatch(CheckUserAction(userId));
         widget.store.dispatch(InitEmployersAction(getCurrentEmployer: true));
       }
@@ -67,7 +67,7 @@ class _RootPageState extends State<RootPage> {
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
                   children: <Widget>[
-                    Text("Login"),
+                    FittedBox(child: Text("Login", style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),)),
                   ],
                 ),
               ),

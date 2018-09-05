@@ -33,7 +33,7 @@ class _TodayViewState extends State<TodayView> {
           Container(
              margin: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorDark,
+                      color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(15.0)),
             child: Column(
               children: <Widget>[

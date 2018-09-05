@@ -85,7 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
             backgroundColor: Colors.white,
             title: Row(
               children: <Widget>[
-                Image.asset('assets/icon-reverse-retangle.png'),
+                Image.asset('assets/icon-retangle.png'),
                 SizedBox(width: 5.0,),
                 Text(widget.title),
               ],

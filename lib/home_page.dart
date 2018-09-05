@@ -107,9 +107,11 @@ class _HomePageState extends State<HomePage> {
     //bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Row(
           children: <Widget>[
             Image.asset('assets/icon-retangle.png'),
+            SizedBox(width: 5.0,),
             Text(widget.title),
           ],
         ),
