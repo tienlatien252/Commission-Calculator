@@ -65,25 +65,6 @@ class _EmployerSetupState extends State<EmployerSetup> {
                       child: Icon(Icons.add),
                       onPressed: _openAddEmployerDialog,
                     ),
-                    // InkWell(
-                    //   onTap: _openAddEmployerDialog,
-                    //   child: Container(
-                    //       padding: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-                    //       margin: EdgeInsets.all(10.0),
-                    //       decoration: ShapeDecoration(
-                    //         shape: RoundedRectangleBorder(
-                    //             borderRadius: BorderRadius.circular(10.0)),
-                    //         color: Theme
-                    //             .of(context)
-                    //             .primaryColorDark
-                    //             .withAlpha(100),
-                    //       ),
-                    //       child: Text(
-                    //         "Add A New Employer",
-                    //         style:
-                    //             TextStyle(fontSize: 20.0, color: Colors.white),
-                    //       )),
-                    // ),
                   ],
                 ),
               ),
@@ -153,11 +134,11 @@ class _NextButtonState extends State<NextButton> {
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).buttonColor,
             ),
             child: Text(
               "Done",
-              style: TextStyle(fontSize: 20.0, color: Colors.white),
+              style: TextStyle(fontSize: 20.0, color: Colors.black),
             )),
       );
     }); // This trailing c

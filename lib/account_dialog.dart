@@ -44,8 +44,7 @@ class _AccountDialogState extends State<AccountDialog> {
                 : currentUser.displayName;
             Widget accountPicture = currentUser.photoUrl != null
                 ? CircleAvatar(
-                    //backgroundColor: Colors.amber,
-                    child: Image.network(currentUser.photoUrl),
+                    backgroundImage: NetworkImage(currentUser.photoUrl),
                   )
                 : Icon(Icons.account_circle);
             return Scaffold(
@@ -55,6 +54,7 @@ class _AccountDialogState extends State<AccountDialog> {
               body: Column(
                 children: <Widget>[
                   UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
                       accountName: Text(displayName),
                       accountEmail: Text(currentUser.email),
                       currentAccountPicture: accountPicture),
@@ -75,17 +75,17 @@ class _AccountDialogState extends State<AccountDialog> {
                     child: Column(
                       children: <Widget>[
                         ListTile(
-                            leading: const Icon(Icons.edit),
+                            leading: const Icon(Icons.settings),
                             title: const Text('Manage Employers'),
                             onTap: () {
                               _openEmployersSetting();
                             }),
-                        ListTile(
-                            leading: const Icon(Icons.settings),
-                            title: const Text('Settings'),
-                            onTap: () {
-                              _openSetting();
-                            }),
+                        // ListTile(
+                        //     leading: const Icon(Icons.settings),
+                        //     title: const Text('Settings'),
+                        //     onTap: () {
+                        //       _openSetting();
+                        //     }),
                         ListTile(
                             leading: const Icon(Icons.exit_to_app),
                             title: const Text('Logout'),
