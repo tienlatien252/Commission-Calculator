@@ -86,6 +86,9 @@ class _EditDataViewState extends State<EditDataView> {
         widget.commission.id != null ? widget.commission.raw.toString() : "";
     String initTip =
         widget.commission.id != null ? widget.commission.tip.toString() : "";
+    
+    initRaw = initRaw.endsWith(".0") ? initRaw.substring(0, initRaw.length - 2) : initRaw;
+    initTip = initTip.endsWith(".0") ? initTip.substring(0, initTip.length - 2) : initTip;
 
     return StoreConnector<AppState, _EditDataViewModel>(
       converter: (Store<AppState> store) {
@@ -109,11 +112,11 @@ class _EditDataViewState extends State<EditDataView> {
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
-                      color: Theme.of(context).primaryColorDark.withAlpha(100),
+                      color: Theme.of(context).accentColor.withAlpha(100),
                     ),
                     child: Text(
                       "Cancel",
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      style: TextStyle(fontSize: 20.0, color: Colors.black),
                     )),
               ),
               InkWell(
@@ -124,11 +127,11 @@ class _EditDataViewState extends State<EditDataView> {
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
-                      color: Theme.of(context).primaryColorDark,
+                      color: Theme.of(context).accentColor,
                     ),
                     child: Text(
                       "Save",
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      style: TextStyle(fontSize: 20.0, color: Colors.black),
                     )),
               ),
             ],

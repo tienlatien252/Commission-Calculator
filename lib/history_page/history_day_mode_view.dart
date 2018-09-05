@@ -88,7 +88,10 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text("Date:", style: TextStyle(color: Colors.black54),),
+                    Text(
+                      "Date:",
+                      style: TextStyle(color: Colors.black54),
+                    ),
                     Container(
                       padding: EdgeInsets.all(10.0),
                       child: ShortOneDayView(

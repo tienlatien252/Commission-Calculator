@@ -66,6 +66,7 @@ class _MyAppState extends State<MyApp> {
               primaryColorLight: Color.fromRGBO(130, 233, 222, 1.0),
               buttonColor: Color.fromRGBO(255, 233, 125, 1.0),
               accentColor: Color.fromRGBO(255, 183, 77, 1.0),
+              //textSelectionColor: Color.fromRGBO(255, 183, 77, 1.0)
               //highlightColor: Color.fromRGBO(255, 183, 77, 1.0)
               //selectedRowColor: Color.fromRGBO(255, 183, 77, 1.0),
               //secondaryHeaderColor: Color.fromRGBO(255, 183, 77, 1.0)
