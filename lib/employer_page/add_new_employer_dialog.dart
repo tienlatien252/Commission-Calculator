@@ -156,11 +156,11 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
-                      color: Theme.of(context).primaryColorDark.withAlpha(100),
+                      color: Theme.of(context).accentColor.withAlpha(100),
                     ),
                     child: Text(
                       "Cancel",
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      style: TextStyle(fontSize: 20.0, color: Colors.black),
                     )),
               ),
               InkWell(
@@ -173,11 +173,11 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
-                      color: Theme.of(context).primaryColorDark,
+                      color: Theme.of(context).accentColor,
                     ),
                     child: Text(
                       "Save",
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      style: TextStyle(fontSize: 20.0, color: Colors.black),
                     )),
               ),
             ],
