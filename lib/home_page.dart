@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColorLight,
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Today'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),

@@ -83,21 +83,24 @@ class ShorterOneDayView extends StatelessWidget {
 
 class WeekStringView extends StatelessWidget {
   WeekStringView({Key key, this.date, this.textColor}) : super(key: key);
-  final formatter = new DateFormat.MMMMd();
+  final formatter = new DateFormat.MMMd();
   final DateTime date;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
     Color realTextColor = textColor != null ? textColor : Colors.black;
-    return Row(
-      children: <Widget>[
-        Text(formatter.format(beginOfWeek(date)),
-            style: TextStyle(fontSize: 20.0, color: realTextColor)),
-        Text("-", style: TextStyle(color: realTextColor)),
-        Text(formatter.format(endOfWeek(date)),
-            style: TextStyle(fontSize: 20.0, color: realTextColor)),
-      ],
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        children: <Widget>[
+          Text(formatter.format(beginOfWeek(date)),
+              style: TextStyle(fontSize: 20.0, color: realTextColor)),
+          Text("-", style: TextStyle(color: realTextColor)),
+          Text(formatter.format(endOfWeek(date)),
+              style: TextStyle(fontSize: 20.0, color: realTextColor)),
+        ],
+      ),
     );
   }
 }
@@ -111,7 +114,8 @@ class MonthStringView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color realTextColor = textColor != null ? textColor : Colors.black;
-    return Text(formatter.format(date), style: TextStyle(fontSize: 20.0, color: realTextColor));
+    return Text(formatter.format(date),
+        style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }
 
@@ -121,10 +125,10 @@ class YearStringView extends StatelessWidget {
   final DateTime date;
   final Color textColor;
 
-
   @override
   Widget build(BuildContext context) {
     Color realTextColor = textColor != null ? textColor : Colors.black;
-    return Text(formatter.format(date), style: TextStyle(fontSize: 20.0, color: realTextColor));
+    return Text(formatter.format(date),
+        style: TextStyle(fontSize: 20.0, color: realTextColor));
   }
 }

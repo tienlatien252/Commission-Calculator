@@ -65,25 +65,33 @@ class _HistoryViewState extends State<HistoryView> {
         return Column(
           children: <Widget>[
             Container(
+                margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                 padding: EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColorDark,
-                  //borderRadius: BorderRadius.circular(15.0)
-                ),
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(15.0),
+                        topRight: const Radius.circular(15.0))
+                    //borderRadius: BorderRadius.circular(15.0)
+                    ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      viewModel.currentEmployer.name,
-                      style: TextStyle(fontSize: 30.0, color: Colors.white),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                      child: Text(
+                        viewModel.currentEmployer.name,
+                        style: TextStyle(fontSize: 40.0, color: Colors.white),
+                      ),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(10.0, 3.0, 10.0, 3.0),
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                       decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)),
-                        color: Colors.white,
-                      ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          //color: Colors.white,
+                          color: Theme.of(context).primaryColorLight),
                       child: DropdownButton(
                         value: _value,
                         items: _values.map((String value) {

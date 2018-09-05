@@ -65,13 +65,14 @@ class _HistoryYearModeViewState extends State<HistoryYearModeView> {
       return Column(
         children: <Widget>[
           Container(
+            margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
             padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.only(
-                      bottomLeft: const Radius.circular(10.0),
-                      bottomRight: const Radius.circular(10.0))),
-              color: Theme.of(context).primaryColorDark,
+                      bottomLeft: const Radius.circular(15.0),
+                      bottomRight: const Radius.circular(15.0))),
+              color: Theme.of(context).primaryColor,
             ),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -111,11 +112,13 @@ class _HistoryYearModeViewState extends State<HistoryYearModeView> {
                 date: date,
                 commission: commission,
                 nextButton: IconButton(
-                  icon: Icon(Icons.keyboard_arrow_right),
+                  color: Theme.of(context).accentColor,
+                  icon: Icon(Icons.arrow_forward_ios),
                   onPressed: onPressNextButton,
                 ),
                 backButton: IconButton(
-                  icon: Icon(Icons.keyboard_arrow_left),
+                  color: Theme.of(context).accentColor,
+                  icon: Icon(Icons.arrow_back_ios),
                   onPressed: onPressBackButton,
                 )),
           ))
