@@ -40,6 +40,7 @@ flutter:
     - assets/alucard.jpg
     - assets/icon-retangle.png
     - assets/icon-square.png
+    - assets/icon-retangle-rounder.png
     - assets/icon-reverse-square.png
     - assets/icon-reverse-retangle.png
 

@@ -10,19 +10,21 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
   final CalculatorPageViewModel viewModel;
 
   @override
-  double get minExtent => 165.0;
+  double get minExtent => 190.0;
   @override
-  double get maxExtent => 165.0;
+  double get maxExtent => 200.0;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      margin: EdgeInsets.all(10.0),
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.only(
-                bottomLeft: const Radius.circular(10.0),
-                bottomRight: const Radius.circular(10.0))),
-        color: Theme.of(context).primaryColorDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)
+            // borderRadius: new BorderRadius.only(
+            //     bottomLeft: const Radius.circular(10.0),
+            //     bottomRight: const Radius.circular(10.0))
+            ),
+        color: Theme.of(context).primaryColor,
       ),
       child: Column(children: <Widget>[
         Container(
@@ -30,7 +32,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
             padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 8.0),
             child: Text(
               viewModel.currentEmployer.name,
-              style: TextStyle(fontSize: 30.0, color: Colors.white),
+              style: TextStyle(fontSize: 40.0, color: Colors.white),
             )),
         _timeRangePicker
       ]),
@@ -57,14 +59,16 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          //color: Colors.white,
-          color: Theme.of(context).primaryColorDark,
+          color: Colors.white,
+          //color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(15.0)),
       child: Column(
         children: <Widget>[
           Text(
             'Result',
-            style: TextStyle(fontSize: 30.0, color: Theme.of(context).accentColor),
+            style:
+                TextStyle(fontSize: 30.0, color: Colors.black
+                ),
           ),
           Container(child: resultCommission),
           //Text('Detail', style: TextStyle(fontSize: 25.0))

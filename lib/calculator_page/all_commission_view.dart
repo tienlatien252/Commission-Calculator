@@ -33,7 +33,7 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
               Text('Details')
             ]),
         children: <Widget>[
-          SmallCommissionsView(commission: widget.listCommissions[index])
+          SmallCommissionsView(commission: widget.listCommissions[index], numberColor: Theme.of(context).primaryColorDark,)
         ],
       ),
     );

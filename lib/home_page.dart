@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         title: Row(
           children: <Widget>[
-            Image.asset('assets/icon-retangle.png'),
+            Image.asset('assets/icon-retangle-rounder.png'),
             SizedBox(width: 5.0,),
             Text(widget.title),
           ],
