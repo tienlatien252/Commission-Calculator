@@ -82,7 +82,14 @@ class _SignInScreenState extends State<SignInScreen> {
     }, builder: (BuildContext context, _LoginViewModel viewModel) {
       return Scaffold(
           appBar: AppBar(
-            title: Text(widget.title),
+            backgroundColor: Colors.white,
+            title: Row(
+              children: <Widget>[
+                Image.asset('assets/icon-reverse-retangle.png'),
+                SizedBox(width: 5.0,),
+                Text(widget.title),
+              ],
+            ),
             elevation: 4.0,
           ),
           body: Builder(

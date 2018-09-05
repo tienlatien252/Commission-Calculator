@@ -29,7 +29,7 @@ class UserView {
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
-  final String title = "Commission Calculator";
+  final String title = "Calmission";
 
   @override
   _MyAppState createState() => _MyAppState();

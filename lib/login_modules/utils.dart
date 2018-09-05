@@ -56,6 +56,8 @@ class ButtonDescription extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: RaisedButton(
+         shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           color: color,
           child: Row(
             children: <Widget>[

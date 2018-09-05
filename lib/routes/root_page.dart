@@ -64,8 +64,12 @@ class _RootPageState extends State<RootPage> {
             header: Padding(
               padding: const EdgeInsets.symmetric(vertical: 32.0),
               child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Text("Demo"),
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: <Widget>[
+                    Text("Login"),
+                  ],
+                ),
               ),
             ));
       case AuthStatus.signedIn:

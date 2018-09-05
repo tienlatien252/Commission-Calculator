@@ -16,7 +16,7 @@ class LoginView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _LoginViewState createState() =>  _LoginViewState();
+  _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
@@ -27,8 +27,8 @@ class _LoginViewState extends State<LoginView> {
   _handleEmailSignIn() async {
     String value = await Navigator
         .of(context)
-        .push( MaterialPageRoute<String>(builder: (BuildContext context) {
-      return  EmailView();
+        .push(MaterialPageRoute<String>(builder: (BuildContext context) {
+      return EmailView();
     }));
 
     if (value != null) {
@@ -37,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   _handleGoogleSignIn() async {
-    GoogleSignIn _googleSignIn =  GoogleSignIn();
+    GoogleSignIn _googleSignIn = GoogleSignIn();
 
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     if (googleUser != null) {
@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   _handleFacebookSignin() async {
-    var facebookLogin =  FacebookLogin();
+    var facebookLogin = FacebookLogin();
     FacebookLoginResult result =
         await facebookLogin.logInWithReadPermissions(['email']);
     if (result.accessToken != null) {
@@ -85,12 +85,17 @@ class _LoginViewState extends State<LoginView> {
           .copyWith(onSelected: _handleEmailSignIn),
     };
 
-    return  Container(
-        child:  Column(
+    return Container(
+        child: Column(
             children: widget.providers.map((p) {
-      return  Container(
+      return Container(
+          // decoration: ShapeDecoration(
+          //   shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(15.0)),
+          //   color: Theme.of(context).accentColor.withAlpha(100),
+          // ),
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: _buttons[p] ??  Container());
+          child: _buttons[p] ?? Container());
     }).toList()));
   }
 

@@ -38,6 +38,10 @@ flutter:
   assets:
     - assets/logo.png
     - assets/alucard.jpg
+    - assets/icon-retangle.png
+    - assets/icon-square.png
+    - assets/icon-reverse-square.png
+    - assets/icon-reverse-retangle.png
 
     - assets/fb-logo.png
     - assets/2.0x/fb-logo.png
