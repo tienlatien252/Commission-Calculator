@@ -29,7 +29,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
       child: Column(children: <Widget>[
         Container(
             alignment: AlignmentDirectional.centerStart,
-            padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 8.0),
+            padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 8.0),
             child: Text(
               viewModel.currentEmployer.name,
               style: TextStyle(fontSize: 40.0, color: Colors.white),
@@ -67,7 +67,7 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
           Text(
             'Result',
             style:
-                TextStyle(fontSize: 30.0, color: Colors.black
+                TextStyle(fontSize: 30.0, color: Theme.of(context).primaryColorDark
                 ),
           ),
           Container(child: resultCommission),

@@ -142,8 +142,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           pinned: true,
                           floating: false,
                           delegate: SliverResultDelegate(SmallCommissionsView(
-                            //numberColor: Colors.black,
-                            numberColor: Theme.of(context).primaryColorDark,
+                            numberColor: Colors.black,
+                            //numberColor: Theme.of(context).primaryColorDark,
                             stringColor: Colors.black87,
                             commission: totalCommission,
                           ))),

@@ -39,14 +39,14 @@ class _TodayViewState extends State<TodayView> {
               children: <Widget>[
                 Container(
                     alignment: AlignmentDirectional.centerStart,
-                    padding: EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
+                    padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 17.0),
                     child: Text(
                       viewModel.currentEmployer.name,
                       style: TextStyle(fontSize: 40.0, color: Colors.white),
                     )),
                 Container(
                   alignment: AlignmentDirectional.centerStart,
-                  padding: EdgeInsets.fromLTRB(10.0, 13.0, 10.0, 13.0),
+                  padding: EdgeInsets.fromLTRB(20.0, 13.0, 10.0, 13.0),
                   child: OneDayView(
                     date: date,
                   ),
