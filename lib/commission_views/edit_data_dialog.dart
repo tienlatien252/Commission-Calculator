@@ -99,6 +99,7 @@ class _EditDataViewState extends State<EditDataView> {
       builder: (BuildContext context, _EditDataViewModel viewModel) {
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.white,
             title: Text(widget.title),
           ),
           floatingActionButton: Row(

@@ -29,11 +29,11 @@ class _AllCommissionsViewState extends State<AllCommissionsView> {
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              ShorterOneDayView(date: widget.listCommissions[index].date, textColor: Theme.of(context).primaryColorDark,),
+              ShorterOneDayView(date: widget.listCommissions[index].date, textColor: Theme.of(context).textSelectionColor,),
               Text('Details')
             ]),
         children: <Widget>[
-          SmallCommissionsView(commission: widget.listCommissions[index],)
+          SmallCommissionsView(commission: widget.listCommissions[index], stringColor: Colors.black87,)
         ],
       ),
     );

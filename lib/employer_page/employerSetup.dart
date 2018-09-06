@@ -52,6 +52,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Employer\'s setup"),
+          backgroundColor: Colors.white,
         ),
         body: Center(
           child: Column(
@@ -62,6 +63,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     FloatingActionButton(
+                      backgroundColor: Theme.of(context).primaryColor,
                       child: Icon(Icons.add),
                       onPressed: _openAddEmployerDialog,
                     ),
@@ -134,7 +136,7 @@ class _NextButtonState extends State<NextButton> {
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              color: Theme.of(context).buttonColor,
+              color: Theme.of(context).accentColor,
             ),
             child: Text(
               "Done",

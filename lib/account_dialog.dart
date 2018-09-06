@@ -50,11 +50,12 @@ class _AccountDialogState extends State<AccountDialog> {
             return Scaffold(
               appBar: AppBar(
                 title: Text("Account"),
+                backgroundColor: Colors.white,
               ),
               body: Column(
                 children: <Widget>[
                   UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                       accountName: Text(displayName),
                       accountEmail: Text(currentUser.email),
                       currentAccountPicture: accountPicture),

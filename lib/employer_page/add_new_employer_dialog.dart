@@ -102,6 +102,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          backgroundColor: Colors.white,
         ),
         body: Container(
             padding: EdgeInsets.all(10.0),
