@@ -35,7 +35,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  
 
   BannerAd bannerAd;
   InterstitialAd interstitialAd;
@@ -103,7 +102,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _children = [TodayView(), HistoryView(), CalculatorPage()];
     //bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
       appBar: AppBar(
@@ -111,7 +109,9 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           children: <Widget>[
             Image.asset('assets/icon-retangle-rounder.png'),
-            SizedBox(width: 5.0,),
+            SizedBox(
+              width: 5.0,
+            ),
             Text(widget.title),
           ],
         ),
@@ -135,8 +135,25 @@ class _HomePageState extends State<HomePage> {
           }),
         ],
       ),
-      //drawer: MyDrawer(),
-      body: _children[_currentIndex],
+      body: Stack(
+        children: <Widget>[
+          Offstage(
+            offstage: _currentIndex != 0,
+            child: TickerMode(
+                enabled: _currentIndex == 0, child: TodayView()),
+          ),
+          Offstage(
+            offstage: _currentIndex != 1,
+            child: TickerMode(
+                enabled: _currentIndex == 1, child: HistoryView()),
+          ),
+          Offstage(
+            offstage: _currentIndex != 2,
+            child: TickerMode(
+                enabled: _currentIndex == 2, child: CalculatorPage()),
+          )
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new
