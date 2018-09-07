@@ -77,7 +77,7 @@ class _HistoryWeekModeViewState extends State<HistoryWeekModeView> {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: FlatButton(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                    borderRadius: BorderRadius.circular(30.0)),
                 color: Theme.of(context).buttonColor,
                 onPressed: () => onPressCalender(context),
                 child: Row(

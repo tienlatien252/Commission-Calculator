@@ -89,7 +89,7 @@ class _HistoryViewState extends State<HistoryView> {
                       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                       decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                              borderRadius: BorderRadius.circular(30.0)),
                           //color: Colors.white,
                           color: Theme.of(context).primaryColorLight),
                       child: DropdownButton(

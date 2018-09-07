@@ -133,7 +133,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                             TextStyle(fontSize: 25.0, color: Colors.black54)),
                     trailing: new Text(
                       "$_comissionRate %",
-                      style: TextStyle(fontSize: 25.0, color: Colors.black),
+                      style: TextStyle(fontSize: 25.0, color: Theme.of(context).primaryColorDark),
                     ),
                     onTap: () => _showRatePicker(context))
               ],
@@ -152,16 +152,16 @@ class _AddEmployerViewState extends State<AddEmployerView> {
               InkWell(
                 onTap: onPresscancel,
                 child: Container(
-                    padding: EdgeInsets.all(15.0),
+                     padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     margin: EdgeInsets.all(10.0),
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      color: Theme.of(context).accentColor.withAlpha(100),
+                          borderRadius: BorderRadius.circular(30.0)),
+                      color: Theme.of(context).accentColor.withAlpha(400),
                     ),
                     child: Text(
                       "Cancel",
-                      style: TextStyle(fontSize: 20.0, color: Colors.black),
+                      style: TextStyle(fontSize: 20.0, color: Colors.grey),
                     )),
               ),
               InkWell(
@@ -169,11 +169,11 @@ class _AddEmployerViewState extends State<AddEmployerView> {
                   _saveNewEmployer(viewModel.onChangeEmployers, viewModel.user);
                 },
                 child: Container(
-                    padding: EdgeInsets.all(15.0),
+                     padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     margin: EdgeInsets.all(10.0),
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
+                          borderRadius: BorderRadius.circular(30.0)),
                       color: Theme.of(context).accentColor,
                     ),
                     child: Text(

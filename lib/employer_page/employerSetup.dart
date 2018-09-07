@@ -131,11 +131,11 @@ class _NextButtonState extends State<NextButton> {
       return InkWell(
         onTap: () => _saveEmployersAndGoNext(viewModel),
         child: Container(
-            padding: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+            padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             margin: EdgeInsets.all(10.0),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(30.0)),
               color: Theme.of(context).accentColor,
             ),
             child: Text(
