@@ -12,7 +12,6 @@ class EmailView extends StatefulWidget {
 }
 
 class _EmailViewState extends State<EmailView> {
-  final TextEditingController _controllerEmail = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _emailText;
 

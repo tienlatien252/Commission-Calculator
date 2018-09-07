@@ -29,6 +29,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
       appBar: AppBar(
         title: Text(FFULocalizations.of(context).recoverPasswordTitle),
         elevation: 4.0,
+        backgroundColor: Colors.white,
       ),
       body: Builder(
         builder: (BuildContext context) {
@@ -40,6 +41,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
                   controller: _controllerEmail,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
+                  autofocus: true,
                   decoration: InputDecoration(
                       labelText: FFULocalizations.of(context).emailLabel),
                 ),
@@ -56,21 +58,27 @@ class _TroubleSignInState extends State<TroubleSignIn> {
           );
         },
       ),
-      persistentFooterButtons: <Widget>[
-        ButtonBar(
+      floatingActionButton: ButtonBar(
           alignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            FlatButton(
-                onPressed: () => _send(context),
-                child: Row(
-                  children: <Widget>[
-                    Text(FFULocalizations.of(context).sendButtonLabel),
-                  ],
-                )),
+            InkWell(
+              onTap: () => _send(context),
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  //margin: EdgeInsets.all(10.0),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    color: Theme.of(context).accentColor.withAlpha(100),
+                  ),
+                  child: Text(
+                    FFULocalizations.of(context).sendButtonLabel,
+                    style: TextStyle(fontSize: 20.0, color: Colors.black),
+                  )),
+            ),
           ],
-        )
-      ],
+        ),
     );
   }
 
