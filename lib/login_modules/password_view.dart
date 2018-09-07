@@ -29,66 +29,72 @@ class _PasswordViewState extends State<PasswordView> {
   Widget build(BuildContext context) {
     _controllerEmail.text = widget.email;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(FFULocalizations.of(context).signInTitle),
-        elevation: 4.0,
-      ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  controller: _controllerEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                      labelText: FFULocalizations.of(context).emailLabel),
-                ),
-                //const SizedBox(height: 5.0),
-                TextField(
-                  controller: _controllerPassword,
-                  obscureText: true,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                      labelText: FFULocalizations.of(context).passwordLabel),
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                        child: Text(
-                          FFULocalizations.of(context).troubleSigningInLabel,
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                        onTap: _handleLostPassword)),
-              ],
-            ),
-          );
-        },
-      ),
-      persistentFooterButtons: <Widget>[
-        ButtonBar(
+        appBar: AppBar(
+          title: Text(FFULocalizations.of(context).signInTitle),
+          elevation: 4.0,
+          backgroundColor: Colors.white,
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: _controllerEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                        labelText: FFULocalizations.of(context).emailLabel),
+                  ),
+                  //const SizedBox(height: 5.0),
+                  TextField(
+                    autofocus: true,
+                    controller: _controllerPassword,
+                    obscureText: true,
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                        labelText: FFULocalizations.of(context).passwordLabel),
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      child: InkWell(
+                          child: Text(
+                            FFULocalizations.of(context).troubleSigningInLabel,
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                          onTap: _handleLostPassword)),
+                ],
+              ),
+            );
+          },
+        ),
+        floatingActionButton: ButtonBar(
           alignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            FlatButton(
-                onPressed: () => _connexion(context),
-                child: Row(
-                  children: <Widget>[
-                    Text(FFULocalizations.of(context).signInLabel),
-                  ],
-                )),
+            InkWell(
+              onTap: () => _connexion(context),
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  //margin: EdgeInsets.all(10.0),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    color: Theme.of(context).accentColor.withAlpha(100),
+                  ),
+                  child: Text(
+                    FFULocalizations.of(context).signInLabel,
+                    style: TextStyle(fontSize: 20.0, color: Colors.black),
+                  )),
+            ),
           ],
-        )
-      ],
-    );
+        ));
   }
 
   _handleLostPassword() {
-    Navigator
-        .of(context)
+    Navigator.of(context)
         .push(new MaterialPageRoute<Null>(builder: (BuildContext context) {
       return TroubleSignIn(_controllerEmail.text);
     }));

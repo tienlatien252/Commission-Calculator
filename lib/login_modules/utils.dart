@@ -5,12 +5,14 @@ import 'package:meta/meta.dart';
 
 import 'l10n/localization.dart';
 
-enum ProvidersTypes { email, google, facebook, twitter, phone }
+enum ProvidersTypes { email, google, facebook, twitter, phone, anonymous }
 
 ProvidersTypes stringToProvidersType(String value) {
   if (value.toLowerCase().contains('facebook')) return ProvidersTypes.facebook;
   if (value.toLowerCase().contains('google')) return ProvidersTypes.google;
   if (value.toLowerCase().contains('password')) return ProvidersTypes.email;
+  if (value.toLowerCase().contains('anonymous'))
+    return ProvidersTypes.anonymous;
 //TODO  if (value.toLowerCase().contains('twitter')) return ProvidersTypes.twitter;
 //TODO  if (value.toLowerCase().contains('phone')) return ProvidersTypes.phone;
   return null;
@@ -52,19 +54,21 @@ class ButtonDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget logoWidget =
+        name == "Anonymous" ? Icon(Icons.lock, color: Colors.white70,) : Image.asset('assets/$logo');
     VoidCallback _onSelected = onSelected ?? () => {};
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: RaisedButton(
-         shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           color: color,
           child: Row(
             children: <Widget>[
               Container(
                   padding: const EdgeInsets.only(
                       top: 8.0, bottom: 8.0, left: 16.0, right: 32.0),
-                  child: Image.asset('assets/$logo')),
+                  child: logoWidget),
               Expanded(
                 child: Text(
                   label,
@@ -99,6 +103,12 @@ Map<ProvidersTypes, ButtonDescription> providersDefinitions(
           label: FFULocalizations.of(context).signInEmail,
           name: "Email",
           labelColor: Colors.white),
+      ProvidersTypes.anonymous: ButtonDescription(
+          color: Colors.black87,
+          logo: "email-logo.png",
+          label: FFULocalizations.of(context).signInAnonymous,
+          name: "Anonymous",
+          labelColor: Colors.white70),
     };
 
 Future<Null> showErrorDialog(BuildContext context, String message,

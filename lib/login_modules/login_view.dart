@@ -25,8 +25,7 @@ class _LoginViewState extends State<LoginView> {
   Map<ProvidersTypes, ButtonDescription> _buttons;
 
   _handleEmailSignIn() async {
-    String value = await Navigator
-        .of(context)
+    String value = await Navigator.of(context)
         .push(MaterialPageRoute<String>(builder: (BuildContext context) {
       return EmailView();
     }));
@@ -72,6 +71,15 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  _handleAnonymousSignin() async {
+    try {
+      final FirebaseUser anonymousUser = await _auth.signInAnonymously();
+      print(anonymousUser);
+    } catch (e) {
+      showErrorDialog(context, e.details);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _buttons = {
@@ -83,6 +91,9 @@ class _LoginViewState extends State<LoginView> {
               .copyWith(onSelected: _handleGoogleSignIn),
       ProvidersTypes.email: providersDefinitions(context)[ProvidersTypes.email]
           .copyWith(onSelected: _handleEmailSignIn),
+      ProvidersTypes.anonymous:
+          providersDefinitions(context)[ProvidersTypes.anonymous]
+              .copyWith(onSelected: _handleAnonymousSignin),
     };
 
     return Container(

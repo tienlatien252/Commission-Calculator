@@ -8,113 +8,138 @@ import 'utils.dart';
 
 class EmailView extends StatefulWidget {
   @override
-  _EmailViewState createState() =>  _EmailViewState();
+  _EmailViewState createState() => _EmailViewState();
 }
 
 class _EmailViewState extends State<EmailView> {
-  final TextEditingController _controllerEmail =  TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _emailText;
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Email Is Not Valid';
+    else
+      return null;
+  }
 
   @override
-  Widget build(BuildContext context) =>  Scaffold(
-        appBar:  AppBar(
-          title:  Text(FFULocalizations.of(context).welcome),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(FFULocalizations.of(context).welcome),
+          backgroundColor: Colors.white,
           elevation: 4.0,
         ),
-        body:  Builder(
+        body: Builder(
           builder: (BuildContext context) {
-            return  Padding(
+            return Padding(
               padding: const EdgeInsets.all(16.0),
-              child:  Column(
+              child: Column(
                 children: <Widget>[
-                   TextField(
-                    controller: _controllerEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
-                    decoration:  InputDecoration(
-                        labelText: FFULocalizations.of(context).emailLabel),
+                  Form(
+                    key: _formKey,
+                    child: TextFormField(
+                        validator: validateEmail,
+                        autofocus: true,
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                            labelText: FFULocalizations.of(context).emailLabel),
+                        onSaved: (String value) {
+                          _emailText = value;
+                        }),
                   ),
                 ],
               ),
             );
           },
         ),
-        persistentFooterButtons: <Widget>[
-           ButtonBar(
-            alignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-               FlatButton(
-                  onPressed: () => _connexion(context),
-                  child:  Row(
-                    children: <Widget>[
-                       Text(FFULocalizations.of(context).nextButtonLabel),
-                    ],
+        floatingActionButton: ButtonBar(
+          alignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            InkWell(
+              onTap: () => _connexion(context),
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  margin: EdgeInsets.all(10.0),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    color: Theme.of(context).accentColor.withAlpha(100),
+                  ),
+                  child: Text(
+                    FFULocalizations.of(context).nextButtonLabel,
+                    style: TextStyle(fontSize: 20.0, color: Colors.black),
                   )),
-            ],
-          )
-        ],
+            ),
+          ],
+        ),
       );
 
   _connexion(BuildContext context) async {
-    try {
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      List<String> providers =
-          await auth.fetchProvidersForEmail(email: _controllerEmail.text);
-      print(providers);
+    if (this._formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      try {
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        List<String> providers =
+            await auth.fetchProvidersForEmail(email: _emailText);
+        print(providers);
 
-      if (providers.isEmpty) {
-        bool connected = await Navigator
-            .of(context)
-            .push( MaterialPageRoute<bool>(builder: (BuildContext context) {
-          return  SignUpView(_controllerEmail.text);
-        }));
+        if (providers.isEmpty) {
+          bool connected = await Navigator.of(context)
+              .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+            return SignUpView(_emailText);
+          }));
 
-        if (connected) {
-          Navigator.pop(context);
-        }
-      } else if (providers.contains('password')) {
-        bool connected = await Navigator
-            .of(context)
-            .push( MaterialPageRoute<bool>(builder: (BuildContext context) {
-          return  PasswordView(_controllerEmail.text);
-        }));
+          if (connected) {
+            Navigator.pop(context);
+          }
+        } else if (providers.contains('password')) {
+          bool connected = await Navigator.of(context)
+              .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+            return PasswordView(_emailText);
+          }));
 
-        if (connected) {
-          Navigator.pop(context);
+          if (connected) {
+            Navigator.pop(context);
+          }
+        } else {
+          String provider = await _showDialogSelectOtherProvider(
+              _emailText, providers);
+          if (provider.isNotEmpty) {
+            Navigator.pop(context, provider);
+          }
         }
-      } else {
-        String provider = await _showDialogSelectOtherProvider(
-            _controllerEmail.text, providers);
-        if (provider.isNotEmpty) {
-          Navigator.pop(context, provider);
-        }
+      } catch (exception) {
+        print(exception);
       }
-    } catch (exception) {
-      print(exception);
     }
   }
 
   _showDialogSelectOtherProvider(String email, List<String> providers) {
     var providerName = _providersToString(providers);
-    return showDialog<Null>(
+    return showDialog<String>(
       context: context,
       barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) =>  AlertDialog(
-            content:  SingleChildScrollView(
-                child:  ListBody(
+      builder: (BuildContext context) => new AlertDialog(
+            content: new SingleChildScrollView(
+                child: new ListBody(
               children: <Widget>[
-                 Text(FFULocalizations
-                    .of(context)
+                new Text(FFULocalizations.of(context)
                     .allReadyEmailMessage(email, providerName)),
-                 SizedBox(
+                new SizedBox(
                   height: 16.0,
                 ),
-                 Column(
+                new Column(
                   children: providers.map((String p) {
-                    return  RaisedButton(
-                      child:  Row(
+                    return new RaisedButton(
+                      child: new Row(
                         children: <Widget>[
-                           Text(_providerStringToButton(p)),
+                          new Text(_providerStringToButton(p)),
                         ],
                       ),
                       onPressed: () {
@@ -126,14 +151,14 @@ class _EmailViewState extends State<EmailView> {
               ],
             )),
             actions: <Widget>[
-               FlatButton(
-                child:  Row(
+              new FlatButton(
+                child: new Row(
                   children: <Widget>[
-                     Text(FFULocalizations.of(context).cancelButtonLabel),
+                    new Text(FFULocalizations.of(context).cancelButtonLabel),
                   ],
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop('');
                 },
               ),
             ],

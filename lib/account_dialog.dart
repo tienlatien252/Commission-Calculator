@@ -47,6 +47,7 @@ class _AccountDialogState extends State<AccountDialog> {
                     backgroundImage: NetworkImage(currentUser.photoUrl),
                   )
                 : Icon(Icons.account_circle);
+            String email = currentUser.email != null ? currentUser.email : "example@email.com";
             return Scaffold(
               appBar: AppBar(
                 title: Text("Account"),
@@ -57,7 +58,7 @@ class _AccountDialogState extends State<AccountDialog> {
                   UserAccountsDrawerHeader(
                     decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                       accountName: Text(displayName),
-                      accountEmail: Text(currentUser.email),
+                      accountEmail: Text(email),
                       currentAccountPicture: accountPicture),
                   ListTile(
                     title: const Text(
@@ -94,45 +95,6 @@ class _AccountDialogState extends State<AccountDialog> {
                       ],
                     ),
                   ),
-
-                  //ListView(children: [
-                  // Column(children: [
-                  //   UserAccountsDrawerHeader(
-                  //       accountName: Text(displayName),
-                  //       accountEmail: Text(currentUser.email),
-                  //       currentAccountPicture: accountPicture),
-                  //   ListTile(
-                  //     title: const Text(
-                  //       'Employers List',
-                  //       style: TextStyle(
-                  //           fontWeight: FontWeight.bold, fontSize: 20.0),
-                  //     ),
-                  //   ),
-                  //   EmployersListView(
-                  //     isDrawer: true,
-                  //   ),
-                  // ]),
-                  // Column(
-                  //   children: <Widget>[
-                  //     ListTile(
-                  //         leading: const Icon(Icons.edit),
-                  //         title: const Text('Manage Employers'),
-                  //         onTap: () {
-                  //           _openEmployersSetting();
-                  //         }),
-                  //     ListTile(
-                  //         leading: const Icon(Icons.settings),
-                  //         title: const Text('Settings'),
-                  //         onTap: () {
-                  //           _openSetting();
-                  //         }),
-                  //     ListTile(
-                  //         leading: const Icon(Icons.exit_to_app),
-                  //         title: const Text('Logout'),
-                  //         onTap: _signOut),
-                  //   ],
-                  // )
-                  //])
                 ],
               ),
             );

@@ -37,6 +37,7 @@ class TranslationBundle {
   String get signInFacebook => parent?.signInFacebook;
   String get signInGoogle => parent?.signInGoogle;
   String get signInEmail => parent?.signInEmail;
+  String get signInAnonymous => parent?.signInAnonymous;
 
   String get errorOccurred => parent?.errorOccurred;
 
@@ -185,6 +186,9 @@ Sign in with $providerName to continue.''';
 
   @override
   String get signInGoogle => r'Sign in with Google';
+
+  @override
+  String get signInAnonymous => r'Log in Anonymously';
 
   @override
   String get signInEmail => r'Sign in with email';

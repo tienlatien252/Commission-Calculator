@@ -45,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
   StreamSubscription<FirebaseUser> _listener;
 
   List<ProvidersTypes> get _providers =>
-      widget.providers ?? [ProvidersTypes.google, ProvidersTypes.email];
+      widget.providers ?? [ProvidersTypes.google, ProvidersTypes.email, ProvidersTypes.anonymous];
 
   @override
   void initState() {
