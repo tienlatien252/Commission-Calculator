@@ -63,6 +63,7 @@ class _EmployerSetupState extends State<EmployerSetup> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     FloatingActionButton(
+                      heroTag: null,
                       backgroundColor: Theme.of(context).primaryColor,
                       child: Icon(Icons.add),
                       onPressed: _openAddEmployerDialog,

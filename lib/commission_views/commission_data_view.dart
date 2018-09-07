@@ -247,6 +247,7 @@ class _DayEditViewState extends State<DayEditView> {
                     alignment: AlignmentDirectional.bottomEnd,
                     padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
                     child: FloatingActionButton(
+                        heroTag: null,
                         onPressed: () => _openEditCommissionDialog(),
                         child: Icon(Icons.edit)),
                   )
