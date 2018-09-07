@@ -70,7 +70,7 @@ class _TroubleSignInState extends State<TroubleSignIn> {
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
-                    color: Theme.of(context).accentColor.withAlpha(100),
+                    color: Theme.of(context).accentColor,
                   ),
                   child: Text(
                     FFULocalizations.of(context).sendButtonLabel,

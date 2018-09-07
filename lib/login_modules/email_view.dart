@@ -68,7 +68,7 @@ class _EmailViewState extends State<EmailView> {
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
-                    color: Theme.of(context).accentColor.withAlpha(100),
+                    color: Theme.of(context).accentColor
                   ),
                   child: Text(
                     FFULocalizations.of(context).nextButtonLabel,
@@ -107,8 +107,8 @@ class _EmailViewState extends State<EmailView> {
             Navigator.pop(context);
           }
         } else {
-          String provider = await _showDialogSelectOtherProvider(
-              _emailText, providers);
+          String provider =
+              await _showDialogSelectOtherProvider(_emailText, providers);
           if (provider.isNotEmpty) {
             Navigator.pop(context, provider);
           }
@@ -135,15 +135,22 @@ class _EmailViewState extends State<EmailView> {
                 ),
                 new Column(
                   children: providers.map((String p) {
-                    return new RaisedButton(
-                      child: new Row(
-                        children: <Widget>[
-                          new Text(_providerStringToButton(p)),
-                        ],
+                    return InkWell(
+                      onTap: () => Navigator.of(context).pop(p),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        //margin: EdgeInsets.all(10.0),
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
+                          color: Theme.of(context).accentColor,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            new Text(_providerStringToButton(p)),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(p);
-                      },
                     );
                   }).toList(),
                 )

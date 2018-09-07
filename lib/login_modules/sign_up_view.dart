@@ -126,7 +126,7 @@ class _SignUpViewState extends State<SignUpView> {
                 decoration: ShapeDecoration(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
-                  color: Theme.of(context).accentColor.withAlpha(100),
+                  color: Theme.of(context).accentColor,
                 ),
                 child: Text(
                   FFULocalizations.of(context).saveLabel,

@@ -50,24 +50,34 @@ class SliverResultDelegate extends SliverPersistentHeaderDelegate {
   final SmallCommissionsView resultCommission;
 
   @override
-  double get minExtent => 130.0;
+  double get minExtent => 150.0;
   @override
-  double get maxExtent => 130.0;
+  double get maxExtent => 150.0;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+          //border: Border.all(color: Theme.of(context).primaryColorLight, width: 0.5),
+          // boxShadow: [
+          //   BoxShadow(
+          //     //color: Colors.grey,
+          //     color: Theme.of(context).primaryColorDark,
+          //     blurRadius: 5.0
+          //   )
+          // ],
           color: Colors.white,
-          //color: Theme.of(context).primaryColor,
+          //color: Theme.of(context).primaryColorLight,
           borderRadius: BorderRadius.circular(15.0)),
       child: Column(
         children: <Widget>[
           Text(
             'Result',
-            style:
-                TextStyle(fontSize: 30.0, color: Theme.of(context).textSelectionColor//color: Theme.of(context).primaryColorDark
+            style: TextStyle(
+                fontSize: 30.0,
+                color: Theme.of(context)
+                    .textSelectionColor //color: Theme.of(context).primaryColorDark
                 ),
           ),
           Container(child: resultCommission),
