@@ -77,11 +77,17 @@ class _HistoryViewState extends State<HistoryView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        viewModel.currentEmployer.name,
-                        style: TextStyle(fontSize: 40.0, color: Colors.white),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                          child: Text(
+                            viewModel.currentEmployer.name,
+                            style:
+                                TextStyle(fontSize: 40.0, color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                     Container(
