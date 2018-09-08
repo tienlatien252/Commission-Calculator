@@ -76,9 +76,11 @@ class _HistoryViewState extends State<HistoryView> {
                     ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Expanded(
                       child: FittedBox(
+                        alignment: Alignment.centerLeft,
                         fit: BoxFit.scaleDown,
                         child: Container(
                           margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),

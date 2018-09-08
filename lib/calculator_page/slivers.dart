@@ -19,21 +19,23 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)
-            // borderRadius: new BorderRadius.only(
-            //     bottomLeft: const Radius.circular(10.0),
-            //     bottomRight: const Radius.circular(10.0))
-            ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         color: Theme.of(context).primaryColor,
       ),
       child: Column(children: <Widget>[
         Container(
-            alignment: AlignmentDirectional.centerStart,
-            padding: EdgeInsets.fromLTRB(20.0, 7.0, 10.0, 8.0),
-            child: Text(
-              viewModel.currentEmployer.name,
-              style: TextStyle(fontSize: 40.0, color: Colors.white),
-            )),
+          alignment: AlignmentDirectional.centerStart,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Container(
+                padding: EdgeInsets.fromLTRB(20.0, 7.0, 20.0, 8.0),
+                child: Text(
+                  viewModel.currentEmployer.name,
+                  style: TextStyle(fontSize: 40.0, color: Colors.white),
+                )),
+          ),
+        ),
         _timeRangePicker
       ]),
     );
