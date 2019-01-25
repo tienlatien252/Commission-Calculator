@@ -1,12 +1,2 @@
-# commission_calculator
-
-A new Flutter project.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
-
-read this documentation about layout:
-https://flutter.io/tutorials/layout/
-https://github.com/Eajy/flutter_demo
+# Calmission
+An Android and IOS app for nail technicians to efficiently organize their commissions using Flutter and Cloud Firestore
