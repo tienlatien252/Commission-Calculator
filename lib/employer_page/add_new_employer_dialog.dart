@@ -52,7 +52,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
       }
 
       future.whenComplete(() {
-        FocusScope.of(context).detach();
+        //FocusScope.of(context).detach();
         callback();
         Navigator.pop(context);
       }).catchError((e) => print(e));
@@ -68,7 +68,7 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   }
 
   onPresscancel() {
-    FocusScope.of(context).detach();
+    //FocusScope.of(context).detach();
     Navigator.pop(context);
   }
 

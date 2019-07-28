@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -6,6 +7,9 @@ import 'package:meta/meta.dart';
 
 import 'email_view.dart';
 import 'utils.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class LoginView extends StatefulWidget {
   final List<ProvidersTypes> providers;
@@ -20,9 +24,9 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   Map<ProvidersTypes, ButtonDescription> _buttons;
+  final TextEditingController _tokenController = TextEditingController();
+  final TextEditingController _tokenSecretController = TextEditingController();
 
   _handleEmailSignIn() async {
     String value = await Navigator.of(context)
@@ -35,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  _handleGoogleSignIn() async {
+  /*_handleGoogleSignIn() async {
     GoogleSignIn _googleSignIn = GoogleSignIn();
 
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -54,9 +58,34 @@ class _LoginViewState extends State<LoginView> {
         }
       }
     }
+  }*/
+
+  void _signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    try {
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(user.uid == currentUser.uid);
+      if (user != null) {
+      Navigator.of(context).pop(true);
+    }
+    } catch (e) {
+      showErrorDialog(context, e.details);
+    }
   }
 
-  _handleFacebookSignin() async {
+  /*_handleFacebookSignin() async {
     var facebookLogin = FacebookLogin();
     FacebookLoginResult result =
         await facebookLogin.logInWithReadPermissions(['email']);
@@ -69,12 +98,63 @@ class _LoginViewState extends State<LoginView> {
         showErrorDialog(context, e.details);
       }
     }
+  }*/
+
+  void _signInWithFacebook() async {
+    final AuthCredential credential = FacebookAuthProvider.getCredential(
+      accessToken: _tokenController.text,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    try {
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(user.uid == currentUser.uid);
+      if (user != null) {
+      Navigator.of(context).pop(true);
+    }
+    } catch (e) {
+      showErrorDialog(context, e.details);
+    }
   }
 
-  _handleAnonymousSignin() async {
+  /*_handleAnonymousSignin() async {
     try {
       final FirebaseUser anonymousUser = await _auth.signInAnonymously();
       print(anonymousUser);
+    } catch (e) {
+      showErrorDialog(context, e.details);
+    }
+  }*/
+
+  void _signInAnonymously() async {
+    final FirebaseUser user = (await _auth.signInAnonymously()).user;
+    assert(user != null);
+    assert(user.isAnonymous);
+    assert(!user.isEmailVerified);
+    assert(await user.getIdToken() != null);
+    if (Platform.isIOS) {
+      // Anonymous auth doesn't show up as a provider on iOS
+      assert(user.providerData.isEmpty);
+    } else if (Platform.isAndroid) {
+      // Anonymous auth does show up as a provider on Android
+      assert(user.providerData.length == 1);
+      assert(user.providerData[0].providerId == 'firebase');
+      assert(user.providerData[0].uid != null);
+      assert(user.providerData[0].displayName == null);
+      assert(user.providerData[0].photoUrl == null);
+      assert(user.providerData[0].email == null);
+    }
+
+    try {
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(user.uid == currentUser.uid);
+      if (user != null) {
+      Navigator.of(context).pop(true);
+    }
     } catch (e) {
       showErrorDialog(context, e.details);
     }
@@ -85,15 +165,15 @@ class _LoginViewState extends State<LoginView> {
     _buttons = {
       ProvidersTypes.facebook:
           providersDefinitions(context)[ProvidersTypes.facebook]
-              .copyWith(onSelected: _handleFacebookSignin),
+              .copyWith(onSelected: _signInWithFacebook),
       ProvidersTypes.google:
           providersDefinitions(context)[ProvidersTypes.google]
-              .copyWith(onSelected: _handleGoogleSignIn),
+              .copyWith(onSelected: _signInWithGoogle),
       ProvidersTypes.email: providersDefinitions(context)[ProvidersTypes.email]
           .copyWith(onSelected: _handleEmailSignIn),
       ProvidersTypes.anonymous:
           providersDefinitions(context)[ProvidersTypes.anonymous]
-              .copyWith(onSelected: _handleAnonymousSignin),
+              .copyWith(onSelected: _signInAnonymously),
     };
 
     return Container(
@@ -113,9 +193,9 @@ class _LoginViewState extends State<LoginView> {
   void _followProvider(String value) {
     ProvidersTypes provider = stringToProvidersType(value);
     if (provider == ProvidersTypes.facebook) {
-      _handleFacebookSignin();
+      _signInWithFacebook();
     } else if (provider == ProvidersTypes.google) {
-      _handleGoogleSignIn();
+      _signInWithGoogle();
     }
   }
 }

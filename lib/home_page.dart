@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_admob/firebase_admob.dart';
+//import 'package:firebase_admob/firebase_admob.dart';
 
 import 'models/employer.dart';
 import 'commission_views/today_view.dart';
@@ -36,7 +36,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  BannerAd bannerAd;
+  /*BannerAd bannerAd;
   InterstitialAd interstitialAd;
 
   BannerAd buildBanner() {
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         listener: (MobileAdEvent event) {
           print(event);
         });
-  }
+  }*/
 
   void onTabTapped(int index) {
     setState(() {
@@ -57,14 +57,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    FirebaseAdMob.instance.initialize(appId: APP_ID);
-    bannerAd = buildBanner()..load();
+    //FirebaseAdMob.instance.initialize(appId: APP_ID);
+    //bannerAd = buildBanner()..load();
   }
 
   @override
   void dispose() {
-    bannerAd?.dispose();
-    interstitialAd?.dispose();
+    //bannerAd?.dispose();
+    //interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  InterstitialAd buildInterstitial() {
+  /*InterstitialAd buildInterstitial() {
     return InterstitialAd(
         adUnitId: InterstitialAd.testAdUnitId,
         targetingInfo: targetingInfo,
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
 
           print(event);
         });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

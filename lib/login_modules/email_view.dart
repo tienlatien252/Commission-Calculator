@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'l10n/localization.dart';
-import 'password_view.dart';
+//import 'password_view.dart';
 import 'sign_up_view.dart';
 import 'utils.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class EmailView extends StatefulWidget {
   @override
@@ -13,7 +15,8 @@ class EmailView extends StatefulWidget {
 
 class _EmailViewState extends State<EmailView> {
   final _formKey = GlobalKey<FormState>();
-  String _emailText;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   String validateEmail(String value) {
     Pattern pattern =
@@ -39,18 +42,28 @@ class _EmailViewState extends State<EmailView> {
               child: Column(
                 children: <Widget>[
                   Form(
-                    key: _formKey,
-                    child: TextFormField(
-                        validator: validateEmail,
-                        autofocus: true,
-                        keyboardType: TextInputType.emailAddress,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                            labelText: FFULocalizations.of(context).emailLabel),
-                        onSaved: (String value) {
-                          _emailText = value;
-                        }),
-                  ),
+                      key: _formKey,
+                      child: Column(children: <Widget>[
+                        TextFormField(
+                          controller: _emailController,
+                          validator: validateEmail,
+                          autofocus: true,
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                              labelText:
+                                  FFULocalizations.of(context).emailLabel),
+                        ),
+                        TextFormField(
+                            controller: _passwordController,
+                            autofocus: true,
+                            keyboardType: TextInputType.emailAddress,
+                            obscureText: true,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                                labelText:
+                                    FFULocalizations.of(context).passwordLabel))
+                      ])),
                 ],
               ),
             );
@@ -66,10 +79,9 @@ class _EmailViewState extends State<EmailView> {
                   padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   margin: EdgeInsets.all(10.0),
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    color: Theme.of(context).accentColor
-                  ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      color: Theme.of(context).accentColor),
                   child: Text(
                     FFULocalizations.of(context).nextButtonLabel,
                     style: TextStyle(fontSize: 20.0, color: Colors.black),
@@ -83,104 +95,17 @@ class _EmailViewState extends State<EmailView> {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        List<String> providers =
-            await auth.fetchProvidersForEmail(email: _emailText);
-        print(providers);
-
-        if (providers.isEmpty) {
-          bool connected = await Navigator.of(context)
-              .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-            return SignUpView(_emailText);
-          }));
-
-          if (connected) {
-            Navigator.pop(context);
-          }
-        } else if (providers.contains('password')) {
-          bool connected = await Navigator.of(context)
-              .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-            return PasswordView(_emailText);
-          }));
-
-          if (connected) {
-            Navigator.pop(context);
-          }
-        } else {
-          String provider =
-              await _showDialogSelectOtherProvider(_emailText, providers);
-          if (provider.isNotEmpty) {
-            Navigator.pop(context, provider);
-          }
-        }
+        final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ))
+            .user;
+        if (user != null) {
+      Navigator.of(context).pop(true);
+    }
       } catch (exception) {
         print(exception);
       }
     }
-  }
-
-  _showDialogSelectOtherProvider(String email, List<String> providers) {
-    var providerName = _providersToString(providers);
-    return showDialog<String>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) => new AlertDialog(
-            content: new SingleChildScrollView(
-                child: new ListBody(
-              children: <Widget>[
-                new Text(FFULocalizations.of(context)
-                    .allReadyEmailMessage(email, providerName)),
-                new SizedBox(
-                  height: 16.0,
-                ),
-                new Column(
-                  children: providers.map((String p) {
-                    return InkWell(
-                      onTap: () => Navigator.of(context).pop(p),
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        //margin: EdgeInsets.all(10.0),
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
-                          color: Theme.of(context).accentColor,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            new Text(_providerStringToButton(p)),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                )
-              ],
-            )),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Row(
-                  children: <Widget>[
-                    new Text(FFULocalizations.of(context).cancelButtonLabel),
-                  ],
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop('');
-                },
-              ),
-            ],
-          ),
-    );
-  }
-
-  String _providersToString(List<String> providers) {
-    return providers.map((String provider) {
-      ProvidersTypes type = stringToProvidersType(provider);
-      return providersDefinitions(context)[type]?.name;
-    }).join(", ");
-  }
-
-  String _providerStringToButton(String provider) {
-    ProvidersTypes type = stringToProvidersType(provider);
-    return providersDefinitions(context)[type]?.label;
   }
 }

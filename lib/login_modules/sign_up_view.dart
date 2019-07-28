@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'l10n/localization.dart';
 import 'utils.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SignUpView extends StatefulWidget {
   final String email;
@@ -119,7 +122,7 @@ class _SignUpViewState extends State<SignUpView> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           InkWell(
-            onTap: () => _connexion(context),
+            onTap: () => _register(context),
             child: Container(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 //margin: EdgeInsets.all(10.0),
@@ -138,19 +141,18 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  _connexion(BuildContext context) async {
+  _register(BuildContext context) async {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
-      FirebaseAuth _auth = FirebaseAuth.instance;
       try {
-        await _auth.createUserWithEmailAndPassword(
+        FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
           email: _emailText,
           password: _password,
-        );
+        )).user;
         try {
           var userUpdateInfo = UserUpdateInfo();
           userUpdateInfo.displayName = _nameText;
-          await _auth.updateProfile(userUpdateInfo);
+          //await _auth.updateProfile(userUpdateInfo);
           Navigator.pop(context, true);
         } catch (e) {
           showErrorDialog(context, e.details);
