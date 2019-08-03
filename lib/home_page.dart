@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
+import 'package:provider/provider.dart';
 
-import 'models/employer.dart';
-import 'commission_views/today_view.dart';
-import 'logic/app_state.dart';
-import 'history_page/history_view.dart';
+//import 'models/employer.dart';
+//import 'commission_views/today_view.dart';
+//import 'logic/app_state.dart';
+//import 'history_page/history_view.dart';
 import 'account_dialog.dart';
-import 'calculator_page/calculator_page.dart';
-import 'main.dart';
-
+import 'package:Calmission/models/user.dart';
+//import 'calculator_page/calculator_page.dart';
+//import 'main.dart';
+/*
 class _HomeViewModel {
   _HomeViewModel(
       {this.employers,
@@ -22,7 +23,7 @@ class _HomeViewModel {
   final Function() onGetCurrentEmployer;
   final FirebaseUser currentUser;
   final Function() onLogout;
-}
+}*/
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -68,17 +69,18 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _openAddEntryDialog(_HomeViewModel viewModel) async {
+  void _openAddEntryDialog() async {
     bool justLogOut = await Navigator.push(
         context,
         new MaterialPageRoute(
             builder: (BuildContext context) {
-              return new AccountDialog(onSignedOut: widget.onSignedOut);
+              return  new AccountDialog(onSignedOut: widget.onSignedOut);
             },
             fullscreenDialog: true));
     if (justLogOut != null && justLogOut) {
       widget.onSignedOut();
-      viewModel.onLogout();
+      var user = Provider.of<UserModel>(context);
+      user.logout();
       await FirebaseAuth.instance.signOut();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('seen', false);
@@ -115,8 +117,11 @@ class _HomePageState extends State<HomePage> {
             Text(widget.title),
           ],
         ),
-        actions: <Widget>[
-          StoreConnector<AppState, _HomeViewModel>(converter: (store) {
+        actions: <Widget>[IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () => _openAddEntryDialog(),
+            )
+          /*StoreConnector<AppState, _HomeViewModel>(converter: (store) {
             return _HomeViewModel(
                 currentUser: store.state.currentUser,
                 onLogout: () => store.dispatch(new LogoutAction()));
@@ -129,10 +134,10 @@ class _HomePageState extends State<HomePage> {
               );
             }
             return IconButton(
-              icon: accountIcon,
-              onPressed: () => _openAddEntryDialog(viewModel),
-            );
-          }),
+              icon: Icon(Icons.account_circle),
+              onPressed: () => _openAddEntryDialog(),
+            );*/
+          //}),
         ],
       ),
       body: Stack(
@@ -140,17 +145,17 @@ class _HomePageState extends State<HomePage> {
           Offstage(
             offstage: _currentIndex != 0,
             child: TickerMode(
-                enabled: _currentIndex == 0, child: TodayView()),
+                enabled: _currentIndex == 0, child: Text("TodayView")),//TodayView()),
           ),
           Offstage(
             offstage: _currentIndex != 1,
             child: TickerMode(
-                enabled: _currentIndex == 1, child: HistoryView()),
+                enabled: _currentIndex == 1, child: Text("HistoryView")),//HistoryView()),
           ),
           Offstage(
             offstage: _currentIndex != 2,
             child: TickerMode(
-                enabled: _currentIndex == 2, child: CalculatorPage()),
+                enabled: _currentIndex == 2, child: Text("CalculatorPage"))//CalculatorPage()),
           )
         ],
       ),

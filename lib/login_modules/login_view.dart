@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:provider/provider.dart';
 
 import 'email_view.dart';
 import 'utils.dart';
+import 'package:Calmission/models/user.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -39,66 +41,29 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  /*_handleGoogleSignIn() async {
-    GoogleSignIn _googleSignIn = GoogleSignIn();
+  Future<String> _signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount =
+        await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
 
-    GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    if (googleUser != null) {
-      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      if (googleAuth.accessToken != null) {
-        try {
-          FirebaseUser user = await _auth.signInWithGoogle(
-            accessToken: googleAuth.accessToken,
-            idToken: googleAuth.idToken,
-          );
-
-          print(user);
-        } catch (e) {
-          showErrorDialog(context, e.details);
-        }
-      }
-    }
-  }*/
-
-  void _signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
     );
+
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
+
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
-    try {
-      final FirebaseUser currentUser = await _auth.currentUser();
-      assert(user.uid == currentUser.uid);
-      if (user != null) {
-      Navigator.of(context).pop(true);
-    }
-    } catch (e) {
-      showErrorDialog(context, e.details);
-    }
-  }
 
-  /*_handleFacebookSignin() async {
-    var facebookLogin = FacebookLogin();
-    FacebookLoginResult result =
-        await facebookLogin.logInWithReadPermissions(['email']);
-    if (result.accessToken != null) {
-      try {
-        FirebaseUser user = await _auth.signInWithFacebook(
-            accessToken: result.accessToken.token);
-        print(user);
-      } catch (e) {
-        showErrorDialog(context, e.details);
-      }
-    }
-  }*/
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+    Provider.of<UserModel>(context).add(currentUser);
+    return 'signInWithGoogle succeeded: $user';
+  }
 
   void _signInWithFacebook() async {
     final AuthCredential credential = FacebookAuthProvider.getCredential(
@@ -114,21 +79,12 @@ class _LoginViewState extends State<LoginView> {
       final FirebaseUser currentUser = await _auth.currentUser();
       assert(user.uid == currentUser.uid);
       if (user != null) {
-      Navigator.of(context).pop(true);
-    }
+        Navigator.of(context).pop(true);
+      }
     } catch (e) {
       showErrorDialog(context, e.details);
     }
   }
-
-  /*_handleAnonymousSignin() async {
-    try {
-      final FirebaseUser anonymousUser = await _auth.signInAnonymously();
-      print(anonymousUser);
-    } catch (e) {
-      showErrorDialog(context, e.details);
-    }
-  }*/
 
   void _signInAnonymously() async {
     final FirebaseUser user = (await _auth.signInAnonymously()).user;
@@ -149,14 +105,10 @@ class _LoginViewState extends State<LoginView> {
       assert(user.providerData[0].email == null);
     }
 
-    try {
-      final FirebaseUser currentUser = await _auth.currentUser();
-      assert(user.uid == currentUser.uid);
-      if (user != null) {
-      Navigator.of(context).pop(true);
-    }
-    } catch (e) {
-      showErrorDialog(context, e.details);
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+    if (currentUser != null) {
+      Provider.of<UserModel>(context).add(currentUser);
     }
   }
 

@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 
-import '../logic/app_state.dart';
+
 import '../models/employer.dart';
-
-class _DeleteEmployerViewModel {
-  final Function() onChangeEmployers;
-  final FirebaseUser user;
-
-  _DeleteEmployerViewModel({this.onChangeEmployers, this.user});
-}
+import 'package:Calmission/models/user.dart';
 
 class DeleteEmployerDialogView extends StatefulWidget {
   DeleteEmployerDialogView({Key key, this.employer}) : super(key: key);
@@ -23,7 +17,10 @@ class DeleteEmployerDialogView extends StatefulWidget {
 }
 
 class _DeleteEmployerDialogViewState extends State<DeleteEmployerDialogView> {
-  _deleteEmployer(Function() callback, FirebaseUser user) async {
+  _deleteEmployer() async {
+    var employers = Provider.of<EmployersModel>(context);
+    var user = Provider.of<UserModel>(context).user;
+
     String id = user.uid;
     String pathString = 'users/' + id + '/employers';
     Map<String, dynamic> data = {
@@ -35,7 +32,7 @@ class _DeleteEmployerDialogViewState extends State<DeleteEmployerDialogView> {
         .collection(pathString)
         .document(widget.employer.employerId)
         .setData(data).whenComplete(() {
-      callback();
+      employers.remove(widget.employer.employerId);
     }).catchError((e) => print(e));
     Navigator.of(context).pop();
   }
@@ -58,18 +55,12 @@ class _DeleteEmployerDialogViewState extends State<DeleteEmployerDialogView> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-        ),
-        StoreConnector<AppState, _DeleteEmployerViewModel>(converter: (store) {
-          return _DeleteEmployerViewModel(
-              onChangeEmployers: () => store.dispatch(InitEmployersAction(getCurrentEmployer: true)),
-              user: store.state.currentUser);
-        }, builder: (context, viewModel) {
-          return FlatButton(
+        ),FlatButton(
             textColor: Colors.red,
             child: Text('Yes'),
-            onPressed: () => _deleteEmployer(viewModel.onChangeEmployers, viewModel.user)
-          );
-        }),
+            onPressed: () => _deleteEmployer()
+          )
+        ,
       ],
     );
   }

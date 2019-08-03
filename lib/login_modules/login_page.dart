@@ -1,20 +1,20 @@
 export 'utils.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+//import 'package:redux/redux.dart';
+//import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
 import 'login_view.dart';
 import 'utils.dart';
-import '../logic/app_state.dart';
-import '../models/employer.dart';
-
+//import '../logic/app_state.dart';
+//import '../models/employer.dart';
+/*
 class _LoginViewModel {
   _LoginViewModel({this.currentUser, this.currentEmployer});
   final Employer currentEmployer;
   final FirebaseUser currentUser;
-}
+}*/
 
 class SignInScreen extends StatefulWidget {
   static String tag = 'login-page';
@@ -24,7 +24,7 @@ class SignInScreen extends StatefulWidget {
       this.header,
       this.providers,
       this.color = Colors.white,
-      this.store,
+      //this.store,
       this.onSignedIn})
       : super(key: key);
 
@@ -32,7 +32,7 @@ class SignInScreen extends StatefulWidget {
   final Widget header;
   final List<ProvidersTypes> providers;
   final Color color;
-  final Store<AppState> store;
+  //final Store<AppState> store;
   final VoidCallback onSignedIn;
 
   @override
@@ -65,8 +65,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) async {
       if(user != null){
-        widget.store.dispatch(CheckUserAction(user));
-        widget.store.dispatch(InitEmployersAction(getCurrentEmployer: true));
+        //widget.store.dispatch(CheckUserAction(user));
+        //widget.store.dispatch(InitEmployersAction(getCurrentEmployer: true));
         widget.onSignedIn();
       }
     });
@@ -74,12 +74,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _LoginViewModel>(
-        converter: (Store<AppState> store) {
-      return _LoginViewModel(
-          currentEmployer: store.state.currentEmployer,
-          currentUser: store.state.currentUser);
-    }, builder: (BuildContext context, _LoginViewModel viewModel) {
       return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -101,11 +95,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       _header,
-                      Expanded(child: LoginView(providers: _providers))
+                      Expanded(child: LoginView(providers: _providers)
+                      )
                     ],
                   ));
             },
           ));
-    });
+    //});
   }
 }

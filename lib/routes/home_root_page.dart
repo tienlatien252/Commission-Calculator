@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
 import '../employer_page/employerSetup.dart';
 import '../home_page.dart';
 import '../models/employer.dart';
-import '../logic/app_state.dart';
-
-class _HomeRootPageViewModel {
-  _HomeRootPageViewModel({this.currentEmployer});
-  final Employer currentEmployer;
-}
+import '../models/user.dart';
 
 class HomeRootPage extends StatefulWidget {
   HomeRootPage({Key key, this.title, this.onSignedOut})
@@ -67,20 +61,24 @@ class _HomeRootPageState extends State<HomeRootPage> {
           seenSetup: _seen,
         );
       case SetupStatus.setup:
-        return StoreConnector<AppState, _HomeRootPageViewModel>(converter: (store) {
+        /*return StoreConnector<AppState, _HomeRootPageViewModel>(converter: (store) {
           return _HomeRootPageViewModel(
               currentEmployer: store.state.currentEmployer);
-        }, builder: (BuildContext context, _HomeRootPageViewModel viewModel) {
-          if (viewModel.currentEmployer == null) {
-            return _buildWaitingScreen();
-          }
+        }, builder: (BuildContext context, _HomeRootPageViewModel viewModel) {*/
+          //if (viewModel.currentEmployer == null) {
+           // return _buildWaitingScreen();
+          //}
           return HomePage(
             onSignedOut: widget.onSignedOut,
             title: widget.title,
           );
-        });
+          /*return Scaffold(
+              appBar: AppBar(),
+              body: Text("Log in")
+            );*/
+        }
     }
-    return null;
+    //return null;
   }
 
   Widget _buildWaitingScreen() {
@@ -91,4 +89,4 @@ class _HomeRootPageState extends State<HomeRootPage> {
       ),
     );
   }
-}
+//}

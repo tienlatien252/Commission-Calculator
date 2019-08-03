@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:async';
-import '../logic/app_state.dart';
 import '../models/employer.dart';
+import '../models/user.dart';
 import 'add_new_employer_dialog.dart';
 import 'employers_list_view.dart';
-
-class _EmployersViewModel {
-  _EmployersViewModel(
-      {this.employers,
-      this.onGetCurrentEmployer,
-      this.currentUser,
-      this.onGetEmployers,
-      this.currentEmployer});
-  final List<Employer> employers;
-  final Employer currentEmployer;
-  final Function() onGetCurrentEmployer;
-  final Function(List<Employer>) onGetEmployers;
-  final FirebaseUser currentUser;
-}
 
 class EmployerSetup extends StatefulWidget {
   EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})
@@ -98,17 +84,41 @@ class NextButton extends StatefulWidget {
   _NextButtonState createState() => _NextButtonState();
 }
 
+List<Employer> getListEmployersFromSnapshot(List<DocumentSnapshot> documents) {
+  return documents.map((document) {
+    return Employer(
+        name: document.data['name'],
+        commissionRate: document.data['commission_rate'],
+        employerId: document.documentID);
+  }).toList();
+}
+
 class _NextButtonState extends State<NextButton> {
-  _saveEmployersAndGoNext(_EmployersViewModel viewModel) async {
-    if (viewModel.employers == null) {
+  _saveEmployersAndGoNext() async {
+    var user = Provider.of<UserModel>(context).user;
+    var employersModel = Provider.of<EmployersModel>(context);
+
+    String pathString = 'users/' + user.uid + '/employers';
+
+    final QuerySnapshot result = await Firestore.instance
+        .collection(pathString)
+        .where('isDeleted', isEqualTo: false)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    Employer firstEmployer = Employer(
+        name: documents[0].data['name'],
+        commissionRate: documents[0].data['commission_rate'],
+        employerId: documents[0].documentID);
+
+    if (documents.length == 0) {
       Scaffold.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.red,
-            content: Text("Please add at least one employer"),
-          ));
+        backgroundColor: Colors.red,
+        content: Text("Please add at least one employer"),
+      ));
       return;
     }
-    if (viewModel.currentEmployer == null) {
-      viewModel.onGetCurrentEmployer();
+    if(employersModel.currentEmployer==null){
+      employersModel.choose(employer: firstEmployer);
     }
     if (widget.isInitialSetting) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -121,29 +131,20 @@ class _NextButtonState extends State<NextButton> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _EmployersViewModel>(converter: (store) {
-      return _EmployersViewModel(
-          onGetCurrentEmployer: () => store
-              .dispatch(ChangeCurrentEmployerAction(store.state.employers[0])),
-          employers: store.state.employers,
-          currentEmployer: store.state.currentEmployer,
-          currentUser: store.state.currentUser);
-    }, builder: (BuildContext context, _EmployersViewModel viewModel) {
-      return InkWell(
-        onTap: () => _saveEmployersAndGoNext(viewModel),
-        child: Container(
-            padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            margin: EdgeInsets.all(10.0),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              color: Theme.of(context).accentColor,
-            ),
-            child: Text(
-              "Done",
-              style: TextStyle(fontSize: 20.0, color: Colors.black),
-            )),
-      );
-    }); // This trailing c
+    return InkWell(
+      onTap: () => _saveEmployersAndGoNext(),
+      child: Container(
+          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+          margin: EdgeInsets.all(10.0),
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)),
+            color: Theme.of(context).accentColor,
+          ),
+          child: Text(
+            "Done",
+            style: TextStyle(fontSize: 20.0, color: Colors.black),
+          )),
+    );
   }
 }

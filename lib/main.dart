@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:flutter_redux/flutter_redux.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
 
 import 'employer_page/employerSetup.dart';
 import 'home_page.dart';
-import 'models/employer.dart';
-import 'logic/middleware.dart';
-import 'logic/app_state.dart';
-import 'logic/reducer.dart';
+//import 'models/employer.dart';
+import 'package:provider/provider.dart';
+
 import 'routes/root_page.dart';
+import 'package:Calmission/models/employer.dart';
+import 'package:Calmission/models/user.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,12 +21,6 @@ const String APP_ID = '1:154487703908:android:b6c7c03dd0151198';
   keywords: ['Games', 'Puzzles'],
 );*/
 
-class UserView {
-  final FirebaseUser currentUser;
-  final Employer currentEmployer;
-  UserView({this.currentUser, this.currentEmployer});
-}
-
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
   final String title = "Calmission";
@@ -36,9 +30,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final store = Store<AppState>(reducer,
-      initialState: AppState(), middleware: [middleware].toList());
-
   @override
   void initState() {
     super.initState();
@@ -46,8 +37,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-        store: store,
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(builder: (context) => EmployersModel()),
+          ChangeNotifierProvider(builder: (context) => UserModel()),
+        ],
         child: MaterialApp(
             routes: <String, WidgetBuilder>{
               '/InitEmployerSetup': (BuildContext context) => EmployerSetup(
@@ -60,19 +54,19 @@ class _MyAppState extends State<MyApp> {
             },
             title: 'Commission Calculator',
             theme: ThemeData(
-              scaffoldBackgroundColor: Colors.grey[200],
-              primaryColor: Color.fromRGBO(77, 182, 172, 1.0),
-              primaryColorDark: Color.fromRGBO(0, 134, 125, 1.0),
-              primaryColorLight: Color.fromRGBO(130, 233, 222, 1.0),
-              buttonColor: Color.fromRGBO(255, 233, 125, 1.0),
-              accentColor: Color.fromRGBO(255, 183, 77, 1.0),
-              textSelectionColor: Color.fromRGBO(200, 135, 25, 1.0)
-              //highlightColor: Color.fromRGBO(255, 183, 77, 1.0)
-              //selectedRowColor: Color.fromRGBO(255, 183, 77, 1.0),
-              //secondaryHeaderColor: Color.fromRGBO(255, 183, 77, 1.0)
-            ),
+                scaffoldBackgroundColor: Colors.grey[200],
+                primaryColor: Color.fromRGBO(77, 182, 172, 1.0),
+                primaryColorDark: Color.fromRGBO(0, 134, 125, 1.0),
+                primaryColorLight: Color.fromRGBO(130, 233, 222, 1.0),
+                buttonColor: Color.fromRGBO(255, 233, 125, 1.0),
+                accentColor: Color.fromRGBO(255, 183, 77, 1.0),
+                textSelectionColor: Color.fromRGBO(200, 135, 25, 1.0)
+                //highlightColor: Color.fromRGBO(255, 183, 77, 1.0)
+                //selectedRowColor: Color.fromRGBO(255, 183, 77, 1.0),
+                //secondaryHeaderColor: Color.fromRGBO(255, 183, 77, 1.0)
+                ),
             home: RootPage(
-              store: store,
+              //store: store,
               title: widget.title,
             )));
   }
