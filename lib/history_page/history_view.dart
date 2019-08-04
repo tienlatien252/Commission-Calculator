@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../models/employer.dart';
-import '../logic/app_state.dart';
 import '../models/commission.dart';
 import 'history_day_mode_view.dart';
 import 'history_week_mode_view.dart';
 import 'history_month_mode_view.dart';
 import 'history_year_mode_view.dart';
-
-class _HistoryViewModel {
-  _HistoryViewModel({this.currentUser, this.currentEmployer});
-  final Employer currentEmployer;
-  final FirebaseUser currentUser;
-}
 
 class HistoryView extends StatefulWidget {
   HistoryView({Key key}) : super(key: key);

@@ -158,10 +158,11 @@ class _DayEditViewState extends State<DayEditView> {
   Future _getCommission() async {
     FirebaseUser _currentUser = await _auth.currentUser();
     Employer currentEmployer = await getCurrentEmployer();
+    String currentEmployerId = currentEmployer != null ? currentEmployer.employerId : 'abc';
     String pathString = 'users/' +
         _currentUser.uid +
         '/employers/' +
-        currentEmployer.employerId +
+        currentEmployerId +
         '/commission';
 
     DateTime dateOnly = getDateOnly(widget.date);

@@ -18,6 +18,13 @@ Future resetCurrentEmployer() async {
   await prefs.remove('currentEmployerCommissionRate');
 }
 
+Future deleteCurrentEmployer() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('currentEmployerId');
+  await prefs.remove('currentEmployerName');
+  await prefs.remove('currentEmployerCommissionRate');
+}
+
 Future<Employer> getCurrentEmployer() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String currentEmployerId = prefs.getString('currentEmployerId');

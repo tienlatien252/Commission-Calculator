@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/employer.dart';
+import 'package:Calmission/common/employer_service.dart';
+
 
 class DeleteEmployerDialogView extends StatefulWidget {
   DeleteEmployerDialogView({Key key, this.employer}) : super(key: key);
@@ -23,6 +25,10 @@ class _DeleteEmployerDialogViewState extends State<DeleteEmployerDialogView> {
           'commission_rate': widget.employer.commissionRate,
           'isDeleted': true
     };
+    Employer currentEmployer = await getCurrentEmployer();
+    if (currentEmployer!= null && currentEmployer.employerId==widget.employer.employerId){
+      await deleteCurrentEmployer();
+    }
     Firestore.instance
         .collection(pathString)
         .document(widget.employer.employerId)

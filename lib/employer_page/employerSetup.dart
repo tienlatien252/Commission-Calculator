@@ -10,7 +10,6 @@ import 'package:Calmission/common/employer_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
 class EmployerSetup extends StatefulWidget {
   EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})
       : super(key: key);
@@ -35,38 +34,52 @@ class _EmployerSetupState extends State<EmployerSetup> {
     setState(() {});
   }
 
+  Future<bool> willPop() async {
+    final List<DocumentSnapshot> employerDocuments =
+        await getEmployersDocument();
+
+    if (employerDocuments.length == 0) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Please add at least one employer"),
+      ));
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
         appBar: AppBar(
           title: Text("Employer\'s setup"),
           backgroundColor: Colors.white,
         ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 100.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    FloatingActionButton(
-                      heroTag: null,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: Icon(Icons.add),
-                      onPressed: _openAddEmployerDialog,
+        body:  Center(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 100.0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        FloatingActionButton(
+                          heroTag: null,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Icon(Icons.add),
+                          onPressed: _openAddEmployerDialog,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: EmployersListView(
+                      isDrawer: false,
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                child: EmployersListView(
-                  isDrawer: false,
-                ),
-              )
-            ],
-          ),
-        ),
+            ),
         floatingActionButton: NextButton(
           title: widget.title,
           isInitialSetting: widget.isInitialSetting,
@@ -96,18 +109,19 @@ List<Employer> getListEmployersFromSnapshot(List<DocumentSnapshot> documents) {
 }
 
 Future<List<DocumentSnapshot>> getEmployersDocument() async {
-    FirebaseUser _currentUser = await _auth.currentUser();
-    String pathString = 'users/' + _currentUser.uid + '/employers';
-    final QuerySnapshot result = await Firestore.instance
-        .collection(pathString)
-        .where('isDeleted', isEqualTo: false)
-        .getDocuments();
-    return result.documents;
+  FirebaseUser _currentUser = await _auth.currentUser();
+  String pathString = 'users/' + _currentUser.uid + '/employers';
+  final QuerySnapshot result = await Firestore.instance
+      .collection(pathString)
+      .where('isDeleted', isEqualTo: false)
+      .getDocuments();
+  return result.documents;
 }
 
 class _NextButtonState extends State<NextButton> {
   _saveEmployersAndGoNext() async {
-    final List<DocumentSnapshot> employerDocuments =  await getEmployersDocument(); 
+    final List<DocumentSnapshot> employerDocuments =
+        await getEmployersDocument();
 
     if (employerDocuments.length == 0) {
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -117,11 +131,11 @@ class _NextButtonState extends State<NextButton> {
       return;
     }
     Employer currentEmployer = await getCurrentEmployer();
-    if(currentEmployer == null){
+    if (currentEmployer == null) {
       Employer employer = Employer(
-        name: employerDocuments[0]['name'],
-        commissionRate: employerDocuments[0]['commission_rate'],
-        employerId: employerDocuments[0].documentID);
+          name: employerDocuments[0]['name'],
+          commissionRate: employerDocuments[0]['commission_rate'],
+          employerId: employerDocuments[0].documentID);
       await setCurrentEmployer(employer);
     }
     if (widget.isInitialSetting) {
@@ -132,9 +146,25 @@ class _NextButtonState extends State<NextButton> {
     }
   }
 
+  Future<bool> willPop() async {
+    final List<DocumentSnapshot> employerDocuments =
+        await getEmployersDocument();
+
+    if (employerDocuments.length == 0) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Please add at least one employer"),
+      ));
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return new WillPopScope(
+            onWillPop: () => willPop(),
+            child:InkWell(
       onTap: () => _saveEmployersAndGoNext(),
       child: Container(
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -148,6 +178,6 @@ class _NextButtonState extends State<NextButton> {
             "Done",
             style: TextStyle(fontSize: 20.0, color: Colors.black),
           )),
-    );
+    ));
   }
 }

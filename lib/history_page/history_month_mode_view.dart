@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-import '../models/employer.dart';
-import '../logic/app_state.dart';
 import '../commission_views/commission_data_view.dart';
 import '../models/commission.dart';
 import '../date_time_view.dart';
-
-class __HistoryMonthModeViewModel {
-  __HistoryMonthModeViewModel({this.currentUser, this.currentEmployer});
-
-  final FirebaseUser currentUser;
-  final Employer currentEmployer;
-}
 
 class HistoryMonthModeView extends StatefulWidget {
   HistoryMonthModeView({Key key}) : super(key: key);
