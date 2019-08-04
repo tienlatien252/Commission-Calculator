@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
-
 import 'dart:async';
+
 import '../models/employer.dart';
-import '../models/user.dart';
 import 'add_new_employer_dialog.dart';
 import 'employers_list_view.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
 class EmployerSetup extends StatefulWidget {
   EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})
@@ -95,20 +97,14 @@ List<Employer> getListEmployersFromSnapshot(List<DocumentSnapshot> documents) {
 
 class _NextButtonState extends State<NextButton> {
   _saveEmployersAndGoNext() async {
-    var user = Provider.of<UserModel>(context).user;
-    var employersModel = Provider.of<EmployersModel>(context);
-
-    String pathString = 'users/' + user.uid + '/employers';
+    FirebaseUser _currentUser = await _auth.currentUser();
+    String pathString = 'users/' + _currentUser.uid + '/employers';
 
     final QuerySnapshot result = await Firestore.instance
         .collection(pathString)
         .where('isDeleted', isEqualTo: false)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
-    Employer firstEmployer = Employer(
-        name: documents[0].data['name'],
-        commissionRate: documents[0].data['commission_rate'],
-        employerId: documents[0].documentID);
 
     if (documents.length == 0) {
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -117,11 +113,12 @@ class _NextButtonState extends State<NextButton> {
       ));
       return;
     }
-    if(employersModel.currentEmployer==null){
-      employersModel.choose(employer: firstEmployer);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String currentEmployerId = prefs.getString('currentEmployer');
+    if(currentEmployerId ==null){
+      await prefs.setString('currentEmployer', documents[0].documentID);
     }
     if (widget.isInitialSetting) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('seen', true);
       widget.seenSetup();
     } else {

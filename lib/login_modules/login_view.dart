@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
-import 'package:provider/provider.dart';
 
 import 'email_view.dart';
 import 'utils.dart';
-import 'package:Calmission/models/user.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -60,8 +58,6 @@ class _LoginViewState extends State<LoginView> {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-
-    Provider.of<UserModel>(context).add(currentUser);
     return 'signInWithGoogle succeeded: $user';
   }
 
@@ -107,9 +103,6 @@ class _LoginViewState extends State<LoginView> {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    if (currentUser != null) {
-      Provider.of<UserModel>(context).add(currentUser);
-    }
   }
 
   @override

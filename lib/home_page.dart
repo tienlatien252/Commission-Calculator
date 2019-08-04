@@ -2,28 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
-import 'package:provider/provider.dart';
 
-//import 'models/employer.dart';
 //import 'commission_views/today_view.dart';
-//import 'logic/app_state.dart';
 //import 'history_page/history_view.dart';
 import 'account_dialog.dart';
-import 'package:Calmission/models/user.dart';
 //import 'calculator_page/calculator_page.dart';
 //import 'main.dart';
-/*
-class _HomeViewModel {
-  _HomeViewModel(
-      {this.employers,
-      this.onGetCurrentEmployer,
-      this.currentUser,
-      this.onLogout});
-  final List<Employer> employers;
-  final Function() onGetCurrentEmployer;
-  final FirebaseUser currentUser;
-  final Function() onLogout;
-}*/
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -74,16 +58,15 @@ class _HomePageState extends State<HomePage> {
         context,
         new MaterialPageRoute(
             builder: (BuildContext context) {
-              return  new AccountDialog(onSignedOut: widget.onSignedOut);
+              return new AccountDialog(onSignedOut: widget.onSignedOut);
             },
             fullscreenDialog: true));
     if (justLogOut != null && justLogOut) {
       widget.onSignedOut();
-      var user = Provider.of<UserModel>(context);
-      user.logout();
       await FirebaseAuth.instance.signOut();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('seen', false);
+      await prefs.setString('currentEmployer', "");
     }
   }
 
@@ -117,27 +100,33 @@ class _HomePageState extends State<HomePage> {
             Text(widget.title),
           ],
         ),
-        actions: <Widget>[IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () => _openAddEntryDialog(),
-            )
-          /*StoreConnector<AppState, _HomeViewModel>(converter: (store) {
-            return _HomeViewModel(
-                currentUser: store.state.currentUser,
-                onLogout: () => store.dispatch(new LogoutAction()));
-          }, builder: (BuildContext context, _HomeViewModel viewModel) {
-            Widget accountIcon = Icon(Icons.account_circle);
-            if (viewModel.currentUser.photoUrl != null) {
-              accountIcon = CircleAvatar(
-                backgroundImage: NetworkImage(viewModel.currentUser.photoUrl),
-                maxRadius: 16.0,
-              );
-            }
-            return IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () => _openAddEntryDialog(),
-            );*/
-          //}),
+        actions: <Widget>[
+          FutureBuilder(
+              future: FirebaseAuth.instance.currentUser(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                FirebaseUser currentUser = snapshot.data;
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    Widget accountIcon = Icon(Icons.account_circle);
+                    if (currentUser.photoUrl != null) {
+                      accountIcon = CircleAvatar(
+                        backgroundImage: NetworkImage(currentUser.photoUrl),
+                        maxRadius: 16.0,
+                      );
+                    }
+                    return IconButton(
+                      icon: accountIcon,
+                      onPressed: () => _openAddEntryDialog(),
+                    );
+                  case ConnectionState.waiting:
+                    return Center(child: CircularProgressIndicator());
+                  default:
+                    if (snapshot.hasError)
+                      return Text('Error: ${snapshot.error}');
+                    else
+                      return Text('Result: ${snapshot.data}');
+                }
+              })
         ],
       ),
       body: Stack(
@@ -145,18 +134,21 @@ class _HomePageState extends State<HomePage> {
           Offstage(
             offstage: _currentIndex != 0,
             child: TickerMode(
-                enabled: _currentIndex == 0, child: Text("TodayView")),//TodayView()),
+                enabled: _currentIndex == 0,
+                child: Text("TodayView")), //TodayView()),
           ),
           Offstage(
             offstage: _currentIndex != 1,
             child: TickerMode(
-                enabled: _currentIndex == 1, child: Text("HistoryView")),//HistoryView()),
+                enabled: _currentIndex == 1,
+                child: Text("HistoryView")), //HistoryView()),
           ),
           Offstage(
-            offstage: _currentIndex != 2,
-            child: TickerMode(
-                enabled: _currentIndex == 2, child: Text("CalculatorPage"))//CalculatorPage()),
-          )
+              offstage: _currentIndex != 2,
+              child: TickerMode(
+                  enabled: _currentIndex == 2,
+                  child: Text("CalculatorPage")) //CalculatorPage()),
+              )
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

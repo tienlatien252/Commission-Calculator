@@ -26,7 +26,6 @@ class _AddEmployerViewState extends State<AddEmployerView> {
 
   _saveNewEmployer() async {
     FirebaseUser _currentUser = await _auth.currentUser();
-    var employers = Provider.of<EmployersModel>(context);
 
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
@@ -50,7 +49,6 @@ class _AddEmployerViewState extends State<AddEmployerView> {
 
       future.whenComplete(() {
         //FocusScope.of(context).detach();
-        //employers.add(widget.employer);
         Navigator.pop(context);
       }).catchError((e) => print(e));
     }
