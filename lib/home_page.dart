@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
 
 //import 'commission_views/today_view.dart';
@@ -8,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'account_dialog.dart';
 //import 'calculator_page/calculator_page.dart';
 //import 'main.dart';
+import 'package:Calmission/common/employer_service.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -64,9 +64,7 @@ class _HomePageState extends State<HomePage> {
     if (justLogOut != null && justLogOut) {
       widget.onSignedOut();
       await FirebaseAuth.instance.signOut();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('seen', false);
-      await prefs.setString('currentEmployer', "");
+      await resetCurrentEmployer();
     }
   }
 

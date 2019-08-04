@@ -7,9 +7,7 @@ import '../login_modules/login_page.dart';
 import 'home_root_page.dart';
 
 class RootPage extends StatefulWidget {
-  //RootPage({Key key, this.store, this.title}) : super(key: key);
   RootPage({Key key, this.title}) : super(key: key);
-  //final Store<AppState> store;
   final String title;
 
   @override
@@ -29,10 +27,6 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     FirebaseAuth.instance.currentUser().then((userId) {
-      if (userId != null) {
-        //widget.store.dispatch(CheckUserAction(userId));
-        //widget.store.dispatch(InitEmployersAction(getCurrentEmployer: true));
-      }
       setState(() {
         authStatus =
             userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;

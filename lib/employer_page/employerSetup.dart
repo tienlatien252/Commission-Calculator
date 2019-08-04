@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../models/employer.dart';
 import 'add_new_employer_dialog.dart';
 import 'employers_list_view.dart';
+import 'package:Calmission/common/employer_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -95,31 +95,37 @@ List<Employer> getListEmployersFromSnapshot(List<DocumentSnapshot> documents) {
   }).toList();
 }
 
-class _NextButtonState extends State<NextButton> {
-  _saveEmployersAndGoNext() async {
+Future<List<DocumentSnapshot>> getEmployersDocument() async {
     FirebaseUser _currentUser = await _auth.currentUser();
     String pathString = 'users/' + _currentUser.uid + '/employers';
-
     final QuerySnapshot result = await Firestore.instance
         .collection(pathString)
         .where('isDeleted', isEqualTo: false)
         .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
+    return result.documents;
+}
 
-    if (documents.length == 0) {
+class _NextButtonState extends State<NextButton> {
+  _saveEmployersAndGoNext() async {
+    final List<DocumentSnapshot> employerDocuments =  await getEmployersDocument(); 
+
+    if (employerDocuments.length == 0) {
       Scaffold.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("Please add at least one employer"),
       ));
       return;
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentEmployerId = prefs.getString('currentEmployer');
-    if(currentEmployerId ==null){
-      await prefs.setString('currentEmployer', documents[0].documentID);
+    Employer currentEmployer = await getCurrentEmployer();
+    if(currentEmployer == null){
+      Employer employer = Employer(
+        name: employerDocuments[0]['name'],
+        commissionRate: employerDocuments[0]['commission_rate'],
+        employerId: employerDocuments[0].documentID);
+      await setCurrentEmployer(employer);
     }
     if (widget.isInitialSetting) {
-      await prefs.setBool('seen', true);
+      await seenFirstSetup(seen: true);
       widget.seenSetup();
     } else {
       Navigator.pop(context);

@@ -26,7 +26,6 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   Map<ProvidersTypes, ButtonDescription> _buttons;
   final TextEditingController _tokenController = TextEditingController();
-  final TextEditingController _tokenSecretController = TextEditingController();
 
   _handleEmailSignIn() async {
     String value = await Navigator.of(context)

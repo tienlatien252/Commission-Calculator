@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../models/employer.dart';
 import 'add_new_employer_dialog.dart';
 import 'delete_employer_dialog.dart';
+import 'package:Calmission/common/employer_service.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -46,12 +46,10 @@ class _EmployersListViewState extends State<EmployersListView> {
   }
 
   Future<Null> selectEmployer(Employer employer) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('currentEmployer', employer.employerId);
+    await setCurrentEmployer(employer);
     if (widget.isDrawer) {
       Navigator.pop(context);
-    }
-    else{
+    } else {
       setState(() {});
     }
   }
@@ -154,11 +152,6 @@ class _EmployersListViewState extends State<EmployersListView> {
     }).toList();
   }
 
-  Future<String> getCurrentEmployer() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('currentEmployer');
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -175,12 +168,12 @@ class _EmployersListViewState extends State<EmployersListView> {
                     if (snapshot.data.documents.isEmpty)
                       return Text('No Employer');
 
-                    return FutureBuilder<String>(
+                    return FutureBuilder<Employer>(
                       future: getCurrentEmployer(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<String> currentEmployerSnapshot) {
+                          AsyncSnapshot<Employer> currentEmployerSnapshot) {
                         String employerID = currentEmployerSnapshot.hasData
-                            ? currentEmployerSnapshot.data
+                            ? currentEmployerSnapshot.data.employerId
                             : snapshot.data.documents[0].documentID;
                         return ListView.builder(
                             shrinkWrap: true,
