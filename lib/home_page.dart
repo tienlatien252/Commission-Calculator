@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
 
-//import 'commission_views/today_view.dart';
+import 'commission_views/today_view.dart';
 //import 'history_page/history_view.dart';
 import 'account_dialog.dart';
 //import 'calculator_page/calculator_page.dart';
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
             offstage: _currentIndex != 0,
             child: TickerMode(
                 enabled: _currentIndex == 0,
-                child: Text("TodayView")), //TodayView()),
+                child: TodayView()), // Text("TodayView")), //
           ),
           Offstage(
             offstage: _currentIndex != 1,

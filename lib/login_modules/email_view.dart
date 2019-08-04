@@ -16,7 +16,6 @@ class EmailView extends StatefulWidget {
 class _EmailViewState extends State<EmailView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   String validateEmail(String value) {
     Pattern pattern =
@@ -54,15 +53,6 @@ class _EmailViewState extends State<EmailView> {
                               labelText:
                                   FFULocalizations.of(context).emailLabel),
                         ),
-                        /*TextFormField(
-                            controller: _passwordController,
-                            autofocus: true,
-                            keyboardType: TextInputType.emailAddress,
-                            obscureText: true,
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                                labelText:
-                                    FFULocalizations.of(context).passwordLabel))*/
                       ])),
                 ],
               ),

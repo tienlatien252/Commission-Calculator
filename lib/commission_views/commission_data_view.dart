@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import '../models/commission.dart';
-import '../models/employer.dart';
-import '../logic/app_state.dart';
 import 'edit_data_dialog.dart';
+import 'package:Calmission/common/employer_service.dart';
+import 'package:Calmission/models/employer.dart';
 
-class _DayEditViewModel {
-  _DayEditViewModel({this.currentUser, this.currentEmployer});
 
-  final Employer currentEmployer;
-  final FirebaseUser currentUser;
-}
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class CommissionView extends StatefulWidget {
   CommissionView(
@@ -160,12 +155,13 @@ class DayEditView extends StatefulWidget {
 class _DayEditViewState extends State<DayEditView> {
   Commission commission;
 
-  Future _getCommission(_DayEditViewModel viewModel) {
-    String id = viewModel.currentUser.uid;
+  Future _getCommission() async {
+    FirebaseUser _currentUser = await _auth.currentUser();
+    Employer currentEmployer = await getCurrentEmployer();
     String pathString = 'users/' +
-        id +
+        _currentUser.uid +
         '/employers/' +
-        viewModel.currentEmployer.employerId +
+        currentEmployer.employerId +
         '/commission';
 
     DateTime dateOnly = getDateOnly(widget.date);
@@ -191,16 +187,6 @@ class _DayEditViewState extends State<DayEditView> {
   }
 
   Future<Null> _openEditCommissionDialog() async {
-    // TODO implement the dialog
-    // await showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return EditDataView(
-    //         title: "Edit Comission",
-    //         date: getDateOnly(widget.date),
-    //         commission: commission,
-    //       );
-    //     });
     await Navigator.push(
         context,
         new MaterialPageRoute(
@@ -218,51 +204,45 @@ class _DayEditViewState extends State<DayEditView> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _DayEditViewModel>(converter: (store) {
-      return _DayEditViewModel(
-          currentUser: store.state.currentUser,
-          currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, _DayEditViewModel viewModel) {
-      return FutureBuilder(
-        future: _getCommission(viewModel),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              commission = _getCommissionData(snapshot);
-              Widget dataAndButton = widget.backButton != null
-                  ? Expanded(
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        widget.backButton,
-                        CommissionView(commission: commission),
-                        widget.nextButton
-                      ],
-                    ))
-                  : CommissionView(commission: commission);
-              return Column(
-                children: <Widget>[
-                  dataAndButton,
-                  Container(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
-                    child: FloatingActionButton(
-                        heroTag: null,
-                        onPressed: () => _openEditCommissionDialog(),
-                        child: Icon(Icons.edit)),
-                  )
-                ],
-              );
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError)
-                return Text('Error: ${snapshot.error}');
-              else
-                return Text('Result: ${snapshot.data}');
-          }
-        },
-      );
-    });
+    return FutureBuilder(
+      future: _getCommission(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            commission = _getCommissionData(snapshot);
+            Widget dataAndButton = widget.backButton != null
+                ? Expanded(
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      widget.backButton,
+                      CommissionView(commission: commission),
+                      widget.nextButton
+                    ],
+                  ))
+                : CommissionView(commission: commission);
+            return Column(
+              children: <Widget>[
+                dataAndButton,
+                Container(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
+                  child: FloatingActionButton(
+                      heroTag: null,
+                      onPressed: () => _openEditCommissionDialog(),
+                      child: Icon(Icons.edit)),
+                )
+              ],
+            );
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          default:
+            if (snapshot.hasError)
+              return Text('Error: ${snapshot.error}');
+            else
+              return Text('Result: ${snapshot.data}');
+        }
+      },
+    );
   }
 }
