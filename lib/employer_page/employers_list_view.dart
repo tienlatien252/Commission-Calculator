@@ -6,7 +6,6 @@ import 'dart:async';
 import '../services/employer_service.dart';
 import 'add_new_employer_dialog.dart';
 import 'delete_employer_dialog.dart';
-import 'package:Calmission/common/employer_service.dart';
 
 class EmployersListView extends StatelessWidget {
   EmployersListView({Key key, this.user, this.isDrawer}) : super(key: key);

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
-import '../services/employer_service.dart';
-import 'package:Calmission/common/employer_service.dart';
+
+import 'package:Calmission/services/employer_service.dart';
 
 
 class DeleteEmployerDialogView extends StatefulWidget {
@@ -17,24 +18,8 @@ class DeleteEmployerDialogView extends StatefulWidget {
 
 class _DeleteEmployerDialogViewState extends State<DeleteEmployerDialogView> {
   _deleteEmployer() async {
-    FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
-    String id = currentUser.uid;
-    String pathString = 'users/' + id + '/employers';
-    Map<String, dynamic> data = {
-          'name': widget.employer.name,
-          'commission_rate': widget.employer.commissionRate,
-          'isDeleted': true
-    };
-    Employer currentEmployer = await getCurrentEmployer();
-    if (currentEmployer!= null && currentEmployer.employerId==widget.employer.employerId){
-      await deleteCurrentEmployer();
-    }
-    Firestore.instance
-        .collection(pathString)
-        .document(widget.employer.employerId)
-        .setData(data).whenComplete(() {
-      //employers.remove(widget.employer.employerId);
-    }).catchError((e) => print(e));
+    EmployerService employerService = Provider.of<EmployerService>(context);
+    employerService.deleteEmployer(widget.employer);
     Navigator.of(context).pop();
   }
 

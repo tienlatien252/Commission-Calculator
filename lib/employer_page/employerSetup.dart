@@ -7,9 +7,7 @@ import 'dart:async';
 import '../services/employer_service.dart';
 import 'add_new_employer_dialog.dart';
 import 'employers_list_view.dart';
-import 'package:Calmission/common/employer_service.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class EmployerSetup extends StatelessWidget {
   EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../services/employer_service.dart';
-import '../commission_views/commission_data_view.dart';
-import '../date_time_view.dart';
-import 'package:Calmission/common/employer_service.dart';
+import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/commission_views/commission_data_view.dart';
+import 'package:Calmission/date_time_view.dart';
 
 class TodayView extends StatefulWidget {
   TodayView({Key key}) : super(key: key);
@@ -28,23 +28,21 @@ class _TodayViewState extends State<TodayView> {
           child: Column(
             children: <Widget>[
               Container(
-                alignment: AlignmentDirectional.centerStart,
-                padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 17.0),
-                child: FutureBuilder<Employer>(
-                    future: getCurrentEmployer(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<Employer> currentEmployerSnapshot) {
-                      Employer employer = currentEmployerSnapshot.data;
-                      String employerName = '';
-                      if(employer!=null){
-                        employerName =employer.name;
-                      }
-                      return Text(
-                        employerName,
-                        style: TextStyle(fontSize: 40.0, color: Colors.white),
-                      );
-                    }),
-              ),
+                  alignment: AlignmentDirectional.centerStart,
+                  padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 17.0),
+                  child: Consumer<EmployerService>(builder:
+                      (BuildContext context, EmployerService employerService,
+                          __) {
+                    Employer employer = employerService.currentEmployer;
+                    String employerName = '';
+                    if (employer != null) {
+                      employerName = employer.name;
+                    }
+                    return Text(
+                      employerName,
+                      style: TextStyle(fontSize: 40.0, color: Colors.white),
+                    );
+                  })),
               Container(
                 alignment: AlignmentDirectional.centerStart,
                 padding: EdgeInsets.fromLTRB(20.0, 13.0, 10.0, 13.0),

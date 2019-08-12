@@ -26,7 +26,6 @@ class EmployerService extends ChangeNotifier {
     double currentEmployerCommissionRate =
         prefs.getDouble('currentEmployerCommissionRate');
     bool seenSetup = prefs.getBool('seenSetup');
-    
 
     if (currentEmployerId != null) {
       Employer currentEmployer = new Employer(
@@ -77,7 +76,10 @@ class EmployerService extends ChangeNotifier {
     await prefs.setString('currentEmployerName', employer.name);
     await prefs.setDouble(
         'currentEmployerCommissionRate', employer.commissionRate);
-    _currentEmployer = Employer(employerId: employer.employerId, name: employer.name, commissionRate: employer.commissionRate);
+    _currentEmployer = Employer(
+        employerId: employer.employerId,
+        name: employer.name,
+        commissionRate: employer.commissionRate);
     notifyListeners();
   }
 
@@ -129,17 +131,20 @@ class EmployerService extends ChangeNotifier {
     String id = _currentUser.uid;
     String pathString = 'users/' + id + '/employers';
     Map<String, dynamic> data = {
-          'name': employer.name,
-          'commission_rate': employer.commissionRate,
-          'isDeleted': true
+      'name': employer.name,
+      'commission_rate': employer.commissionRate,
+      'isDeleted': true
     };
-    if (_currentEmployer!= null && currentEmployer.employerId==employer.employerId){
+    if (_currentEmployer != null &&
+        currentEmployer.employerId == employer.employerId) {
       await deleteCurrentEmployer();
     }
     Firestore.instance
         .collection(pathString)
         .document(employer.employerId)
-        .setData(data).whenComplete(() {
+        .setData(data)
+        .whenComplete(() {
+      notifyListeners();
       //employers.remove(widget.employer.employerId);
     }).catchError((e) => print(e));
   }

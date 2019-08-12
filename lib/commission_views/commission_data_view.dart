@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:provider/provider.dart';
+
 
 import '../models/commission.dart';
 import 'edit_data_dialog.dart';
-import 'package:Calmission/common/employer_service.dart';
 import 'package:Calmission/services/employer_service.dart';
 
 
@@ -157,7 +158,9 @@ class _DayEditViewState extends State<DayEditView> {
 
   Future _getCommission() async {
     FirebaseUser _currentUser = await _auth.currentUser();
-    Employer currentEmployer = await getCurrentEmployer();
+    EmployerService employerService = Provider.of<EmployerService>(context);
+
+    Employer currentEmployer = employerService.currentEmployer;
     String currentEmployerId = currentEmployer != null ? currentEmployer.employerId : 'abc';
     String pathString = 'users/' +
         _currentUser.uid +
