@@ -8,7 +8,6 @@ import 'commission_views/today_view.dart';
 import 'account_dialog.dart';
 //import 'calculator_page/calculator_page.dart';
 //import 'main.dart';
-import 'package:Calmission/common/employer_service.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';

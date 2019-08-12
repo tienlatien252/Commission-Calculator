@@ -120,7 +120,7 @@ class SignInPage extends StatelessWidget {
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         builder: (_) {
-          return EmailView(manager: manager);
+          return EmailView();
         }, //(_) => EmailPasswordSignInPageBuilder(),
       ),
     );

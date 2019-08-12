@@ -1,3 +1,4 @@
+import 'package:Calmission/services/commission_service.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,9 +6,10 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 
 
-import '../models/commission.dart';
+//import '../models/commission.dart';
 import 'edit_data_dialog.dart';
 import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/services/commission_service.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -155,40 +157,7 @@ class DayEditView extends StatefulWidget {
 
 class _DayEditViewState extends State<DayEditView> {
   Commission commission;
-
-  Future _getCommission() async {
-    FirebaseUser _currentUser = await _auth.currentUser();
-    EmployerService employerService = Provider.of<EmployerService>(context);
-
-    Employer currentEmployer = employerService.currentEmployer;
-    String currentEmployerId = currentEmployer != null ? currentEmployer.employerId : 'abc';
-    String pathString = 'users/' +
-        _currentUser.uid +
-        '/employers/' +
-        currentEmployerId +
-        '/commission';
-
-    DateTime dateOnly = getDateOnly(widget.date);
-    return Firestore.instance
-        .collection(pathString)
-        .where('date', isEqualTo: dateOnly)
-        .getDocuments();
-  }
-
-  Commission _getCommissionData(AsyncSnapshot snapshot) {
-    if (snapshot.data.documents.length != 0) {
-      Map<String, dynamic> retunredCommission = snapshot.data.documents[0].data;
-      commission = Commission(
-          raw: retunredCommission['raw'].toDouble(),
-          commission: retunredCommission['commission'].toDouble(),
-          tip: retunredCommission['tip'].toDouble(),
-          total: retunredCommission['total'].toDouble(),
-          id: snapshot.data.documents[0].documentID);
-
-      return commission;
-    }
-    return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-  }
+  final CommissionService  commissionService = CommissionService();
 
   Future<Null> _openEditCommissionDialog() async {
     await Navigator.push(
@@ -202,18 +171,17 @@ class _DayEditViewState extends State<DayEditView> {
               );
             },
             fullscreenDialog: true));
-
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    EmployerService employerService = Provider.of<EmployerService>(context, listen: false);
     return FutureBuilder(
-      future: _getCommission(),
+      future: commissionService.getCommission(employerService.currentEmployer, widget.commission, widget.date),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            commission = _getCommissionData(snapshot);
+            commission = snapshot.data;
             Widget dataAndButton = widget.backButton != null
                 ? Expanded(
                     child: Row(

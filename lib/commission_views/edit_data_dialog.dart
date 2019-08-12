@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:async';
-import '../models/commission.dart';
-import 'package:Calmission/common/employer_service.dart';
 import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/services/commission_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -24,6 +24,7 @@ class _EditDataViewState extends State<EditDataView> {
   final _formKey = GlobalKey<FormState>();
   Commission _comissionData =
       Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
+  final CommissionService commissionService = CommissionService();
 
   onPresscancel() {
     //FocusScope.of(context).detach();
@@ -33,35 +34,13 @@ class _EditDataViewState extends State<EditDataView> {
   void onSubmit() async {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
-      FirebaseUser _currentUser = await _auth.currentUser();
-      Employer currentEmployer = await getCurrentEmployer();
+      EmployerService employerService =
+          Provider.of<EmployerService>(context, listen: false);
+      Employer currentEmployer = employerService.currentEmployer;
+      await commissionService.saveCommission(
+          currentEmployer, _comissionData, widget.date);
 
-      String id = _currentUser.uid;
-      String employerId = currentEmployer.employerId;
-      String pathString =
-          'users/' + id + '/employers/' + employerId + '/commission';
-      Map<String, dynamic> data = {
-        'raw': _comissionData.raw,
-        'tip': _comissionData.tip,
-        'commission': _comissionData.commission,
-        'total': _comissionData.total,
-        'date': widget.date,
-      };
-
-      Future future;
-      if (widget.commission.id == null) {
-        future =
-            Firestore.instance.collection(pathString).document().setData(data);
-      } else {
-        future = Firestore.instance
-            .collection(pathString)
-            .document(widget.commission.id)
-            .setData(data);
-      }
-      future.whenComplete(() {
-        //FocusScope.of(context).detach();
-        Navigator.pop(context);
-      });
+      Navigator.pop(context);
     }
   }
 
@@ -76,7 +55,10 @@ class _EditDataViewState extends State<EditDataView> {
   }
 
   void _onSave(String value) async {
-    Employer currentEmployer = await getCurrentEmployer();
+    EmployerService employerService =
+        Provider.of<EmployerService>(context, listen: false);
+    Employer currentEmployer = employerService.currentEmployer;
+    _comissionData.id = widget.commission.id;
     _comissionData.raw = double.parse(value);
     _comissionData.commission =
         (_comissionData.raw * currentEmployer.commissionRate);
