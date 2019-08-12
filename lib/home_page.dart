@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
+import 'package:provider/provider.dart';
 
 import 'commission_views/today_view.dart';
 //import 'history_page/history_view.dart';
@@ -8,6 +9,9 @@ import 'account_dialog.dart';
 //import 'calculator_page/calculator_page.dart';
 //import 'main.dart';
 import 'package:Calmission/common/employer_service.dart';
+import 'package:Calmission/services/firebase_auth_service.dart';
+import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -20,6 +24,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  bool onLogout = false;
+  GlobalKey _scaffold = GlobalKey();
 
   /*BannerAd bannerAd;
   InterstitialAd interstitialAd;
@@ -53,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _openAddEntryDialog() async {
+  void _openAddEntryDialog(BuildContext context) async {
     bool justLogOut = await Navigator.push(
         context,
         new MaterialPageRoute(
@@ -61,11 +67,7 @@ class _HomePageState extends State<HomePage> {
               return new AccountDialog(onSignedOut: widget.onSignedOut);
             },
             fullscreenDialog: true));
-    if (justLogOut != null && justLogOut) {
-      widget.onSignedOut();
-      await FirebaseAuth.instance.signOut();
-      await resetCurrentEmployer();
-    }
+
   }
 
   /*InterstitialAd buildInterstitial() {
@@ -87,6 +89,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     //bannerAd..show(anchorOffset: 50.0);
     return Scaffold(
+      key: _scaffold,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
@@ -114,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     }
                     return IconButton(
                       icon: accountIcon,
-                      onPressed: () => _openAddEntryDialog(),
+                      onPressed: () => _openAddEntryDialog(context),
                     );
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());

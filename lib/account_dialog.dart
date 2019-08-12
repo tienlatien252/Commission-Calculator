@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'employer_page/employers_list_view.dart';
 import 'employer_page/employerSetup.dart';
+import 'package:Calmission/services/firebase_auth_service.dart';
+import 'package:Calmission/services/employer_service.dart';
+
+import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
+
 
 class AccountDialog extends StatefulWidget {
   AccountDialog({Key key, this.onSignedOut}) : super(key: key);
@@ -13,8 +19,29 @@ class AccountDialog extends StatefulWidget {
 }
 
 class _AccountDialogState extends State<AccountDialog> {
-  _signOut() {
-    Navigator.pop(context, true);
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      final FirebaseAuthService auth = Provider.of<FirebaseAuthService>(context);
+      final EmployerService employerService = Provider.of<EmployerService>(context);
+      
+      await auth.signOut();
+      await employerService.resetCurrentEmployer();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    final bool didRequestSignOut = await PlatformAlertDialog(
+      title: "Strings.logout",
+      content: "logoutAreYouSure",
+      cancelActionText: "cancel",
+      defaultActionText: "logout",
+    ).show(context);
+    if (didRequestSignOut == true) {
+      _signOut(context);
+      Navigator.pop(context, true);
+    }
   }
 
   _openSetting() {
@@ -91,7 +118,7 @@ class _AccountDialogState extends State<AccountDialog> {
                         ListTile(
                             leading: const Icon(Icons.exit_to_app),
                             title: const Text('Logout'),
-                            onTap: _signOut),
+                            onTap: () => _confirmSignOut(context)),
                       ],
                     ),
                   ),

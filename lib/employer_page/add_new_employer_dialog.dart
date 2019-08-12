@@ -5,7 +5,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:async';
-import '../models/employer.dart';
+import '../services/employer_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -25,27 +25,10 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   final _formKey = GlobalKey<FormState>();
 
   _saveNewEmployer() async {
-    FirebaseUser _currentUser = await _auth.currentUser();
-
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
-      String id = _currentUser.uid;
-      String pathString = 'users/' + id + '/employers';
-      Map<String, dynamic> data = {
-        'name': employerName,
-        'commission_rate': _comissionRate.round() / 100,
-        'isDeleted': false
-      };
-      Future future;
-      if (widget.employer == null) {
-        future =
-            Firestore.instance.collection(pathString).document().setData(data);
-      } else {
-        future = Firestore.instance
-            .collection(pathString)
-            .document(widget.employer.employerId)
-            .setData(data);
-      }
+      Future future = Provider.of<EmployerService>(context, listen: false)
+          .saveNewEmployer(_comissionRate, employerName, widget.employer);
 
       future.whenComplete(() {
         //FocusScope.of(context).detach();

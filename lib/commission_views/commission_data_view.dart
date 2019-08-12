@@ -6,7 +6,7 @@ import 'dart:async';
 import '../models/commission.dart';
 import 'edit_data_dialog.dart';
 import 'package:Calmission/common/employer_service.dart';
-import 'package:Calmission/models/employer.dart';
+import 'package:Calmission/services/employer_service.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;

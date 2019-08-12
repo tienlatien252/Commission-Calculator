@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/employer.dart';
+import '../services/employer_service.dart';
 import '../commission_views/commission_data_view.dart';
 import '../date_time_view.dart';
 import 'package:Calmission/common/employer_service.dart';

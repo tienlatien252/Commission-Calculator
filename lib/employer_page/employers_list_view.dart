@@ -1,31 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
-import '../models/employer.dart';
+import '../services/employer_service.dart';
 import 'add_new_employer_dialog.dart';
 import 'delete_employer_dialog.dart';
 import 'package:Calmission/common/employer_service.dart';
 
-FirebaseAuth _auth = FirebaseAuth.instance;
-
-class EmployersListView extends StatefulWidget {
+class EmployersListView extends StatelessWidget {
   EmployersListView({Key key, this.user, this.isDrawer}) : super(key: key);
   final FirebaseUser user;
   final bool isDrawer;
 
-  @override
-  _EmployersListViewState createState() => _EmployersListViewState();
-}
-
-class _EmployersListViewState extends State<EmployersListView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<Null> _openEditEmployerDialog(Employer employer) async {
+  Future<Null> _openEditEmployerDialog(
+      BuildContext context, Employer employer) async {
     await Navigator.push(
         context,
         new MaterialPageRoute(
@@ -36,7 +25,8 @@ class _EmployersListViewState extends State<EmployersListView> {
             fullscreenDialog: true));
   }
 
-  Future<Null> _openDeleteEmployerDialog(Employer employer) async {
+  Future<Null> _openDeleteEmployerDialog(
+      BuildContext context, Employer employer) async {
     // TODO implement the dialog
     await showDialog(
         context: context,
@@ -45,24 +35,22 @@ class _EmployersListViewState extends State<EmployersListView> {
         });
   }
 
-  Future<Null> selectEmployer(Employer employer) async {
-    await setCurrentEmployer(employer);
-    if (widget.isDrawer) {
+  Future<Null> selectEmployer(BuildContext context, EmployerService employerService, Employer employer) async {
+    await employerService.setCurrentEmployer(employer);
+    if (isDrawer) {
       Navigator.pop(context);
-    } else {
-      setState(() {});
     }
   }
 
-  Widget employerBuilder(
-      BuildContext context, DocumentSnapshot document, String employerId) {
-    Employer employer = Employer(
+  Widget employerBuilder(BuildContext context, EmployerService employerService,
+      Employer employer, String currentEmployerID) {
+    /*Employer employer = Employer(
         name: document.data['name'],
         commissionRate: document.data['commission_rate'],
         employerId: document.documentID);
-
+*/
     Widget employersList;
-    if (!widget.isDrawer) {
+    if (!isDrawer) {
       employersList = Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -71,12 +59,12 @@ class _EmployersListViewState extends State<EmployersListView> {
               IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    _openEditEmployerDialog(employer);
+                    _openEditEmployerDialog(context, employer);
                   }),
               IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    _openDeleteEmployerDialog(employer);
+                    _openDeleteEmployerDialog(context, employer);
                   })
             ])
           ]);
@@ -86,9 +74,8 @@ class _EmployersListViewState extends State<EmployersListView> {
           children: <Widget>[Text(employer.name)]);
     }
 
-    bool isCurrentEmployer =
-        employerId != null ? employer.employerId == employerId : false;
-    if (widget.isDrawer) {
+    bool isCurrentEmployer = employer.employerId == currentEmployerID;
+    if (isDrawer) {
       return Container(
         decoration: ShapeDecoration(
           shape:
@@ -99,7 +86,7 @@ class _EmployersListViewState extends State<EmployersListView> {
         child: ListTileTheme(
           selectedColor: Theme.of(context).textSelectionColor,
           child: ListTile(
-            onTap: () => selectEmployer(employer),
+            onTap: () => selectEmployer(context, employerService, employer),
             selected: isCurrentEmployer,
             leading: const Icon(Icons.store),
             subtitle: Text((employer.commissionRate * 100).toString() + "%"),
@@ -118,7 +105,7 @@ class _EmployersListViewState extends State<EmployersListView> {
       child: ListTileTheme(
         selectedColor: Theme.of(context).textSelectionColor,
         child: ListTile(
-          onTap: () => selectEmployer(employer),
+          onTap: () => selectEmployer(context, employerService, employer),
           selected: isCurrentEmployer,
           leading: const Icon(Icons.store),
           subtitle: Text((employer.commissionRate * 100).toString() + "%"),
@@ -128,73 +115,29 @@ class _EmployersListViewState extends State<EmployersListView> {
     );
   }
 
-  Stream<dynamic> _getEmployers(FirebaseUser currentUser) {
-    if (currentUser.uid != null) {
-      String id = currentUser.uid;
-      String pathString = 'users/' + id + '/employers';
-      print(pathString);
-      Stream<dynamic> stream = Firestore.instance
-          .collection(pathString)
-          .where('isDeleted', isEqualTo: false)
-          .snapshots();
-      return stream;
-    }
-    return null;
-  }
-
-  List<Employer> getListEmployersFromSnapshot(
-      List<DocumentSnapshot> documents) {
-    return documents.map((document) {
-      return Employer(
-          name: document.data['name'],
-          commissionRate: document.data['commission_rate'],
-          employerId: document.documentID);
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: FirebaseAuth.instance.currentUser(),
+    EmployerService employerService = Provider.of<EmployerService>(context);
+    return FutureBuilder<List<Employer>>(
+        future: employerService.getListEmployers(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              FirebaseUser currentUser = snapshot.data;
-              return StreamBuilder(
-                  stream: _getEmployers(currentUser),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(child: CircularProgressIndicator());
-                    if (snapshot.data.documents.isEmpty)
-                      return Text('No Employer');
+          if (!snapshot.hasData)
+            return Center(child: CircularProgressIndicator());
+          if (snapshot.data.isEmpty) return Text('No Employer');
 
-                    return FutureBuilder<Employer>(
-                      future: getCurrentEmployer(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<Employer> currentEmployerSnapshot) {
-                        String employerID = currentEmployerSnapshot.hasData
-                            ? currentEmployerSnapshot.data.employerId
-                            : snapshot.data.documents[0].documentID;
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.documents.length,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot employerSnapshot =
-                                  snapshot.data.documents[index];
-                              return employerBuilder(
-                                  context, employerSnapshot, employerID);
-                            });
-                      },
-                    );
-                  });
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError)
-                return Text('Error: ${snapshot.error}');
-              else
-                return Text('Result: ${snapshot.data}');
-          }
+          Employer currentEmployer = employerService.currentEmployer;
+
+          String currentEmployerID = currentEmployer != null
+              ? currentEmployer.employerId
+              : snapshot.data[0].employerId;
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                Employer employer = snapshot.data[index];
+                return employerBuilder(
+                    context, employerService, employer, currentEmployerID);
+              });
         });
   }
 }

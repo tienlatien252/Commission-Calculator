@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import '../models/commission.dart';
 import 'package:Calmission/common/employer_service.dart';
-import 'package:Calmission/models/employer.dart';
+import 'package:Calmission/services/employer_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 

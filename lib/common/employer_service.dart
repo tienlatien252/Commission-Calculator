@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import '../models/employer.dart';
+import '../services/employer_service.dart';
 
 Future setCurrentEmployer(Employer employer) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

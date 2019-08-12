@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-import '../models/employer.dart';
+import '../services/employer_service.dart';
 import '../logic/app_state.dart';
 import '../models/commission.dart';
 import 'slivers.dart';

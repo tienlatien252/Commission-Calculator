@@ -9,6 +9,7 @@ import 'utils.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class EmailView extends StatefulWidget {
+
   @override
   _EmailViewState createState() => _EmailViewState();
 }
@@ -102,7 +103,7 @@ class _EmailViewState extends State<EmailView> {
         } else if (providers.contains('password')) {
           bool connected = await Navigator.of(context)
               .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-            return PasswordView(_emailController.text);
+            return PasswordView(email: _emailController.text);
           }));
 
           if (connected) {
