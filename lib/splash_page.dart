@@ -7,6 +7,7 @@ import 'package:Calmission/login_modules/login_page.dart';
 import 'package:Calmission/services/auth_service.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/employer_page/employerSetup.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 class SplashPage extends StatelessWidget {
   @override
@@ -37,14 +38,14 @@ class SplashPage extends StatelessWidget {
                 }
                 return Scaffold(
                   body: Center(
-                    child: CircularProgressIndicator(),
+                    child: PlatformLoadingIndicator(),
                   ),
                 );
               });
         } else {
           return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: PlatformLoadingIndicator(),
             ),
           );
         }

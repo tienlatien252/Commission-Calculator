@@ -7,7 +7,6 @@ import 'l10n/localization.dart';
 import 'trouble_signin.dart';
 import 'utils.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
-import 'package:Calmission/login_modules/sign_in_manager.dart';
 import 'package:Calmission/services/auth_service.dart';
 
 

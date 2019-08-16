@@ -11,6 +11,7 @@ import 'account_dialog.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -119,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () => _openAddEntryDialog(context),
                     );
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: PlatformLoadingIndicator());
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');

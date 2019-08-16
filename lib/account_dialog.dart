@@ -6,8 +6,8 @@ import 'employer_page/employers_list_view.dart';
 import 'employer_page/employerSetup.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/employer_service.dart';
-
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 
 class AccountDialog extends StatefulWidget {
@@ -42,10 +42,6 @@ class _AccountDialogState extends State<AccountDialog> {
       _signOut(context);
       Navigator.pop(context, true);
     }
-  }
-
-  _openSetting() {
-    print("openSetting");
   }
 
   _openEmployersSetting() {
@@ -127,7 +123,7 @@ class _AccountDialogState extends State<AccountDialog> {
             );
 
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return Center(child: PlatformLoadingIndicator());
           default:
             if (snapshot.hasError)
               return Text('Error: ${snapshot.error}');

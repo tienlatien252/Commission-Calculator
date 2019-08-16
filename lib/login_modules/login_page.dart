@@ -1,6 +1,5 @@
 export 'utils.dart';
 import 'dart:async';
-import 'package:Calmission/services/employer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
@@ -8,9 +7,9 @@ import 'package:flutter/services.dart';
 
 import 'utils.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
-import 'package:Calmission/login_modules/sign_in_manager.dart';
 import 'package:Calmission/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:Calmission/login_modules/email_view.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 class SignInScreen extends StatelessWidget {
   static String tag = 'login-page';
@@ -33,28 +32,9 @@ class SignInScreen extends StatelessWidget {
     return SignInPage._(
       providers: _providers,
       isLoading: auth.status == Status.Authenticating,
-      manager: SignInManager(auth: auth),
       color: color,
       title: title,
     );
-
-    // return ChangeNotifierProvider<ValueNotifier<bool>>(
-    //     builder: (_) => ValueNotifier<bool>(false),
-    //     child: Consumer<ValueNotifier<bool>>(
-    //       builder: (_, ValueNotifier<bool> isLoading, __) =>
-    //           Provider<SignInManager>(
-    //         builder: (_) => SignInManager(auth: auth, isLoading: isLoading),
-    //         child: Consumer<SignInManager>(
-    //           builder: (_, SignInManager manager, __) => SignInPage._(
-    //             providers: _providers,
-    //             isLoading: isLoading.value,
-    //             manager: manager,
-    //             color: color,
-    //             title: title,
-    //           ),
-    //         ),
-    //       ),
-    //     ));
   }
 }
 
@@ -63,7 +43,6 @@ class SignInPage extends StatelessWidget {
   SignInPage._({
     Key key,
     this.isLoading,
-    this.manager,
     this.title,
     this.color,
     @required this.providers,
@@ -71,7 +50,6 @@ class SignInPage extends StatelessWidget {
 
   Map<ProvidersTypes, ButtonDescription> _buttons;
   final List<ProvidersTypes> providers;
-  final SignInManager manager;
   final String title;
   final bool isLoading;
   final Color color;
@@ -152,7 +130,7 @@ class SignInPage extends StatelessWidget {
   Widget _buildHeader() {
     if (isLoading) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: PlatformLoadingIndicator(),
       );
     }
     return Text(

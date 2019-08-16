@@ -153,7 +153,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   AllCommissionsView(listCommissions: listCommissions,
                   ));
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return Center(child: PlatformLoadingIndicator());
             default:
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');

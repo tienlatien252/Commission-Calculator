@@ -6,6 +6,7 @@ import 'dart:async';
 import '../services/employer_service.dart';
 import 'add_new_employer_dialog.dart';
 import 'delete_employer_dialog.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 class EmployersListView extends StatelessWidget {
   EmployersListView({Key key, this.user, this.isDrawer}) : super(key: key);
@@ -121,7 +122,7 @@ class EmployersListView extends StatelessWidget {
         future: employerService.getListEmployers(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData)
-            return Center(child: CircularProgressIndicator());
+            return Center(child: PlatformLoadingIndicator());
           if (snapshot.data.isEmpty) return Text('No Employer');
 
           Employer currentEmployer = employerService.currentEmployer;

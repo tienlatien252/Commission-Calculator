@@ -5,7 +5,7 @@ import 'dart:async';
 
 import '../commission_views/commission_data_view.dart';
 import '../models/commission.dart';
-import '../date_time_view.dart';
+import 'package:Calmission/common_widgets/date_time_widgets.dart';
 
 class HistoryWeekModeView extends StatefulWidget {
   HistoryWeekModeView({Key key}) : super(key: key);
@@ -207,7 +207,7 @@ class _WeekDataViewState extends State<WeekDataView> {
                 ],
               );
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return Center(child: PlatformLoadingIndicator());
             default:
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');

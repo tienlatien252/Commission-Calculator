@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'edit_data_dialog.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/services/commission_service.dart';
+import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -207,7 +208,7 @@ class _DayEditViewState extends State<DayEditView> {
               ],
             );
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return Center(child: PlatformLoadingIndicator());
           default:
             if (snapshot.hasError)
               return Text('Error: ${snapshot.error}');
