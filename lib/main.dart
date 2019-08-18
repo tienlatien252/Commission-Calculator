@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         },*/
             title: 'Commission Calculator',
             theme: ThemeData(
-                scaffoldBackgroundColor: Colors.grey[200],
+                scaffoldBackgroundColor:  Color.fromRGBO(77, 182, 172, 1.0),
                 primaryColor: Color.fromRGBO(77, 182, 172, 1.0),
                 primaryColorDark: Color.fromRGBO(0, 134, 125, 1.0),
                 primaryColorLight: Color.fromRGBO(130, 233, 222, 1.0),

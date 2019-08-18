@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_admob/firebase_admob.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/rendering.dart';
 
 import 'commission_page/today_view.dart';
 import 'package:Calmission/history_page/history_view.dart';
 import 'package:Calmission/account_dialog.dart';
 //import 'package:Calmission/calculator_page/calculator_page.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
-import 'package:Calmission/history_page/charts.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -19,46 +17,34 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
-  int _currentIndex = 0;
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin , AutomaticKeepAliveClientMixin<HomePage> {
   bool onLogout = false;
   GlobalKey _scaffold = GlobalKey();
   TabController _controller;
 
-  List<Widget> _pages = [TodayView(), HistoryView(), Text("CalculatorPage")];
-  /*BannerAd bannerAd;
-  InterstitialAd interstitialAd;
+  List<Widget> _pages = [TodayView(), HistoryView(), Text("CalculatorPage"), AccountDialog()];
 
-  BannerAd buildBanner() {
-    return BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
-        size: AdSize.smartBanner,
-        listener: (MobileAdEvent event) {
-          print(event);
-        });
-  }*/
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  void _onTabTapped(int index) {
+    _controller.animateTo(index);
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
     _controller = TabController(vsync: this, length: _pages.length);
-    //FirebaseAdMob.instance.initialize(appId: APP_ID);
-    //bannerAd = buildBanner()..load();
   }
 
   @override
   void dispose() {
-    //bannerAd?.dispose();
-    //interstitialAd?.dispose();
     _controller.dispose();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
+
 
   void _openAddEntryDialog(BuildContext context) async {
     bool justLogOut = await Navigator.push(
@@ -70,27 +56,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             fullscreenDialog: true));
   }
 
-  /*InterstitialAd buildInterstitial() {
-    return InterstitialAd(
-        adUnitId: InterstitialAd.testAdUnitId,
-        targetingInfo: targetingInfo,
-        listener: (MobileAdEvent event) {
-          if (event == MobileAdEvent.failedToLoad) {
-            interstitialAd..load();
-          } else if (event == MobileAdEvent.closed) {
-            interstitialAd = buildInterstitial()..load();
-          }
-
-          print(event);
-        });
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    //bannerAd..show(anchorOffset: 50.0);
+    super.build(context);
     return Scaffold(
       key: _scaffold,
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
           children: <Widget>[
@@ -100,7 +71,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
             Text(widget.title),
           ],
-        ),
+        ),),
         actions: <Widget>[
           FutureBuilder(
               future: FirebaseAuth.instance.currentUser(),
@@ -129,48 +100,138 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 }
               })
         ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: _currentIndex != 0,
-            child: TickerMode(
-                enabled: _currentIndex == 0,
-                child: TodayView()), // Text("TodayView")), //
-          ),
-          Offstage(
-              offstage: _currentIndex != 1,
-              child: TickerMode(
-                  enabled: _currentIndex == 1,
-                  child: HistoryView(),
-                  ) //Text("HistoryView")), //HistoryView()),
-              ),
-          Offstage(
-              offstage: _currentIndex != 2,
-              child: TickerMode(
-                  enabled: _currentIndex == 2,
-                  child: Text("CalculatorPage")) //CalculatorPage()),
-              )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // new
-        currentIndex: _currentIndex, // new
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColorLight,
-            icon: Icon(Icons.home),
-            title: Text('Today'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            title: Text('History'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.assessment), title: Text('Calculator'))
-        ],
+      ),*/
+      body: TabBarView(
+          controller: _controller,
+          children: _pages.map<Widget>((Widget page) {
+            return SafeArea(
+              top: false,
+              bottom: false,
+              child: Container(
+                  key: ObjectKey(page),
+                  //padding: const EdgeInsets.all(12.0),
+                  child: page),
+            );
+          }).toList()),
+      bottomNavigationBar: CustomBottomBar(
+        controller: _controller,
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class CustomBottomBar extends StatefulWidget {
+  final TabController controller;
+
+  CustomBottomBar({Key key, this.controller}) : super(key: key);
+
+  @override
+  _CustomBottomBarState createState() => _CustomBottomBarState();
+}
+
+class _CustomBottomBarState extends State<CustomBottomBar> {
+  void _onPressed(int index) {
+    widget.controller.animateTo(index);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      shape: CircularNotchedRectangle(),
+      child: new Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          TabIcon(
+            selected: widget.controller.index == 0,
+            icon: Icons.home,
+            onPressed: () => _onPressed(0),
+            text: 'Today',
+          ),
+          TabIcon(
+            selected: widget.controller.index == 1,
+            icon: Icons.history,
+            onPressed: () => _onPressed(1),
+            text: 'History',
+          ),
+          TabIcon(
+            selected: widget.controller.index == 2,
+            icon: Icons.assessment,
+            onPressed: () => _onPressed(2),
+            text: 'Calculator',
+          ),
+          TabIcon(
+            selected: widget.controller.index == 3,
+            icon: Icons.account_circle,
+            onPressed: () => _onPressed(3),
+            text: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TabIcon extends StatefulWidget {
+  final IconData icon;
+  final Function onPressed;
+  final bool selected;
+  final String text;
+
+  TabIcon({Key key, this.icon, this.onPressed, this.selected, this.text})
+      : super(key: key);
+
+  @override
+  _TabIconState createState() => _TabIconState();
+}
+
+class _TabIconState extends State<TabIcon> {
+  @override
+  Widget build(BuildContext context) {
+    /*return IconButton(
+      icon: Icon(
+        widget.icon,
+        color:
+            widget.selected ? Theme.of(context).primaryColor : Colors.blueGrey,
+      ),
+      onPressed: widget.onPressed,
+    );*/
+    return Expanded(
+      child: InkWell(
+        onTap: widget.onPressed,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 6.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                widget.icon,
+                color: widget.selected
+                    ? Theme.of(context).primaryColor
+                    : Colors.blueGrey,
+              ),
+              Text(
+                widget.text,
+                style: TextStyle(
+                    color: widget.selected
+                        ? Theme.of(context).primaryColor
+                        : Colors.blueGrey),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

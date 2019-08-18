@@ -39,7 +39,7 @@ class CommissionChart extends StatelessWidget {
         id: 'Sales',
         domainFn: (Money sales, _) => sales.type,
         measureFn: (Money sales, _) => sales.amount,
-        colorFn: (_, __) => color != null ? color : charts.MaterialPalette.teal.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
         data: data,
         labelAccessorFn: (Money sales, _) => '\$${sales.amount.toString()}',
       ),

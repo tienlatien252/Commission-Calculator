@@ -8,6 +8,7 @@ import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
+import 'package:Calmission/common_widgets/CustomButton.dart';
 
 class AccountDialog extends StatefulWidget {
   AccountDialog({Key key, this.onSignedOut}) : super(key: key);
@@ -41,13 +42,12 @@ class _AccountDialogState extends State<AccountDialog> {
     ).show(context);
     if (didRequestSignOut == true) {
       _signOut(context);
-      Navigator.pop(context, true);
     }
   }
 
   _openEmployersSetting() {
     print("openEmployersSetting");
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => EmployerSetup(
@@ -66,44 +66,22 @@ class _AccountDialogState extends State<AccountDialog> {
             String displayName = currentUser.displayName == null
                 ? 'Name'
                 : currentUser.displayName;
-            Widget accountPicture = currentUser.photoUrl != null
-                ? CircleAvatar(
-                    backgroundImage: NetworkImage(currentUser.photoUrl),
-                  )
-                : Icon(Icons.account_circle);
-            String email = currentUser.email != null
-                ? currentUser.email
-                : "example@email.com";
             return Scaffold(
+              backgroundColor: Colors.grey[200],
               appBar: AppBar(
-                title: Text("Account"),
-                backgroundColor: Colors.white,
+                title: Text(
+                  "Profile & Settings",
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: Theme.of(context).primaryColor,
               ),
               body: Column(
                 children: <Widget>[
-                  UserAccountsDrawerHeader(
-                      decoration:
-                          BoxDecoration(color: Theme.of(context).primaryColor),
-                      accountName: Text(displayName),
-                      accountEmail: Text(email),
-                      currentAccountPicture: accountPicture),
                   Column(
                     children: <Widget>[
-                      ListTile(
-                        title: const Text(
-                          'Employers List',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.0),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text("Manage"),
-                              Icon(Icons.arrow_right),
-                            ],
-                          ),
-                        onTap: _openEmployersSetting,
-                      ),
+                      CustomListTile(onTap: _openEmployersSetting, title: displayName, subtitle: 'Manage Account',),
+                      CustomListTile(onTap: _openEmployersSetting, title: 'Settings', subtitle: 'Languages,',),
+                      CustomListTile(onTap: _openEmployersSetting, title: 'Employers', subtitle: 'Manage',),
                     ],
                   ),
                   Expanded(
@@ -112,26 +90,10 @@ class _AccountDialogState extends State<AccountDialog> {
                     ),
                   ),
                   Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                            leading: const Icon(Icons.settings),
-                            title: const Text('Setting'),
-                            onTap: () {
-                              _openEmployersSetting();
-                            }),
-                        // ListTile(
-                        //     leading: const Icon(Icons.settings),
-                        //     title: const Text('Settings'),
-                        //     onTap: () {
-                        //       _openSetting();
-                        //     }),
-                        ListTile(
-                            leading: const Icon(Icons.exit_to_app),
-                            title: const Text('Logout'),
-                            onTap: () => _confirmSignOut(context)),
-                      ],
+                    //color: Colors.white,
+                    child: CustomButtonBar(
+                      text: "Logout",
+                      onTap: () => _confirmSignOut(context),
                     ),
                   ),
                 ],
@@ -150,3 +112,4 @@ class _AccountDialogState extends State<AccountDialog> {
     );
   }
 }
+

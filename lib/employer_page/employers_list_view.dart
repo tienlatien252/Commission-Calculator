@@ -75,9 +75,9 @@ class EmployerCard extends StatelessWidget {
   Future<Null> selectEmployer(BuildContext context,
       EmployerService employerService, Employer employer) async {
     await employerService.setCurrentEmployer(employer);
-    if (isDrawer) {
-      Navigator.pop(context);
-    }
+    //if (isDrawer) {
+    // Navigator.pop(context);
+    //}
   }
 
   Widget _buildEmployerManage(BuildContext context) {
@@ -100,7 +100,7 @@ class EmployerCard extends StatelessWidget {
   }
 
   ShapeDecoration _getShapeDecoration() {
-    double radius = isDrawer ? 10.0 : 20.0;
+    double radius = isDrawer ? 5.0 : 5.0;
     return ShapeDecoration(
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
@@ -112,9 +112,13 @@ class EmployerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     EmployerService employerService = Provider.of<EmployerService>(context);
     return Container(
-      decoration: _getShapeDecoration(),
+      decoration: ShapeDecoration(
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      color: Colors.white,
+    ),
       margin: isDrawer
-          ? EdgeInsets.fromLTRB(1.0, 6.0, 1.0, 6.0)
+          ? EdgeInsets.fromLTRB(5.0, 6.0, 5.0, 6.0)
           : EdgeInsets.fromLTRB(15.0, 6.0, 15.0, 6.0),
       child: ListTileTheme(
         selectedColor: Theme.of(context).textSelectionColor,
@@ -127,7 +131,12 @@ class EmployerCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(child: Text(employer.name, maxLines: 1, overflow: TextOverflow.ellipsis,)),
+              Expanded(
+                  child: Text(
+                employer.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )),
               _buildEmployerManage(context),
             ],
           ),

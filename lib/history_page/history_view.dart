@@ -15,7 +15,7 @@ class HistoryView extends StatefulWidget {
   _HistoryViewState createState() => _HistoryViewState();
 }
 
-class _HistoryViewState extends State<HistoryView> {
+class _HistoryViewState extends State<HistoryView>{
   final DateTime date = DateTime.now();
   Commission commission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
@@ -38,6 +38,9 @@ class _HistoryViewState extends State<HistoryView> {
       _value = value;
     });
   }
+
+  @override
+bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
