@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'commission_page/today_view.dart';
-//import 'package:Calmission/history_page/history_view.dart';
+import 'package:Calmission/history_page/history_view.dart';
 import 'package:Calmission/account_dialog.dart';
 //import 'package:Calmission/calculator_page/calculator_page.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
@@ -19,11 +19,13 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   int _currentIndex = 0;
   bool onLogout = false;
   GlobalKey _scaffold = GlobalKey();
+  TabController _controller;
 
+  List<Widget> _pages = [TodayView(), HistoryView(), Text("CalculatorPage")];
   /*BannerAd bannerAd;
   InterstitialAd interstitialAd;
 
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: _pages.length);
     //FirebaseAdMob.instance.initialize(appId: APP_ID);
     //bannerAd = buildBanner()..load();
   }
@@ -53,6 +56,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     //bannerAd?.dispose();
     //interstitialAd?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -138,23 +142,7 @@ class _HomePageState extends State<HomePage> {
               offstage: _currentIndex != 1,
               child: TickerMode(
                   enabled: _currentIndex == 1,
-                  child: TestView(),
-                  // Row(
-                  //   children: <Widget>[
-                  //     Flexible(
-                  //       flex: 5,
-                  //       child: Container(
-                  //           constraints: BoxConstraints(),
-                  //           child: PartialPieChart.withSampleData()),
-                  //     ),
-                  //     Flexible(
-                  //       flex: 5,
-                  //       child: Container(
-                  //         child: DatumLegendWithMeasures.withSampleData(),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // )
+                  child: HistoryView(),
                   ) //Text("HistoryView")), //HistoryView()),
               ),
           Offstage(
