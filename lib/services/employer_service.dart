@@ -62,6 +62,9 @@ class EmployerService extends ChangeNotifier {
 
   Future<List<DocumentSnapshot>> getEmployersDocument() async {
     FirebaseUser _currentUser = await _firebaseAuth.currentUser();
+    if (_currentUser == null){
+      return [];
+    }
     String pathString = 'users/' + _currentUser.uid + '/employers';
     final QuerySnapshot result = await Firestore.instance
         .collection(pathString)

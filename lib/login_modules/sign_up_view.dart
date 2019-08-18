@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import 'l10n/localization.dart';
-import 'utils.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'package:Calmission/localization/localization.dart';
+import 'package:Calmission/services/validator.dart';
+import 'package:Calmission/login_modules/utils.dart';
+import 'package:Calmission/services/firebase_auth_service.dart';
+
 
 class SignUpView extends StatefulWidget {
   final String email;
@@ -23,42 +25,6 @@ class _SignUpViewState extends State<SignUpView> {
   String _emailText;
   String _nameText;
   String _password;
-
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Email Is Not Valid';
-    else
-      return null;
-  }
-
-  String validateName(String value) {
-    if (value.length < 3)
-      return 'Name must be more than 2 charater';
-    else
-      return null;
-  }
-
-  String validatePassword(String value) {
-    Pattern numberPattern = r'[0-9]';
-    RegExp numberRegex = new RegExp(numberPattern);
-    Pattern lowerCasePattern = r'[a-z]';
-    RegExp lowerCasRegex = new RegExp(lowerCasePattern);
-    Pattern upperCasePattern = r'[A-Z]';
-    RegExp upperCasRegex = new RegExp(upperCasePattern);
-    if (value.length < 6) {
-      return "Password must contain at least six characters";
-    }
-    if (!numberRegex.hasMatch(value)) {
-      return 'Password must contain at least one number (0-9)';
-    }
-    if (!lowerCasRegex.hasMatch(value) && !upperCasRegex.hasMatch(value)) {
-      return 'Password must contain at least one letter';
-    } else
-      return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +45,7 @@ class _SignUpViewState extends State<SignUpView> {
                   children: <Widget>[
                     TextFormField(
                         initialValue: _emailText,
-                        validator: validateEmail,
+                        validator: (String value) => validateEmail(context,value),
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         decoration: InputDecoration(
@@ -90,7 +56,7 @@ class _SignUpViewState extends State<SignUpView> {
                         }),
                     const SizedBox(height: 8.0),
                     TextFormField(
-                        validator: validateName,
+                        validator: (String value) => validateName(context,value),
                         keyboardType: TextInputType.text,
                         autocorrect: false,
                         autofocus: true,
@@ -102,7 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
                         }),
                     const SizedBox(height: 8.0),
                     TextFormField(
-                        validator: validatePassword,
+                        validator: (String value) => validatePassword(context,value),
                         keyboardType: TextInputType.text,
                         obscureText: true,
                         autocorrect: false,
@@ -145,14 +111,10 @@ class _SignUpViewState extends State<SignUpView> {
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
-          email: _emailText,
-          password: _password,
-        )).user;
+        final FirebaseAuthService _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+        await _auth.register(_emailText, _password);
         try {
-          var userUpdateInfo = UserUpdateInfo();
-          userUpdateInfo.displayName = _nameText;
-          //await _auth.updateProfile(userUpdateInfo);
+          await _auth.updateUserInfo(_nameText);
           Navigator.pop(context, true);
         } catch (e) {
           showErrorDialog(context, e.details);

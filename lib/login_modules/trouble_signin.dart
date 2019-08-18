@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'l10n/localization.dart';
+
+import 'package:Calmission/localization/localization.dart';
 import 'utils.dart';
 
 class TroubleSignIn extends StatefulWidget {

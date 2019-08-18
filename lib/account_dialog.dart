@@ -9,7 +9,6 @@ import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 
-
 class AccountDialog extends StatefulWidget {
   AccountDialog({Key key, this.onSignedOut}) : super(key: key);
   final VoidCallback onSignedOut;
@@ -21,9 +20,11 @@ class AccountDialog extends StatefulWidget {
 class _AccountDialogState extends State<AccountDialog> {
   Future<void> _signOut(BuildContext context) async {
     try {
-      final FirebaseAuthService auth = Provider.of<FirebaseAuthService>(context);
-      final EmployerService employerService = Provider.of<EmployerService>(context);
-      
+      final FirebaseAuthService auth =
+          Provider.of<FirebaseAuthService>(context);
+      final EmployerService employerService =
+          Provider.of<EmployerService>(context);
+
       await auth.signOut();
       await employerService.resetCurrentEmployer();
     } catch (e) {
@@ -33,8 +34,8 @@ class _AccountDialogState extends State<AccountDialog> {
 
   Future<void> _confirmSignOut(BuildContext context) async {
     final bool didRequestSignOut = await PlatformAlertDialog(
-      title: "Strings.logout",
-      content: "logoutAreYouSure",
+      title: "Logout",
+      content: "Are You Sure?",
       cancelActionText: "cancel",
       defaultActionText: "logout",
     ).show(context);
@@ -70,7 +71,9 @@ class _AccountDialogState extends State<AccountDialog> {
                     backgroundImage: NetworkImage(currentUser.photoUrl),
                   )
                 : Icon(Icons.account_circle);
-            String email = currentUser.email != null ? currentUser.email : "example@email.com";
+            String email = currentUser.email != null
+                ? currentUser.email
+                : "example@email.com";
             return Scaffold(
               appBar: AppBar(
                 title: Text("Account"),
@@ -79,16 +82,29 @@ class _AccountDialogState extends State<AccountDialog> {
               body: Column(
                 children: <Widget>[
                   UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                      decoration:
+                          BoxDecoration(color: Theme.of(context).primaryColor),
                       accountName: Text(displayName),
                       accountEmail: Text(email),
                       currentAccountPicture: accountPicture),
-                  ListTile(
-                    title: const Text(
-                      'Employers List',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
-                    ),
+                  Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: const Text(
+                          'Employers List',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("Manage"),
+                              Icon(Icons.arrow_right),
+                            ],
+                          ),
+                        onTap: _openEmployersSetting,
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: EmployersListView(
@@ -101,7 +117,7 @@ class _AccountDialogState extends State<AccountDialog> {
                       children: <Widget>[
                         ListTile(
                             leading: const Icon(Icons.settings),
-                            title: const Text('Manage Employers'),
+                            title: const Text('Setting'),
                             onTap: () {
                               _openEmployersSetting();
                             }),

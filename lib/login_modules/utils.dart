@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'l10n/localization.dart';
+import 'package:Calmission/localization/localization.dart';
 
 enum ProvidersTypes { email, google, facebook, twitter, phone, anonymous }
 
@@ -121,7 +120,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(message ?? FFULocalizations.of(context).errorOccurred),
+                Text(message ?? FFULocalizations.of(context).errorOccurredMessage),
               ],
             ),
           ),

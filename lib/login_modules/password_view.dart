@@ -1,11 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-import 'l10n/localization.dart';
-import 'trouble_signin.dart';
-import 'utils.dart';
+import 'package:Calmission/localization/localization.dart';
+import 'package:Calmission/login_modules/trouble_signin.dart';
+import 'package:Calmission/login_modules/utils.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/auth_service.dart';
 
@@ -113,6 +112,7 @@ class _PasswordViewState extends State<PasswordView> {
       print(user);
     } catch (exception) {
       //TODO improve errors catching
+      print(exception);
       String msg = FFULocalizations.of(context).passwordInvalidMessage;
       showErrorDialog(context, msg);
     }

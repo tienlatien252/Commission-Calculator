@@ -5,14 +5,15 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'utils.dart';
+import 'package:Calmission/login_modules/utils.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:Calmission/login_modules/email_view.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
+import 'package:Calmission/localization/localization.dart';
+
 
 class SignInScreen extends StatelessWidget {
-  static String tag = 'login-page';
   SignInScreen({
     Key key,
     this.title,
@@ -38,6 +39,16 @@ class SignInScreen extends StatelessWidget {
   }
 }
 
+class MyGlobals {
+  GlobalKey _scaffoldKey;
+  MyGlobals() {
+    _scaffoldKey = GlobalKey();
+  }
+  GlobalKey get scaffoldKey => _scaffoldKey;
+}
+
+
+MyGlobals myGlobals = new MyGlobals();
 class SignInPage extends StatelessWidget {
   // TODO: findout why he used SignInPage._() instead of SignInPage()
   SignInPage._({
@@ -57,14 +68,15 @@ class SignInPage extends StatelessWidget {
   Future<void> _showSignInError(
       BuildContext context, PlatformException exception) async {
     await PlatformExceptionAlertDialog(
-      title: "Strings.signInFailed",
+      title: FFULocalizations.of(context).errorOccurredMessage,
       exception: exception,
     ).show(context);
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      final FirebaseAuthService _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+      final FirebaseAuthService _auth =
+          Provider.of<FirebaseAuthService>(context, listen: false);
       await _auth.signInAnonymously();
     } on PlatformException catch (e) {
       _showSignInError(context, e);
@@ -73,7 +85,8 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      final FirebaseAuthService _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+      final FirebaseAuthService _auth =
+          Provider.of<FirebaseAuthService>(context, listen: false);
       await _auth.signInWithGoogle();
     } on PlatformException catch (e) {
       if (e.code != 'ERROR_ABORTED_BY_USER') {
@@ -84,7 +97,8 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      final FirebaseAuthService _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+      final FirebaseAuthService _auth =
+          Provider.of<FirebaseAuthService>(context, listen: false);
       await _auth.signInWithFacebook();
     } on PlatformException catch (e) {
       if (e.code != 'ERROR_ABORTED_BY_USER') {
@@ -94,19 +108,33 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _signInWithEmailAndPassword(BuildContext context) async {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
+    String value = await Navigator.of(context).push(
+      MaterialPageRoute<String>(
         fullscreenDialog: true,
         builder: (_) {
           return EmailView();
-        }, //(_) => EmailPasswordSignInPageBuilder(),
+        },
       ),
     );
+
+    if (value != null) {
+      _followProvider(value);
+    }
+  }
+
+  void _followProvider(String value) {
+    ProvidersTypes provider = stringToProvidersType(value);
+    if (provider == ProvidersTypes.facebook) {
+      _signInWithFacebook(myGlobals.scaffoldKey.currentContext);
+    } else if (provider == ProvidersTypes.google) {
+      _signInWithGoogle(myGlobals.scaffoldKey.currentContext);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: myGlobals.scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: Row(

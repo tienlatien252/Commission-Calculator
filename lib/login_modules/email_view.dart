@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'l10n/localization.dart';
-import 'password_view.dart';
-import 'sign_up_view.dart';
-import 'utils.dart';
+import 'package:Calmission/localization/localization.dart';
+import 'package:Calmission/login_modules/password_view.dart';
+import 'package:Calmission/login_modules/sign_up_view.dart';
+import 'package:Calmission/login_modules/utils.dart';
+import 'package:Calmission/services/validator.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -17,16 +18,6 @@ class EmailView extends StatefulWidget {
 class _EmailViewState extends State<EmailView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Email Is Not Valid';
-    else
-      return null;
-  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -46,7 +37,7 @@ class _EmailViewState extends State<EmailView> {
                       child: Column(children: <Widget>[
                         TextFormField(
                           controller: _emailController,
-                          validator: validateEmail,
+                          validator: (String value) => validateEmail(context, value),
                           autofocus: true,
                           keyboardType: TextInputType.emailAddress,
                           autocorrect: false,

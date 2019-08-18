@@ -1,19 +1,13 @@
-import 'package:Calmission/services/commission_service.dart' as prefix0;
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 
-
-//import '../models/commission.dart';
-import 'edit_data_dialog.dart';
+import 'package:Calmission/commission_page/edit_data_dialog.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
-
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'package:Calmission/common_widgets/CustomButton.dart';
+import 'package:Calmission/common_widgets/comission_chart.dart';
 
 class CommissionView extends StatefulWidget {
   CommissionView(
@@ -158,7 +152,93 @@ class DayEditView extends StatefulWidget {
 
 class _DayEditViewState extends State<DayEditView> {
   Commission commission;
-  final CommissionService  commissionService = CommissionService();
+  final CommissionService commissionService = CommissionService();
+
+  Future<Null> _openEditCommissionDialog() async {
+    await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) {
+              return EditDataView(
+                title: "Edit Comission",
+                date: getDateOnly(widget.date),
+                commission: commission,
+              );
+            },
+            fullscreenDialog: true));
+  }
+
+  Widget _buildDataAndButtion(Commission commission) {
+    Widget dataAndButton = widget.backButton != null
+        ? Expanded(
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              widget.backButton,
+              CommissionChart(
+                commission: commission,
+                animate: true,
+                color: Theme.of(context).accentColor,
+              ),
+              widget.nextButton
+            ],
+          ))
+        : CommissionChart(commission: commission, animate: true,);
+    return dataAndButton;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    EmployerService employerService =
+        Provider.of<EmployerService>(context, listen: false);
+    return FutureBuilder(
+      future: commissionService.getCommission(
+          employerService.currentEmployer, widget.commission, widget.date),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            commission = snapshot.data;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _buildDataAndButtion(commission),
+                CustomTextButton(
+                  label: "Edit",
+                  onTap: _openEditCommissionDialog,
+                  alignment: AlignmentDirectional.bottomEnd,
+                ),
+              ],
+            );
+          case ConnectionState.waiting:
+            return Center(child: PlatformLoadingIndicator());
+          default:
+            if (snapshot.hasError)
+              return Text('Error: ${snapshot.error}');
+            else
+              return Text('Result: ${snapshot.data}');
+        }
+      },
+    );
+  }
+}
+
+/*
+class DayEditView extends StatefulWidget {
+  DayEditView(
+      {Key key, this.date, this.commission, this.nextButton, this.backButton})
+      : super(key: key);
+  final DateTime date;
+  final Commission commission;
+  final Widget nextButton;
+  final Widget backButton;
+
+  @override
+  _DayEditViewState createState() => _DayEditViewState();
+}
+
+class _DayEditViewState extends State<DayEditView> {
+  Commission commission;
+  final CommissionService commissionService = CommissionService();
 
   Future<Null> _openEditCommissionDialog() async {
     await Navigator.push(
@@ -176,9 +256,11 @@ class _DayEditViewState extends State<DayEditView> {
 
   @override
   Widget build(BuildContext context) {
-    EmployerService employerService = Provider.of<EmployerService>(context, listen: false);
+    EmployerService employerService =
+        Provider.of<EmployerService>(context, listen: false);
     return FutureBuilder(
-      future: commissionService.getCommission(employerService.currentEmployer, widget.commission, widget.date),
+      future: commissionService.getCommission(
+          employerService.currentEmployer, widget.commission, widget.date),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
@@ -197,14 +279,11 @@ class _DayEditViewState extends State<DayEditView> {
             return Column(
               children: <Widget>[
                 dataAndButton,
-                Container(
+                CustomTextButton(
+                  label: "Edit",
+                  onTap: _openEditCommissionDialog,
                   alignment: AlignmentDirectional.bottomEnd,
-                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 10.0),
-                  child: FloatingActionButton(
-                      heroTag: null,
-                      onPressed: () => _openEditCommissionDialog(),
-                      child: Icon(Icons.edit)),
-                )
+                ),
               ],
             );
           case ConnectionState.waiting:
@@ -219,3 +298,4 @@ class _DayEditViewState extends State<DayEditView> {
     );
   }
 }
+*/

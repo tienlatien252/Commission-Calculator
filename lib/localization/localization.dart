@@ -7,41 +7,36 @@ import 'translations.dart';
 
 class FFULocalizations {
   TranslationBundle _translationBundle;
-
   FFULocalizations(Locale locale) {
     _translationBundle = translationBundleForLocale(locale);
   }
 
+  // Title
   String get welcome => _translationBundle.welcome;
-
-  String get emailLabel => _translationBundle.emailLabel;
-
-  String get nextButtonLabel => _translationBundle.nextButtonLabel;
-
-  String get cancelButtonLabel => _translationBundle.cancelButtonLabel;
-
-  String get passwordLabel => _translationBundle.passwordLabel;
-
-  String get troubleSigningInLabel => _translationBundle.troubleSigningInLabel;
-
-  String get signInLabel => _translationBundle.signInLabel;
-
+  String get signOutTitle => _translationBundle.signInLabel;
   String get signInTitle => _translationBundle.signInTitle;
-
-  String get passwordInvalidMessage =>
-      _translationBundle.passwordInvalidMessage;
-
   String get recoverPasswordTitle => _translationBundle.recoverPasswordTitle;
 
+  // Labels
+  String get emailLabel => _translationBundle.emailLabel;
+  String get nextButtonLabel => _translationBundle.nextButtonLabel;
+  String get cancelButtonLabel => _translationBundle.cancelButtonLabel;
+  String get passwordLabel => _translationBundle.passwordLabel;
+  String get troubleSigningInLabel => _translationBundle.troubleSigningInLabel;
+  String get signInLabel => _translationBundle.signInLabel;
   String get recoverHelpLabel => _translationBundle.recoverHelpLabel;
-
   String get sendButtonLabel => _translationBundle.sendButtonLabel;
-
   String get nameLabel => _translationBundle.nameLabel;
-
   String get saveLabel => _translationBundle.saveLabel;
 
+  // Messages
+  String get passwordLetterMessage => _translationBundle.passwordLetterMessage;
+  String get passwordDigitMessage => _translationBundle.passwordDigitMessage;
+  String get passwordInvalidMessage => _translationBundle.passwordInvalidMessage;
   String get passwordLengthMessage => _translationBundle.passwordLengthMessage;
+  String get emailNotValidMessage => _translationBundle.emailNotValidMessage;
+  String get nameLengthMessage => _translationBundle.nameLengthMessage;
+  
 
   String get signInFacebook => _translationBundle.signInFacebook;
   String get signInGoogle => _translationBundle.signInGoogle;
@@ -49,7 +44,7 @@ class FFULocalizations {
   String get signInAnonymous => _translationBundle.signInAnonymous;
   
 
-  String get errorOccurred => _translationBundle.errorOccurred;
+  String get errorOccurredMessage => _translationBundle.errorOccurredMessage;
 
   static Future<FFULocalizations> load(Locale locale) {
     return SynchronousFuture<FFULocalizations>(

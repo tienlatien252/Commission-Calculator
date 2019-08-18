@@ -3,15 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
 import 'package:provider/provider.dart';
 
-import 'commission_views/today_view.dart';
-//import 'history_page/history_view.dart';
-import 'account_dialog.dart';
-//import 'calculator_page/calculator_page.dart';
-//import 'main.dart';
-import 'package:Calmission/services/firebase_auth_service.dart';
-import 'package:Calmission/services/employer_service.dart';
-import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
+import 'commission_page/today_view.dart';
+//import 'package:Calmission/history_page/history_view.dart';
+import 'package:Calmission/account_dialog.dart';
+//import 'package:Calmission/calculator_page/calculator_page.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
+import 'package:Calmission/history_page/charts.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -67,7 +64,6 @@ class _HomePageState extends State<HomePage> {
               return new AccountDialog(onSignedOut: widget.onSignedOut);
             },
             fullscreenDialog: true));
-
   }
 
   /*InterstitialAd buildInterstitial() {
@@ -139,11 +135,28 @@ class _HomePageState extends State<HomePage> {
                 child: TodayView()), // Text("TodayView")), //
           ),
           Offstage(
-            offstage: _currentIndex != 1,
-            child: TickerMode(
-                enabled: _currentIndex == 1,
-                child: Text("HistoryView")), //HistoryView()),
-          ),
+              offstage: _currentIndex != 1,
+              child: TickerMode(
+                  enabled: _currentIndex == 1,
+                  child: TestView(),
+                  // Row(
+                  //   children: <Widget>[
+                  //     Flexible(
+                  //       flex: 5,
+                  //       child: Container(
+                  //           constraints: BoxConstraints(),
+                  //           child: PartialPieChart.withSampleData()),
+                  //     ),
+                  //     Flexible(
+                  //       flex: 5,
+                  //       child: Container(
+                  //         child: DatumLegendWithMeasures.withSampleData(),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
+                  ) //Text("HistoryView")), //HistoryView()),
+              ),
           Offstage(
               offstage: _currentIndex != 2,
               child: TickerMode(
