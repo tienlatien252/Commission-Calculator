@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../models/commission.dart';
+import 'package:Calmission/services/commission_service.dart';
 
 class SmallCommissionsView extends StatelessWidget {
   SmallCommissionsView({Key key, this.commission, this.numberColor, this.stringColor}) : super(key: key);

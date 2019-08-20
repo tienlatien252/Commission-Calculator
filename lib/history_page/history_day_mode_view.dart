@@ -95,7 +95,7 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
           margin: EdgeInsets.all(10.0),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
-          child: DayEditView(
+          child: DayScrollView(
               date: date,
               commission: commission,
               nextButton: IconButton(

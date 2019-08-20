@@ -6,23 +6,25 @@ import 'package:Calmission/common_widgets/date_time_widgets.dart';
 class EmployerName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: AlignmentDirectional.centerStart,
-        padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 17.0),
-        child: Consumer<EmployerService>(builder:
-            (BuildContext context, EmployerService employerService, __) {
-          Employer employer = employerService.currentEmployer;
-          String employerName = '';
-          if (employer != null) {
-            employerName = employer.name;
-          }
-          return Text(
-            employerName,
-            style: TextStyle(fontSize: 40.0, color: Colors.white),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          );
-        }));
+    return Expanded(
+          child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          padding: EdgeInsets.fromLTRB(20.0, 17.0, 10.0, 17.0),
+          child: Consumer<EmployerService>(builder:
+              (BuildContext context, EmployerService employerService, __) {
+            Employer employer = employerService.currentEmployer;
+            String employerName = '';
+            if (employer != null) {
+              employerName = employer.name;
+            }
+            return Text(
+              employerName,
+              style: TextStyle(color: Colors.white),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            );
+          })),
+    );
   }
 }
 
@@ -51,10 +53,6 @@ class EmployerPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: _getEdgeInsets(),
-      decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: _getDecoration()),
       child: Column(
         children: <Widget>[
           Row(

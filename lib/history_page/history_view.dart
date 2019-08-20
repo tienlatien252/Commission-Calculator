@@ -15,7 +15,7 @@ class HistoryView extends StatefulWidget {
   _HistoryViewState createState() => _HistoryViewState();
 }
 
-class _HistoryViewState extends State<HistoryView>{
+class _HistoryViewState extends State<HistoryView> {
   final DateTime date = DateTime.now();
   Commission commission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
@@ -40,7 +40,7 @@ class _HistoryViewState extends State<HistoryView>{
   }
 
   @override
-bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,41 +54,52 @@ bool get wantKeepAlive => true;
           ),
     ];
 
-    return Column(
-      children: <Widget>[
-        EmployerPanel(selector: Container(
-                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                  decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)),
-                      //color: Colors.white,
-                      color: Theme.of(context).primaryColorLight),
-                  child: DropdownButton(
-                    value: _value,
-                    items: _values.map((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.date_range),
-                            Container(
-                                padding:
-                                    EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                                child: Text(value))
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String value) {
-                      _onChange(value);
-                    },
-                  ),
-                ),),
-        Expanded(
-          child: historyModeViewsArray[_values.indexOf(_value)],
-        )
-      ],
-    );
+    return Scaffold(
+        appBar: AppBar(
+          leading: new IconButton(
+              icon: new Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
+          elevation: 0.0,
+          title: Text(
+            "History",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  //color: Colors.white,
+                  color: Theme.of(context).primaryColorLight),
+              child: DropdownButton(
+                value: _value,
+                items: _values.map((String value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.date_range),
+                        Container(
+                            padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: Text(value))
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String value) {
+                  _onChange(value);
+                },
+              ),
+            ),
+            Expanded(
+              child: historyModeViewsArray[_values.indexOf(_value)],
+            )
+          ],
+        ));
   }
 }

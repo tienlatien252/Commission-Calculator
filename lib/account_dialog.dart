@@ -79,6 +79,7 @@ class _AccountDialogState extends State<AccountDialog> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
+                      SizedBox(height: 10),
                       CustomListTile(onTap: _openEmployersSetting, title: displayName, subtitle: 'Manage Account',),
                       CustomListTile(onTap: _openEmployersSetting, title: 'Settings', subtitle: 'Languages,',),
                       CustomListTile(onTap: _openEmployersSetting, title: 'Employers', subtitle: 'Manage',),

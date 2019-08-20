@@ -7,6 +7,7 @@ import 'package:Calmission/history_page/history_view.dart';
 import 'package:Calmission/account_dialog.dart';
 //import 'package:Calmission/calculator_page/calculator_page.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
+import 'package:Calmission/common_widgets/employer_panel.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage>
   GlobalKey _scaffold = GlobalKey();
   TabController _controller;
 
-  List<Widget> _pages = [TodayView(), HistoryView(), Text("CalculatorPage"), AccountDialog()];
+  List<Widget> _pages = [TodayView(), Text("CalculatorPage"), AccountDialog()];
 
   void _onTabTapped(int index) {
     _controller.animateTo(index);
@@ -61,46 +62,6 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     return Scaffold(
       key: _scaffold,
-      /*appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Row(
-          children: <Widget>[
-            Image.asset('assets/icon-retangle-rounder.png'),
-            SizedBox(
-              width: 5.0,
-            ),
-            Text(widget.title),
-          ],
-        ),),
-        actions: <Widget>[
-          FutureBuilder(
-              future: FirebaseAuth.instance.currentUser(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                FirebaseUser currentUser = snapshot.data;
-                switch (snapshot.connectionState) {
-                  case ConnectionState.done:
-                    Widget accountIcon = Icon(Icons.account_circle);
-                    if (currentUser.photoUrl != null) {
-                      accountIcon = CircleAvatar(
-                        backgroundImage: NetworkImage(currentUser.photoUrl),
-                        maxRadius: 16.0,
-                      );
-                    }
-                    return IconButton(
-                      icon: accountIcon,
-                      onPressed: () => _openAddEntryDialog(context),
-                    );
-                  case ConnectionState.waiting:
-                    return Center(child: PlatformLoadingIndicator());
-                  default:
-                    if (snapshot.hasError)
-                      return Text('Error: ${snapshot.error}');
-                    else
-                      return Text('Result: ${snapshot.data}');
-                }
-              })
-        ],
-      ),*/
       body: TabBarView(
           controller: _controller,
           children: _pages.map<Widget>((Widget page) {
@@ -160,20 +121,14 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           ),
           TabIcon(
             selected: widget.controller.index == 1,
-            icon: Icons.history,
-            onPressed: () => _onPressed(1),
-            text: 'History',
-          ),
-          TabIcon(
-            selected: widget.controller.index == 2,
             icon: Icons.assessment,
-            onPressed: () => _onPressed(2),
+            onPressed: () => _onPressed(1),
             text: 'Calculator',
           ),
           TabIcon(
-            selected: widget.controller.index == 3,
+            selected: widget.controller.index == 2,
             icon: Icons.account_circle,
-            onPressed: () => _onPressed(3),
+            onPressed: () => _onPressed(2),
             text: 'Profile',
           ),
         ],
