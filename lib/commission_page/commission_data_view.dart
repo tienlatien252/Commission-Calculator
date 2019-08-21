@@ -95,7 +95,7 @@ class _DayScrollViewState extends State<DayScrollView> {
         Provider.of<EmployerService>(context, listen: false);
     return FutureBuilder(
       future: commissionService.getCommission(
-          employerService.currentEmployer, widget.commission, widget.date),
+          employerService.currentEmployer, widget.date),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
@@ -111,6 +111,7 @@ class _DayScrollViewState extends State<DayScrollView> {
                   children: <Widget>[
                     TotalView(
                       commission: commission,
+                      color: Colors.white,
                     ),
                     CustomInlineButton(
                       onTap: () => _openEmployersSetting(context),
@@ -122,6 +123,7 @@ class _DayScrollViewState extends State<DayScrollView> {
                       date: widget.date,
                     ),
                     HistoryCardView(
+                      currentEmployer: employerService.currentEmployer,
                       commission: commission,
                       date: widget.date,
                       onTapHistory: () => _openHistoryDialog(),
@@ -144,11 +146,17 @@ class _DayScrollViewState extends State<DayScrollView> {
 }
 
 class HistoryCardView extends StatelessWidget {
-  HistoryCardView({Key key, this.commission, this.date, this.onTapHistory})
+  HistoryCardView(
+      {Key key,
+      this.commission,
+      this.date,
+      this.onTapHistory,
+      this.currentEmployer})
       : super(key: key);
   final Commission commission;
   final DateTime date;
   final Function onTapHistory;
+  final Employer currentEmployer;
 
   @override
   Widget build(BuildContext context) {
@@ -159,31 +167,119 @@ class HistoryCardView extends StatelessWidget {
       height: 300,
       child: Column(
         children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(10.0),
-              height: 30.0,
-              child: Row(
-                children: <Widget>[
-                  Text('History',
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontSize: 20.0)),
-                ],
-              )),
-          Divider(
-            height: 10.0,
-            endIndent: 20.0,
-            indent: 10.0,
+          HistoryButton(onTap: onTapHistory),
+          SmallDayHistoryView(
+            currentEmployer: currentEmployer,
+            date: minusToday(1),
+          ),
+          SmallDayHistoryView(
+            currentEmployer: currentEmployer,
+            date: minusToday(2),
+          ),
+          SmallDayHistoryView(
+            currentEmployer: currentEmployer,
+            date: minusToday(3),
           ),
           Expanded(
-            child: CustomInlineButton(
-              onTap: onTapHistory,
-              text: 'View History',
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: CustomInlineButton(
+                onTap: onTapHistory,
+                text: 'View History',
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class HistoryButton extends StatelessWidget {
+  HistoryButton({Key key, this.onTap}) : super(key: key);
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        InkWell(
+          onTap: onTap,
+          child: Container(
+              margin: EdgeInsets.all(10.0),
+              height: 30.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('History',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontSize: 20.0)),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Theme.of(context).primaryColorDark,
+                  )
+                ],
+              )),
+        ),
+        Divider(
+          height: 10.0,
+          endIndent: 20.0,
+          indent: 10.0,
+        ),
+      ],
+    );
+  }
+}
+
+class SmallDayHistoryView extends StatelessWidget {
+  SmallDayHistoryView({Key key, this.date, this.currentEmployer})
+      : super(key: key);
+  final DateTime date;
+  final Employer currentEmployer;
+
+  final CommissionService commissionService = CommissionService();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: commissionService.getCommission(currentEmployer, date),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              Commission commission = snapshot.data;
+              return Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.all(10.0),
+                          height: 20.0,
+                          child: SmallItalicOneDayView(
+                            //textColor: Theme.of(context).primaryColorDark,
+                            date: date,
+                          )),
+                      SmallAmountView(
+                        amount: commission.total,
+                      )
+                    ],
+                  ),
+                  Divider(
+                    endIndent: 20.0,
+                    indent: 10.0,
+                  )
+                ],
+              );
+            case ConnectionState.waiting:
+              return Center(child: PlatformLoadingIndicator());
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else
+                return Text('Result: ${snapshot.data}');
+          }
+        });
   }
 }
 
@@ -212,6 +308,56 @@ class SummaryView extends StatelessWidget {
               )),
           Divider(
             height: 10.0,
+            endIndent: 20.0,
+            indent: 10.0,
+          ),
+          Expanded(
+            child: CommissionPieChart(
+              commission: commission,
+              animate: true,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          Container(
+            //alignment: AlignmentDirectional.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SmallDetailsView(type: 'Raw', amount: commission.raw),
+                SmallDetailsView(
+                    type: 'Commission', amount: commission.commission),
+                SmallDetailsView(type: 'Tip', amount: commission.tip),
+              ],
+            ),
+          ),
+          CustomButtonBar(
+            onTap: onTapEdit,
+            text: 'Edit',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class FlexibleSummaryView extends StatelessWidget {
+  FlexibleSummaryView({Key key, this.commission, this.date, this.onTapEdit})
+      : super(key: key);
+  final Commission commission;
+  final DateTime date;
+  final Function onTapEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(7.0)),
+      child: Column(
+        children: <Widget>[
+          Divider(
             endIndent: 20.0,
             indent: 10.0,
           ),
@@ -289,16 +435,14 @@ class SmallDetailsView extends StatelessWidget {
   }
 }
 
-class TotalView extends StatelessWidget {
-  TotalView({Key key, this.commission, this.text}) : super(key: key);
-  final Commission commission;
-  final String text;
+class SmallAmountView extends StatelessWidget {
+  SmallAmountView({Key key, this.amount}) : super(key: key);
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text('Total', style: TextStyle(color: Colors.white)),
         Container(
           margin: EdgeInsets.all(10.0),
           child: Row(
@@ -307,11 +451,52 @@ class TotalView extends StatelessWidget {
             children: <Widget>[
               Text(
                 '\$ ',
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10.0),
+              ),
+              Text(
+                amount.toInt().toString(),
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+              ),
+              Container(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: Text(
+                    (amount % 1 * 10).toInt().toString().padLeft(2, '0'),
+                    textAlign: TextAlign.start,
+                    style:
+                        TextStyle(fontStyle: FontStyle.italic, fontSize: 10.0),
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TotalView extends StatelessWidget {
+  TotalView({Key key, this.commission, this.text, this.color}) : super(key: key);
+  final Commission commission;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text('Total', style: TextStyle(color: color)),
+        Container(
+          margin: EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '\$ ',
+                style: TextStyle(color: color, fontSize: 20.0),
               ),
               Text(
                 commission.total.toInt().toString(),
-                style: TextStyle(color: Colors.white, fontSize: 40.0),
+                style: TextStyle(color: color, fontSize: 40.0),
               ),
               Container(
                   alignment: AlignmentDirectional.topEnd,
@@ -321,7 +506,7 @@ class TotalView extends StatelessWidget {
                         .toString()
                         .padLeft(2, '0'),
                     textAlign: TextAlign.start,
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                    style: TextStyle(color: color, fontSize: 20.0),
                   )),
             ],
           ),

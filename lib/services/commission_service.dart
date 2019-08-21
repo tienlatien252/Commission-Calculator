@@ -48,7 +48,7 @@ class CommissionService {
   }
 
   Future<Commission> getCommission(
-      Employer currentEmployer, Commission comissionData, DateTime date) async {
+      Employer currentEmployer, DateTime date) async {
     FirebaseUser _currentUser = await _firebaseAuth.currentUser();
     String currentEmployerId =
         currentEmployer != null ? currentEmployer.employerId : 'abc';

@@ -25,6 +25,12 @@ DateTime endOfYear(DateTime date) {
   return DateTime(date.year, DateTime.december, 31);
 }
 
+
+DateTime minusToday(int number) {
+  DateTime today = DateTime.now();
+  return today.subtract(Duration(days: number));
+}
+
 DateTime secondEndOfWeek(DateTime date) {
   final formatter = new DateFormat.yMMMMEEEEd();
   DateTime endOfWeek = DateTime.now();
@@ -48,6 +54,21 @@ class OneDayView extends StatelessWidget {
     Color realTextColor = textColor != null ? textColor : Colors.black;
     return Text(formatted,
         style: TextStyle(fontSize: 20.0, color: realTextColor));
+  }
+}
+
+class SmallItalicOneDayView extends StatelessWidget {
+  SmallItalicOneDayView({Key key, this.date, this.textColor}) : super(key: key);
+  final DateTime date;
+  final Color textColor;
+  final formatter = new DateFormat.MMMd();
+
+  @override
+  Widget build(BuildContext context) {
+    String formatted = formatter.format(date);
+    Color realTextColor = textColor != null ? textColor : Colors.black;
+    return Text(formatted,
+        style: TextStyle(fontSize: 15.0, color: realTextColor, fontStyle: FontStyle.italic));
   }
 }
 

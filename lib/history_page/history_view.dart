@@ -65,18 +65,7 @@ class _HistoryViewState extends State<HistoryView> {
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Theme.of(context).primaryColor,
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  //color: Colors.white,
-                  color: Theme.of(context).primaryColorLight),
-              child: DropdownButton(
+          actions: <Widget>[DropdownButton(
                 value: _value,
                 items: _values.map((String value) {
                   return DropdownMenuItem(
@@ -94,8 +83,10 @@ class _HistoryViewState extends State<HistoryView> {
                 onChanged: (String value) {
                   _onChange(value);
                 },
-              ),
-            ),
+              )],
+        ),
+        body: Column(
+          children: <Widget>[
             Expanded(
               child: historyModeViewsArray[_values.indexOf(_value)],
             )
