@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:flutter_picker/flutter_picker.dart';
 
-import '../commission_views/commission_data_view.dart';
-import '../models/commission.dart';
 import 'package:Calmission/common_widgets/date_time_widgets.dart';
+import 'package:Calmission/services/commission_service.dart';
+import 'package:Calmission/common_widgets/custom_commission_data_view.dart';
 
 class HistoryMonthModeView extends StatefulWidget {
   HistoryMonthModeView({Key key}) : super(key: key);
@@ -17,6 +16,36 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
   DateTime date = DateTime.now();
   Commission commission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+
+  showPickerDate(BuildContext context) {
+    Picker(
+        hideHeader: true,
+        adapter: DateTimePickerAdapter(
+            value: date,
+            type: PickerDateTimeType.kYM,
+            maxValue: DateTime.now()),
+        title: Text("Select Date"),
+        selectedTextStyle: TextStyle(color: Theme.of(context).primaryColorDark),
+        onConfirm: (Picker picker, List value) {
+          print((picker.adapter as DateTimePickerAdapter).value);
+          setState(() {
+            date = (picker.adapter as DateTimePickerAdapter).value;
+          });
+        }).showDialog(context);
+  }
+
+  showPickerDateCustom(BuildContext context) {
+    new Picker(
+        hideHeader: true,
+        adapter: new DateTimePickerAdapter(
+          customColumnType: [2, 1, 0, 3, 4],
+        ),
+        title: new Text("Select Data"),
+        selectedTextStyle: TextStyle(color: Colors.blue),
+        onConfirm: (Picker picker, List value) {
+          print((picker.adapter as DateTimePickerAdapter).value);
+        }).showDialog(context);
+  }
 
   Future<Null> onPressCalender(BuildContext context) async {
     final datePicked = await showDatePicker(
@@ -46,169 +75,53 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, __HistoryMonthModeViewModel>(
-        converter: (store) {
-      return __HistoryMonthModeViewModel(
-          currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __HistoryMonthModeViewModel viewModel) {
-      return Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.only(
-                      bottomLeft: const Radius.circular(15.0),
-                      bottomRight: const Radius.circular(15.0))),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-                color: Theme.of(context).buttonColor,
-                onPressed: () => onPressCalender(context),
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.calendar_today,
-                      color: Colors.black54,
-                    ),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Text("Month:", style: TextStyle(color: Colors.black54)),
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: MonthStringView(
-                        date: date,
-                        textColor: Colors.black,
-                      ),
-                    ),
-                  ],
+    final CommissionService commissionService = CommissionService();
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+              color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(7.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: onPressBackButton,
+              ),
+              FlatButton(
+                onPressed: () => showPickerDate(context),
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: MonthStringView(
+                    date: date,
+                    textColor: Colors.black,
+                  ),
                 ),
               ),
-            ),
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(Icons.arrow_forward_ios),
+                onPressed: onPressNextButton,
+              ),
+            ],
           ),
-          Expanded(
-              child: Container(
-            margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
-            child: MonthDataView(
-                date: date,
-                commission: commission,
-                nextButton: IconButton(
-                  color: Theme.of(context).accentColor,
-                  icon: Icon(Icons.arrow_forward_ios),
-                  onPressed: onPressNextButton,
-                ),
-                backButton: IconButton(
-                  color: Theme.of(context).accentColor,
-                  icon: Icon(Icons.arrow_back_ios),
-                  onPressed: onPressBackButton,
-                )),
-          ))
-        ],
-      );
-    });
-  }
-}
-
-class MonthDataView extends StatefulWidget {
-  MonthDataView(
-      {Key key, this.date, this.commission, this.nextButton, this.backButton})
-      : super(key: key);
-  final DateTime date;
-  final Commission commission;
-  final Widget nextButton;
-  final Widget backButton;
-
-  @override
-  _MonthDataViewState createState() => _MonthDataViewState();
-}
-
-class _MonthDataViewState extends State<MonthDataView> {
-  Commission commission;
-
-  Future _getCommission(__HistoryMonthModeViewModel viewModel) {
-    String id = viewModel.currentUser.uid;
-    DateTime beginMonth = getDateOnly(beginOfMonth(widget.date));
-    DateTime endMonth = getDateOnly(endOfMonth(widget.date));
-
-    String pathString = 'users/' +
-        id +
-        '/employers/' +
-        viewModel.currentEmployer.employerId +
-        '/commission';
-
-    return Firestore.instance
-        .collection(pathString)
-        .where('date', isGreaterThanOrEqualTo: beginMonth)
-        .where('date', isLessThanOrEqualTo: endMonth)
-        .getDocuments();
-  }
-
-  Commission _getCommissionData(AsyncSnapshot snapshot) {
-    if (snapshot.data.documents.length != 0) {
-      commission = Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-      List<DocumentSnapshot> retunredCommissions = snapshot.data.documents;
-
-      retunredCommissions.forEach((commissionData) {
-        commission.raw += commissionData.data['raw'].toDouble();
-        commission.commission += commissionData.data['commission'].toDouble();
-        commission.tip += commissionData.data['tip'].toDouble();
-        commission.total += commissionData.data['total'].toDouble();
-        commission.id == commissionData.documentID;
-      });
-
-      return commission;
-    }
-    return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, __HistoryMonthModeViewModel>(
-        converter: (store) {
-      return __HistoryMonthModeViewModel(
-          currentUser: store.state.currentUser,
-          currentEmployer: store.state.currentEmployer);
-    }, builder: (BuildContext context, __HistoryMonthModeViewModel viewModel) {
-      return FutureBuilder(
-        future: _getCommission(viewModel),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              commission = _getCommissionData(snapshot);
-              Widget dataAndButton = widget.backButton != null
-                  ? Expanded(
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        widget.backButton,
-                        CommissionView(commission: commission),
-                        widget.nextButton
-                      ],
-                    ))
-                  : CommissionView(commission: commission);
-              return Column(
-                children: <Widget>[
-                  dataAndButton,
-                ],
-              );
-            case ConnectionState.waiting:
-              return Center(child: PlatformLoadingIndicator());
-            default:
-              if (snapshot.hasError)
-                return Text('Error: ${snapshot.error}');
-              else
-                return Text('Result: ${snapshot.data}');
-          }
-        },
-      );
-    });
+        ),
+        Expanded(
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0)),
+                child: CustomCommissionView(
+                  date: date,
+                  commission: commission,
+                  hasEditButton: false,
+                  getCommissionFunction: commissionService.getMonthCommission,
+                )))
+      ],
+    );
   }
 }

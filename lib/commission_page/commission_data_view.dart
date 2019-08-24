@@ -57,28 +57,6 @@ class _DayScrollViewState extends State<DayScrollView> {
             fullscreenDialog: true));
   }
 
-  Widget _buildDataAndButtion(Commission commission) {
-    Widget dataAndButton = widget.backButton != null
-        ? Expanded(
-            child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              widget.backButton,
-              CommissionChart(
-                commission: commission,
-                animate: true,
-                color: Theme.of(context).accentColor,
-              ),
-              widget.nextButton
-            ],
-          ))
-        : CommissionChart(
-            commission: commission,
-            animate: true,
-          );
-    return dataAndButton;
-  }
-
   _openEmployersSetting(BuildContext context) {
     print("openEmployersSetting");
     Navigator.push(

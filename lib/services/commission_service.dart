@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/common_widgets/date_time_widgets.dart';
 
 class Commission {
   Commission(
@@ -66,19 +67,86 @@ class CommissionService {
     return _getCommissionData(snapshot);
   }
 
+    Future<Commission> getMonthCommission(
+      Employer currentEmployer, DateTime date) async {
+    FirebaseUser _currentUser = await _firebaseAuth.currentUser();
+    String currentEmployerId =
+        currentEmployer != null ? currentEmployer.employerId : 'abc';
+    String pathString = 'users/' +
+        _currentUser.uid +
+        '/employers/' +
+        currentEmployerId +
+        '/commission';
+
+    DateTime beginMonth = _getDateOnly(beginOfMonth(date));
+    DateTime endMonth = _getDateOnly(endOfMonth(date));
+
+    final QuerySnapshot snapshot = await Firestore.instance
+        .collection(pathString)
+        .where('date', isGreaterThanOrEqualTo: beginMonth)
+        .where('date', isLessThanOrEqualTo: endMonth)
+        .getDocuments();
+    return _getCommissionData(snapshot);
+  }
+
+  Future<Commission> getWeekCommission(
+      Employer currentEmployer, DateTime date) async {
+    FirebaseUser _currentUser = await _firebaseAuth.currentUser();
+    String currentEmployerId =
+        currentEmployer != null ? currentEmployer.employerId : 'abc';
+    String pathString = 'users/' +
+        _currentUser.uid +
+        '/employers/' +
+        currentEmployerId +
+        '/commission';
+
+    DateTime beginWeek = _getDateOnly(beginOfWeek(date));
+    DateTime endWeek = _getDateOnly(endOfWeek(date));
+
+    final QuerySnapshot snapshot = await Firestore.instance
+        .collection(pathString)
+        .where('date', isGreaterThanOrEqualTo: beginWeek)
+        .where('date', isLessThanOrEqualTo: endWeek)
+        .getDocuments();
+    return _getCommissionData(snapshot);
+  }
+
+  Future<Commission> getYearCommission(
+      Employer currentEmployer, DateTime date) async {
+    FirebaseUser _currentUser = await _firebaseAuth.currentUser();
+    String currentEmployerId =
+        currentEmployer != null ? currentEmployer.employerId : 'abc';
+    String pathString = 'users/' +
+        _currentUser.uid +
+        '/employers/' +
+        currentEmployerId +
+        '/commission';
+
+    DateTime beginYear = _getDateOnly(beginOfYear(date));
+    DateTime endYear = _getDateOnly(endOfYear(date));
+
+    final QuerySnapshot snapshot = await Firestore.instance
+        .collection(pathString)
+        .where('date', isGreaterThanOrEqualTo: beginYear)
+        .where('date', isLessThanOrEqualTo: endYear)
+        .getDocuments();
+    return _getCommissionData(snapshot);
+  }
+
+
   Commission _getCommissionData(QuerySnapshot snapshot) {
     List<DocumentSnapshot> documents = snapshot.documents;
-    if (documents.length != 0) {   
-      List<Commission> listCommission = documents.map((document) {
-        return Commission(
-          raw: document['raw'].toDouble(),
-          commission: document['commission'].toDouble(),
-          tip: document['tip'].toDouble(),
-          total: document['total'].toDouble(),
-          id: document.documentID,
-        );
-      }).toList();
-      return listCommission[0];
+    if (documents.length != 0) {  
+      Commission commission = Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0); 
+      documents.forEach((commissionData) {
+        commission.raw += commissionData.data['raw'].toDouble();
+        commission.commission += commissionData.data['commission'].toDouble();
+        commission.tip += commissionData.data['tip'].toDouble();
+        commission.total += commissionData.data['total'].toDouble();
+        commission.id = commissionData.documentID;
+      });
+
+      return commission;
     }
     return Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
   }

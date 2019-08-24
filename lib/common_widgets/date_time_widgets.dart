@@ -83,7 +83,7 @@ class ShortOneDayView extends StatelessWidget {
     Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
     return Text(formatted,
-        style: TextStyle(fontSize: 20.0, color: realTextColor));
+        style: TextStyle(fontSize: 20.0, color: realTextColor, fontStyle: FontStyle.italic));
   }
 }
 
@@ -116,10 +116,10 @@ class WeekStringView extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(formatter.format(beginOfWeek(date)),
-              style: TextStyle(fontSize: 20.0, color: realTextColor)),
-          Text("-", style: TextStyle(color: realTextColor)),
+              style: TextStyle(fontSize: 20.0, color: realTextColor,fontStyle: FontStyle.italic)),
+          Text("-", style: TextStyle(color: realTextColor,fontStyle: FontStyle.italic)),
           Text(formatter.format(endOfWeek(date)),
-              style: TextStyle(fontSize: 20.0, color: realTextColor)),
+              style: TextStyle(fontSize: 20.0, color: realTextColor,fontStyle: FontStyle.italic)),
         ],
       ),
     );

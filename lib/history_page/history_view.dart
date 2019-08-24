@@ -5,9 +5,9 @@ import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/employer_panel.dart';
 //import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/history_page/history_day_mode_view.dart';
-//import 'package:Calmission/history_page/history_week_mode_view.dart';
-//import 'package:Calmission/history_page/history_month_mode_view.dart';
-//import 'package:Calmission/history_page/history_year_mode_view.dart';
+import 'package:Calmission/history_page/history_week_mode_view.dart';
+import 'package:Calmission/history_page/history_month_mode_view.dart';
+import 'package:Calmission/history_page/history_year_mode_view.dart';
 
 class HistoryView extends StatefulWidget {
   HistoryView({Key key}) : super(key: key);
@@ -46,12 +46,9 @@ class _HistoryViewState extends State<HistoryView> {
   Widget build(BuildContext context) {
     List<Widget> historyModeViewsArray = [
       Container(child: HistoryDayModeView()),
-      Container(child: Text("week") //HistoryWeekModeView()
-          ),
-      Container(child: Text("Month") //HistoryMonthModeView()
-          ),
-      Container(child: Text("Year") // HistoryYearModeView()
-          ),
+      Container(child: HistoryWeekModeView()),
+      Container(child: HistoryMonthModeView()),
+      Container(child: HistoryYearModeView()),
     ];
 
     return Scaffold(
@@ -65,25 +62,27 @@ class _HistoryViewState extends State<HistoryView> {
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          actions: <Widget>[DropdownButton(
-                value: _value,
-                items: _values.map((String value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.date_range),
-                        Container(
-                            padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                            child: Text(value))
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String value) {
-                  _onChange(value);
-                },
-              )],
+          actions: <Widget>[
+            DropdownButton(
+              value: _value,
+              items: _values.map((String value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.date_range),
+                      Container(
+                          padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                          child: Text(value))
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (String value) {
+                _onChange(value);
+              },
+            )
+          ],
         ),
         body: Column(
           children: <Widget>[

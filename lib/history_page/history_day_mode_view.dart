@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 
 import 'package:Calmission/commission_page/commission_data_view.dart';
 import 'package:Calmission/services/commission_service.dart';
@@ -11,6 +11,7 @@ import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 import 'package:Calmission/common_widgets/CustomButton.dart';
 import 'package:Calmission/common_widgets/comission_chart.dart';
+import 'package:Calmission/common_widgets/custom_commission_data_view.dart';
 
 class HistoryDayModeView extends StatefulWidget {
   HistoryDayModeView({Key key}) : super(key: key);
@@ -22,6 +23,20 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
   DateTime date = DateTime.now();
   Commission commission =
       Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+
+  showPickerDate(BuildContext context) {
+    Picker(
+        hideHeader: true,
+        adapter: DateTimePickerAdapter(value: date, maxValue: DateTime.now()),
+        title: Text("Select Date"),
+        selectedTextStyle: TextStyle(color: Theme.of(context).primaryColorDark),
+        onConfirm: (Picker picker, List value) {
+          print((picker.adapter as DateTimePickerAdapter).value);
+          setState(() {
+            date = (picker.adapter as DateTimePickerAdapter).value;
+          });
+        }).showDialog(context);
+  }
 
   Future<Null> onPressCalender(BuildContext context) async {
     final datePicked = await showDatePicker(
@@ -66,38 +81,39 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
 
   @override
   Widget build(BuildContext context) {
+    final CommissionService commissionService = CommissionService();
+
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: FlatButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.0)),
-            //color: Color.fromARGB(255, 76, 183, 219),
-            color: Theme.of(context).accentColor,
-            onPressed: () => onPressCalender(context),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.black54,
-                ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Text(
-                  "Date:",
-                  style: TextStyle(color: Colors.black54),
-                ),
-                Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+              color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(7.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: onPressBackButton,
+              ),
+              FlatButton(
+                onPressed: () => showPickerDate(context),
+                child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: ShortOneDayView(
                     date: date,
                     textColor: Colors.black,
                   ),
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(Icons.arrow_forward_ios),
+                onPressed: onPressNextButton,
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -109,19 +125,12 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(7.0)),
-              child: DayWithButtonsView(
-                  date: date,
-                  commission: commission,
-                  nextButton: IconButton(
-                    color: Theme.of(context).accentColor,
-                    icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: onPressNextButton,
-                  ),
-                  backButton: IconButton(
-                    color: Theme.of(context).accentColor,
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: onPressBackButton,
-                  )),
+              child: CustomCommissionView(
+                date: date,
+                commission: commission,
+                hasEditButton: true,
+                getCommissionFunction: commissionService.getCommission,
+              ),
             ),
           ),
         )
@@ -129,7 +138,7 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
     );
   }
 }
-
+/*
 class DayWithButtonsView extends StatefulWidget {
   DayWithButtonsView(
       {Key key, this.date, this.commission, this.nextButton, this.backButton})
@@ -161,35 +170,25 @@ class _DayWithButtonsViewState extends State<DayWithButtonsView> {
             fullscreenDialog: true));
   }
 
-  Widget _buildDataAndButtion(Commission commission) {
-    return Row(
-      //mainAxisSize: MainAxisSize.min,
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildDataView(Commission commission) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        widget.backButton,
         Flexible(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: TotalView(
-                  commission: commission,
-                  color: Colors.black,
-                ),
-              ),
-              Flexible(
-                flex: 6,
-                child: FlexibleSummaryView(
-                  commission: commission,
-                  onTapEdit: _openEditCommissionDialog,
-                  date: widget.date,
-                ),
-              ),
-            ],
+          flex: 1,
+          child: TotalView(
+            commission: commission,
+            color: Colors.black,
           ),
         ),
-        widget.nextButton
+        Flexible(
+          flex: 6,
+          child: FlexibleSummaryView(
+            commission: commission,
+            onTapEdit: _openEditCommissionDialog,
+            date: widget.date,
+          ),
+        ),
       ],
     );
   }
@@ -205,7 +204,7 @@ class _DayWithButtonsViewState extends State<DayWithButtonsView> {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             commission = snapshot.data;
-            return _buildDataAndButtion(commission);
+            return _buildDataView(commission);
           case ConnectionState.waiting:
             return Center(child: PlatformLoadingIndicator());
           default:
@@ -218,3 +217,4 @@ class _DayWithButtonsViewState extends State<DayWithButtonsView> {
     );
   }
 }
+*/
