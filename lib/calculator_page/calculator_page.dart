@@ -11,7 +11,10 @@ import 'package:Calmission/calculator_page/all_commission_view.dart';
 import 'package:Calmission/calculator_page/time_range_picker_widget.dart';
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
-
+import 'package:Calmission/common_widgets/custom_commission_data_view.dart';
+import 'package:Calmission/commission_page/commission_data_view.dart';
+import 'package:Calmission/common_widgets/date_time_widgets.dart';
+import 'package:Calmission/common_widgets/comission_chart.dart';
 
 class CalculatorPage extends StatefulWidget {
   CalculatorPage({Key key}) : super(key: key);
@@ -54,13 +57,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     EmployerService employerService =
         Provider.of<EmployerService>(context, listen: false);
     return FutureBuilder(
-      future: getRangeCommission(employerService.currentEmployer, startDate, endDate),
+      future: getRangeCommission(
+          employerService.currentEmployer, startDate, endDate),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
@@ -68,32 +71,34 @@ class _CalculatorPageState extends State<CalculatorPage> {
             listCommissions = map['listCommissions'];
             totalCommission = map['totalCommission'];
             return NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverPersistentHeader(
-                        delegate: SliverTopBarDelegate(
-                            TimeRangePickerView(
-                              onPickEndDate: () => onPickEndDate(context),
-                              onPickStartDate: () => onPickStartDate(context),
-                              startDate: startDate,
-                              endDate: endDate,
-                            ),)),
-                    SliverPersistentHeader(
-                        pinned: true,
-                        floating: false,
-                        delegate: SliverResultDelegate(SmallCommissionsView(
-                          numberColor: Colors.black,
-                          //stringColor: Theme.of(context).textSelectionColor,
-                          stringColor: Colors.black87,
-                          commission: totalCommission,
-                        ))),
-                  ];
-                },
-                body: //Text('sample')
-                    AllCommissionsView(
-                  listCommissions: listCommissions,
-                ));
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverPersistentHeader(
+                      delegate: SliverTopBarDelegate(
+                    TimeRangePickerView(
+                      onPickEndDate: () => onPickEndDate(context),
+                      onPickStartDate: () => onPickStartDate(context),
+                      startDate: startDate,
+                      endDate: endDate,
+                    ),
+                  )),
+                ];
+              },
+              body: //Text('sample') //TotalView(
+                  //  commission: totalCommission,
+                  //),
+                  ListView(
+                children: <Widget>[
+                  TotalView(
+                    commission: totalCommission,
+                  ),
+                  AllCommissionsView(
+                    listCommissions: listCommissions,
+                  ),
+                ],
+              ),
+            );
           case ConnectionState.waiting:
             return Center(child: PlatformLoadingIndicator());
           default:
@@ -103,6 +108,51 @@ class _CalculatorPageState extends State<CalculatorPage> {
               return Text('Result: ${snapshot.data}');
         }
       },
+    );
+  }
+}
+
+class TotalView extends StatelessWidget {
+  TotalView({Key key, this.commission}) : super(key: key);
+  final Commission commission;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(7.0)),
+      height: 400,
+      child: Column(
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.all(10.0), height: 30.0, child: Text('total')),
+          Divider(
+            height: 10.0,
+            endIndent: 20.0,
+            indent: 10.0,
+          ),
+          Expanded(
+            child: CommissionPieChart(
+              commission: commission,
+              animate: true,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          Container(
+            //alignment: AlignmentDirectional.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SmallDetailsView(type: 'Raw', amount: commission.raw),
+                SmallDetailsView(
+                    type: 'Commission', amount: commission.commission),
+                SmallDetailsView(type: 'Tip', amount: commission.tip),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
