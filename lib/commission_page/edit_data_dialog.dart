@@ -24,7 +24,6 @@ class _EditDataViewState extends State<EditDataView> {
   final _formKey = GlobalKey<FormState>();
   Commission _comissionData =
       Commission(raw: 0.0, tip: 0.0, commission: 0.0, total: 0.0);
-  final CommissionService commissionService = CommissionService();
 
   onPresscancel() {
     //FocusScope.of(context).detach();
@@ -37,7 +36,7 @@ class _EditDataViewState extends State<EditDataView> {
       EmployerService employerService =
           Provider.of<EmployerService>(context, listen: false);
       Employer currentEmployer = employerService.currentEmployer;
-      await commissionService.saveCommission(
+      await saveCommission(
           currentEmployer, _comissionData, widget.date);
 
       Navigator.pop(context);

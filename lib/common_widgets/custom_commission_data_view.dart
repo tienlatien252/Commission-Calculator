@@ -28,7 +28,6 @@ class CustomCommissionView extends StatefulWidget {
 
 class _CustomCommissionViewState extends State<CustomCommissionView> {
   Commission commission;
-  final CommissionService commissionService = CommissionService();
 
   Future<Null> _openEditCommissionDialog() async {
     await Navigator.push(

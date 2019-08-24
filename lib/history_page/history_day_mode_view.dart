@@ -81,7 +81,6 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
 
   @override
   Widget build(BuildContext context) {
-    final CommissionService commissionService = CommissionService();
 
     return Column(
       children: <Widget>[
@@ -129,7 +128,7 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
                 date: date,
                 commission: commission,
                 hasEditButton: true,
-                getCommissionFunction: commissionService.getCommission,
+                getCommissionFunction: getDayCommission,
               ),
             ),
           ),
@@ -138,83 +137,3 @@ class _HistoryDayModeViewState extends State<HistoryDayModeView> {
     );
   }
 }
-/*
-class DayWithButtonsView extends StatefulWidget {
-  DayWithButtonsView(
-      {Key key, this.date, this.commission, this.nextButton, this.backButton})
-      : super(key: key);
-  final DateTime date;
-  final Commission commission;
-  final Widget nextButton;
-  final Widget backButton;
-
-  @override
-  _DayWithButtonsViewState createState() => _DayWithButtonsViewState();
-}
-
-class _DayWithButtonsViewState extends State<DayWithButtonsView> {
-  Commission commission;
-  final CommissionService commissionService = CommissionService();
-
-  Future<Null> _openEditCommissionDialog() async {
-    await Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (BuildContext context) {
-              return EditDataView(
-                title: "Edit Comission",
-                date: getDateOnly(widget.date),
-                commission: commission,
-              );
-            },
-            fullscreenDialog: true));
-  }
-
-  Widget _buildDataView(Commission commission) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: TotalView(
-            commission: commission,
-            color: Colors.black,
-          ),
-        ),
-        Flexible(
-          flex: 6,
-          child: FlexibleSummaryView(
-            commission: commission,
-            onTapEdit: _openEditCommissionDialog,
-            date: widget.date,
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    EmployerService employerService =
-        Provider.of<EmployerService>(context, listen: false);
-    return FutureBuilder(
-      future: commissionService.getCommission(
-          employerService.currentEmployer, widget.date),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            commission = snapshot.data;
-            return _buildDataView(commission);
-          case ConnectionState.waiting:
-            return Center(child: PlatformLoadingIndicator());
-          default:
-            if (snapshot.hasError)
-              return Text('Error: ${snapshot.error}');
-            else
-              return Text('Result: ${snapshot.data}');
-        }
-      },
-    );
-  }
-}
-*/

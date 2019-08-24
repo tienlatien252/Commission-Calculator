@@ -75,7 +75,6 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
 
   @override
   Widget build(BuildContext context) {
-    final CommissionService commissionService = CommissionService();
     return Column(
       children: <Widget>[
         Container(
@@ -119,7 +118,7 @@ class _HistoryMonthModeViewState extends State<HistoryMonthModeView> {
                   date: date,
                   commission: commission,
                   hasEditButton: false,
-                  getCommissionFunction: commissionService.getMonthCommission,
+                  getCommissionFunction: getMonthCommission,
                 )))
       ],
     );

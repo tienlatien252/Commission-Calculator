@@ -5,9 +5,8 @@ import 'small_commisison_widget.dart';
 import 'time_range_picker_widget.dart';
 
 class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
-  SliverTopBarDelegate(this._timeRangePicker, {this.viewModel});
+  SliverTopBarDelegate(this._timeRangePicker);
   final TimeRangePickerView _timeRangePicker;
-  final CalculatorPageViewModel viewModel;
 
   @override
   double get minExtent => 200.0;
@@ -31,7 +30,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
             child: Container(
                 padding: EdgeInsets.fromLTRB(20.0, 7.0, 20.0, 8.0),
                 child: Text(
-                  viewModel.currentEmployer.name,
+                  'Current Employer',
                   style: TextStyle(fontSize: 40.0, color: Colors.white),
                 )),
           ),

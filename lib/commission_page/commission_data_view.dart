@@ -31,7 +31,6 @@ class DayScrollView extends StatefulWidget {
 
 class _DayScrollViewState extends State<DayScrollView> {
   Commission commission;
-  final CommissionService commissionService = CommissionService();
 
   Future<Null> _openEditCommissionDialog() async {
     await Navigator.push(
@@ -72,7 +71,7 @@ class _DayScrollViewState extends State<DayScrollView> {
     EmployerService employerService =
         Provider.of<EmployerService>(context, listen: false);
     return FutureBuilder(
-      future: commissionService.getCommission(
+      future: getDayCommission(
           employerService.currentEmployer, widget.date),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
@@ -216,12 +215,10 @@ class SmallDayHistoryView extends StatelessWidget {
   final DateTime date;
   final Employer currentEmployer;
 
-  final CommissionService commissionService = CommissionService();
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: commissionService.getCommission(currentEmployer, date),
+        future: getDayCommission(currentEmployer, date),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:

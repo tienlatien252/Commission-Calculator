@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'commission_page/today_view.dart';
 import 'package:Calmission/history_page/history_view.dart';
 import 'package:Calmission/account_dialog.dart';
-//import 'package:Calmission/calculator_page/calculator_page.dart';
+import 'package:Calmission/calculator_page/calculator_page.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 import 'package:Calmission/common_widgets/employer_panel.dart';
 
@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage>
   GlobalKey _scaffold = GlobalKey();
   TabController _controller;
 
-  List<Widget> _pages = [TodayView(), Text("CalculatorPage"), AccountDialog()];
+  List<Widget> _pages = [TodayView(), CalculatorPage(), AccountDialog()];
 
   void _onTabTapped(int index) {
     _controller.animateTo(index);
