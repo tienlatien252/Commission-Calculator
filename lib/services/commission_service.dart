@@ -167,14 +167,13 @@ Map<String, dynamic> _getAllCommissionsData(QuerySnapshot snapshot) {
           raw: commissionData.data['raw'].toDouble(),
           tip: commissionData.data['tip'].toDouble(),
           total: commissionData.data['total'].toDouble(),
-          //date: commissionData.data['date'],
+          date: commissionData.data['date'].toDate(),
           id: commissionData.documentID));
       totalCommission.raw += commissionData.data['raw'].toDouble();
       totalCommission.commission +=
           commissionData.data['commission'].toDouble();
       totalCommission.tip += commissionData.data['tip'].toDouble();
       totalCommission.total += commissionData.data['total'].toDouble();
-      totalCommission.id == commissionData.documentID;
     });
   }
 
