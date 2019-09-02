@@ -25,54 +25,59 @@ class _TimeRangePickerViewState extends State<TimeRangePickerView> {
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 5.0),
+          //padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: FlatButton(
             splashColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-            color: Theme.of(context).buttonColor,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.0)),
+            color: Theme.of(context).accentColor,
             onPressed: () => widget.onPickStartDate(),
             child: Row(
               children: <Widget>[
-            Icon(
-              Icons.calendar_today,
-            ),
-            SizedBox(width: 10.0,),
-            Text("Start Date:", style: TextStyle(color: Colors.black54)),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.startDate,
-                textColor: Colors.black,
-              ),
-            ),
+                Icon(
+                  Icons.calendar_today,
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text("Start Date:", style: TextStyle(color: Colors.black54)),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: ShorterOneDayView(
+                    date: widget.startDate,
+                    textColor: Colors.black,
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        SizedBox(height: 5.0),
+        //SizedBox(height: 5.0),
         Container(
-          padding: EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
+          margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+          //padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: FlatButton(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-            color: Theme.of(context).buttonColor,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.0)),
+            color: Theme.of(context).accentColor,
             onPressed: () => widget.onPickEndDate(),
             child: Row(
               children: <Widget>[
-            Icon(
-              Icons.calendar_today,
-            ),
-            SizedBox(width: 10.0,),
-            Text(
-              "End Date:",
-              style: TextStyle(color: Colors.black54)
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ShorterOneDayView(
-                date: widget.endDate,
-                textColor: Colors.black,
-              ),
-            ),
+                Icon(
+                  Icons.calendar_today,
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text("End Date:", style: TextStyle(color: Colors.black54)),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: ShorterOneDayView(
+                    date: widget.endDate,
+                    textColor: Colors.black,
+                  ),
+                ),
               ],
             ),
           ),

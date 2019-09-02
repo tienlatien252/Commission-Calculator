@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/services/commission_service.dart';
+import 'package:Calmission/common_widgets/CustomButton.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -36,8 +37,7 @@ class _EditDataViewState extends State<EditDataView> {
       EmployerService employerService =
           Provider.of<EmployerService>(context, listen: false);
       Employer currentEmployer = employerService.currentEmployer;
-      await saveCommission(
-          currentEmployer, _comissionData, widget.date);
+      await saveCommission(currentEmployer, _comissionData, widget.date);
 
       Navigator.pop(context);
     }
@@ -80,44 +80,18 @@ class _EditDataViewState extends State<EditDataView> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(widget.title),
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop()),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          InkWell(
-            onTap: onPresscancel,
-            child: Container(
-                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                margin: EdgeInsets.all(10.0),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  color: Theme.of(context).accentColor.withAlpha(400),
-                ),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(fontSize: 20.0, color: Colors.grey),
-                )),
-          ),
-          InkWell(
-            onTap: () => onSubmit(),
-            child: Container(
-                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                margin: EdgeInsets.all(10.0),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  color: Theme.of(context).accentColor,
-                ),
-                child: Text(
-                  "Save",
-                  style: TextStyle(fontSize: 20.0, color: Colors.black),
-                )),
-          ),
-        ],
-      ),
+      backgroundColor: Colors.grey[200],
+      floatingActionButton: CustomButtonBar(onTap: onSubmit, text: "Save"),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Container(
         padding: EdgeInsets.all(20.0),
         child: Form(

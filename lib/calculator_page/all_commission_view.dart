@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:Calmission/common_widgets/date_time_widgets.dart';
 import 'small_commisison_widget.dart';
 import 'package:Calmission/services/commission_service.dart';
+import 'package:Calmission/common_widgets/comission_chart.dart';
+import 'package:Calmission/history_page/history_view.dart';
+import 'package:Calmission/calculator_page/calculator_page.dart';
+
 
 class AllCommissionsView extends StatefulWidget {
   AllCommissionsView({Key key, this.listCommissions, this.totalCommission})
@@ -16,6 +20,9 @@ class AllCommissionsView extends StatefulWidget {
 
 class _AllCommissionsViewState extends State<AllCommissionsView> {
   Widget dataBuilder(BuildContext context, int index) {
+    if(index == 0){
+      return SummaryView(commission: widget.listCommissions[0],);
+    }
     return Container(
       decoration: ShapeDecoration(
         shape:

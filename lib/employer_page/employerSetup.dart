@@ -7,7 +7,7 @@ import 'dart:async';
 import '../services/employer_service.dart';
 import 'add_new_employer_dialog.dart';
 import 'employers_list_view.dart';
-
+import 'package:Calmission/common_widgets/CustomButton.dart';
 
 class EmployerSetup extends StatelessWidget {
   EmployerSetup({Key key, this.title, this.isInitialSetting, this.seenSetup})
@@ -30,9 +30,13 @@ class EmployerSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Employer\'s setup"),
-          backgroundColor: Colors.white,
+          title: Text(
+            "Employer\'s setup",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
+        backgroundColor: Colors.grey[200],
         body: Center(
           child: Column(
             children: <Widget>[
@@ -41,12 +45,13 @@ class EmployerSetup extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    FloatingActionButton(
+                    CustomTextButton(onTap: () => _openAddEmployerDialog(context), label: "Add",),
+                    /*FloatingActionButton(
                       heroTag: null,
                       backgroundColor: Theme.of(context).primaryColor,
                       child: Icon(Icons.add),
                       onPressed: () => _openAddEmployerDialog(context),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -63,8 +68,7 @@ class EmployerSetup extends StatelessWidget {
 }
 
 class NextButton extends StatelessWidget {
-  NextButton({Key key, this.isInitialSetting})
-      : super(key: key);
+  NextButton({Key key, this.isInitialSetting}) : super(key: key);
   final bool isInitialSetting;
 
   _saveEmployersAndGoNext(
@@ -82,13 +86,10 @@ class NextButton extends StatelessWidget {
     if (currentEmployer == null) {
       employerService.setCurrentEmployer(employers[0]);
     }
-    //if (employerService.seenSetup) {
     employerService.finishSetup(seen: true);
-    // } else {
-    if (!isInitialSetting){
+    if (!isInitialSetting) {
       Navigator.pop(context);
     }
-    // }
   }
 
   Future<bool> _willPop(
@@ -111,20 +112,10 @@ class NextButton extends StatelessWidget {
     EmployerService employerService = Provider.of<EmployerService>(context);
     return WillPopScope(
         onWillPop: () => _willPop(context, employerService),
-        child: InkWell(
+        child: CustomTextButton(
           onTap: () => _saveEmployersAndGoNext(context, employerService),
-          child: Container(
-              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-              margin: EdgeInsets.all(10.0),
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-                color: Theme.of(context).accentColor,
-              ),
-              child: Text(
-                "Done",
-                style: TextStyle(fontSize: 20.0, color: Colors.black),
-              )),
+          label: "Done",
+          alignment: AlignmentDirectional.bottomEnd,
         ));
   }
 }

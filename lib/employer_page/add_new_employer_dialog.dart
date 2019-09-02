@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:async';
-import '../services/employer_service.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/common_widgets/CustomButton.dart';
 
 class AddEmployerView extends StatefulWidget {
   AddEmployerView({Key key, this.title, this.employer}) : super(key: key);
@@ -78,82 +75,52 @@ class _AddEmployerViewState extends State<AddEmployerView> {
   Widget build(BuildContext context) {
     String initName = widget.employer != null ? widget.employer.name : "";
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          backgroundColor: Colors.white,
-        ),
-        body: Container(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.store_mall_directory),
-                  title: Form(
-                    key: _formKey,
-                    child: TextFormField(
-                        autofocus: true,
-                        style: TextStyle(fontSize: 25.0, color: Colors.black),
-                        initialValue: initName,
-                        decoration: new InputDecoration(labelText: 'Name'),
-                        validator: _validateNameString,
-                        onSaved: (String value) {
-                          employerName = value;
-                        }),
-                  ),
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop()),
+      ),
+      backgroundColor: Colors.grey[200],
+      body: Container(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.store_mall_directory),
+                title: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                      autofocus: true,
+                      style: TextStyle(fontSize: 25.0, color: Colors.black),
+                      initialValue: initName,
+                      decoration: new InputDecoration(labelText: 'Name'),
+                      validator: _validateNameString,
+                      onSaved: (String value) {
+                        employerName = value;
+                      }),
                 ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ListTile(
-                    leading: Icon(Icons.check_circle_outline),
-                    title: Text("Commission Rate",
-                        style:
-                            TextStyle(fontSize: 25.0, color: Colors.black54)),
-                    trailing: new Text(
-                      "$_comissionRate %",
-                      style: TextStyle(
-                          fontSize: 25.0,
-                          color: Theme.of(context).primaryColorDark),
-                    ),
-                    onTap: () => _showRatePicker(context))
-              ],
-            )),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            InkWell(
-              onTap: onPresscancel,
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  margin: EdgeInsets.all(10.0),
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    color: Theme.of(context).accentColor.withAlpha(400),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              ListTile(
+                  leading: Icon(Icons.check_circle_outline),
+                  title: Text("Commission Rate",
+                      style: TextStyle(fontSize: 25.0, color: Colors.black54)),
+                  trailing: new Text(
+                    "$_comissionRate %",
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        color: Theme.of(context).primaryColorDark),
                   ),
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(fontSize: 20.0, color: Colors.grey),
-                  )),
-            ),
-            InkWell(
-              onTap: () {
-                _saveNewEmployer();
-              },
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  margin: EdgeInsets.all(10.0),
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    color: Theme.of(context).accentColor,
-                  ),
-                  child: Text(
-                    "Save",
-                    style: TextStyle(fontSize: 20.0, color: Colors.black),
-                  )),
-            ),
-          ],
-        ));
+                  onTap: () => _showRatePicker(context))
+            ],
+          )),
+      floatingActionButton:
+          CustomButtonBar(onTap: _saveNewEmployer, text: "Save"),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }
