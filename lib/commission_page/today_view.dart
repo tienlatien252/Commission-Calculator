@@ -22,10 +22,11 @@ class TodayView extends StatefulWidget {
   _TodayViewState createState() => _TodayViewState();
 }
 
-class _TodayViewState extends State<TodayView> {
+class _TodayViewState extends State<TodayView> with AutomaticKeepAliveClientMixin {
   final DateTime date = DateTime.now();
-  // Commission commission =
-  //     Commission(raw: 0.0, commission: 0.0, tip: 0.0, total: 0.0);
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

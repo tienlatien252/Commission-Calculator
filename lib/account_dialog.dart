@@ -18,7 +18,10 @@ class AccountDialog extends StatefulWidget {
   _AccountDialogState createState() => _AccountDialogState();
 }
 
-class _AccountDialogState extends State<AccountDialog> {
+class _AccountDialogState extends State<AccountDialog> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   Future<void> _signOut(BuildContext context) async {
     try {
       final FirebaseAuthService auth =
@@ -80,9 +83,21 @@ class _AccountDialogState extends State<AccountDialog> {
                   Column(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      CustomListTile(onTap: _openEmployersSetting, title: displayName, subtitle: 'Manage Account',),
-                      CustomListTile(onTap: _openEmployersSetting, title: 'Settings', subtitle: 'Languages,',),
-                      CustomListTile(onTap: _openEmployersSetting, title: 'Employers', subtitle: 'Manage',),
+                      CustomListTile(
+                        onTap: _openEmployersSetting,
+                        title: displayName,
+                        subtitle: 'Manage Account',
+                      ),
+                      CustomListTile(
+                        onTap: _openEmployersSetting,
+                        title: 'Settings',
+                        subtitle: 'Languages,',
+                      ),
+                      CustomListTile(
+                        onTap: _openEmployersSetting,
+                        title: 'Employers',
+                        subtitle: 'Manage',
+                      ),
                     ],
                   ),
                   Expanded(
@@ -113,4 +128,3 @@ class _AccountDialogState extends State<AccountDialog> {
     );
   }
 }
-

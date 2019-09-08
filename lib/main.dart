@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 //import 'package:firebase_admob/firebase_admob.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/services.dart';
 
 import 'package:Calmission/splash_page.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/email_secure_store.dart';
 import 'package:Calmission/services/employer_service.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -25,6 +25,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiProvider(
         providers: <SingleChildCloneableWidget>[
           ChangeNotifierProvider<FirebaseAuthService>(
@@ -36,21 +40,13 @@ class MyApp extends StatelessWidget {
             builder: (_) =>
                 EmailSecureStore(flutterSecureStorage: FlutterSecureStorage()),
           ),
-          ChangeNotifierProvider<EmployerService> (builder: (_) => EmployerService())
+          ChangeNotifierProvider<EmployerService>(
+              builder: (_) => EmployerService())
         ],
         child: MaterialApp(
-            /*routes: <String, WidgetBuilder>{
-          '/InitEmployerSetup': (BuildContext context) => EmployerSetup(
-                title: widget.title,
-                isInitialSetting: true,
-              ),
-          '/loading': (BuildContext context) =>
-              LoadingView(title: widget.title),
-          '/home': (BuildContext context) => HomePage(title: widget.title),
-        },*/
             title: 'Commission Calculator',
             theme: ThemeData(
-                scaffoldBackgroundColor:  Color.fromRGBO(77, 182, 172, 1.0),
+                scaffoldBackgroundColor: Color.fromRGBO(77, 182, 172, 1.0),
                 primaryColor: Color.fromRGBO(77, 182, 172, 1.0),
                 primaryColorDark: Color.fromRGBO(0, 134, 125, 1.0),
                 primaryColorLight: Color.fromRGBO(130, 233, 222, 1.0),

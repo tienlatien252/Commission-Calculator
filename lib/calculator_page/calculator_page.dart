@@ -22,7 +22,7 @@ class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(color: Colors.grey[200],child: _timeRangePicker);
+    return Container(color: Colors.grey[200], child: _timeRangePicker);
   }
 
   @override
@@ -37,7 +37,10 @@ class CalculatorPage extends StatefulWidget {
   _CalculatorPageState createState() => _CalculatorPageState();
 }
 
-class _CalculatorPageState extends State<CalculatorPage> {
+class _CalculatorPageState extends State<CalculatorPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   Commission totalCommission =
@@ -47,7 +50,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   showPickerStartDate(BuildContext context) {
     Picker(
         hideHeader: true,
-        adapter: DateTimePickerAdapter(value: startDate, maxValue: DateTime.now()),
+        adapter:
+            DateTimePickerAdapter(value: startDate, maxValue: DateTime.now()),
         title: Text("Select Date"),
         selectedTextStyle: TextStyle(color: Theme.of(context).primaryColorDark),
         onConfirm: (Picker picker, List value) {
@@ -55,7 +59,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           if (datePicked != null && datePicked != startDate) {
             setState(() {
               startDate = datePicked;
-              if(endDate.compareTo(startDate) < 0){
+              if (endDate.compareTo(startDate) < 0) {
                 endDate = startDate;
               }
             });
@@ -66,8 +70,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   showPickerEndDate(BuildContext context) {
     Picker(
         hideHeader: true,
-        adapter: DateTimePickerAdapter(
-            value: endDate, maxValue: DateTime.now()),
+        adapter:
+            DateTimePickerAdapter(value: endDate, maxValue: DateTime.now()),
         title: Text("Select Date"),
         selectedTextStyle: TextStyle(color: Theme.of(context).primaryColorDark),
         onConfirm: (Picker picker, List value) {
@@ -75,7 +79,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           if (datePicked != null && datePicked != endDate) {
             setState(() {
               endDate = datePicked;
-              if(startDate.compareTo(endDate) > 0){
+              if (startDate.compareTo(endDate) > 0) {
                 startDate = endDate;
               }
             });
@@ -132,8 +136,7 @@ class DataCalculatedView extends StatelessWidget {
     }
     return Container(
       decoration: ShapeDecoration(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
         color: Colors.white,
       ),
       margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 6.0),
@@ -142,9 +145,9 @@ class DataCalculatedView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               ShorterOneDayView(
-                date: listCommissions[index].date,
-                textColor: Colors.black//Theme.of(context).primaryColorDark,
-              ),
+                  date: listCommissions[index].date,
+                  textColor: Colors.black //Theme.of(context).primaryColorDark,
+                  ),
             ]),
         children: <Widget>[
           SmallCommissionsView(
@@ -202,7 +205,7 @@ class SummaryView extends StatelessWidget {
       height: 400,
       child: Column(
         children: <Widget>[
-         TotalView(
+          TotalView(
             commission: commission,
             color: Colors.black,
           ),

@@ -34,9 +34,6 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
     List<Widget> historyModeViewsArray = [
       Container(child: HistoryDayModeView()),
