@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:provider/provider.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 
-import 'package:Calmission/commission_page/commission_data_view.dart';
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/date_time_widgets.dart';
-import 'package:Calmission/commission_page/edit_data_dialog.dart';
-import 'package:Calmission/services/employer_service.dart';
-import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
-import 'package:Calmission/common_widgets/CustomButton.dart';
-import 'package:Calmission/common_widgets/comission_chart.dart';
 import 'package:Calmission/common_widgets/custom_commission_data_view.dart';
 
 class HistoryDayModeView extends StatefulWidget {

@@ -4,13 +4,55 @@ import 'package:provider/provider.dart';
 
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/services/employer_service.dart';
-import 'package:Calmission/commission_page/commission_data_view.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 import 'package:Calmission/common_widgets/CustomButton.dart';
 import 'package:Calmission/common_widgets/comission_chart.dart';
 import 'package:Calmission/commission_page/edit_data_dialog.dart';
+import 'package:Calmission/common_widgets/date_time_widgets.dart';
 
 
+class TotalView extends StatelessWidget {
+  TotalView({Key key, this.commission, this.text, this.color}) : super(key: key);
+  final Commission commission;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text('Total', style: TextStyle(color: color)),
+        Container(
+          margin: EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '\$ ',
+                style: TextStyle(color: color, fontSize: 20.0),
+              ),
+              Text(
+                commission.total.toInt().toString(),
+                style: TextStyle(color: color, fontSize: 40.0),
+              ),
+              Container(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: Text(
+                    (commission.total % 1 * 10)
+                        .toInt()
+                        .toString()
+                        .padLeft(2, '0'),
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: color, fontSize: 20.0),
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class CustomCommissionView extends StatefulWidget {
   CustomCommissionView(
@@ -143,6 +185,52 @@ class CustomSummaryView extends StatelessWidget {
           _buildEditButton()
         ],
       ),
+    );
+  }
+}
+
+
+class SmallDetailsView extends StatelessWidget {
+  SmallDetailsView({Key key, this.amount, this.type}) : super(key: key);
+  final String type;
+  final double amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(type,
+            style: TextStyle(
+                color: Theme.of(context).primaryColor, fontSize: 10.0)),
+        Container(
+          margin: EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '\$ ',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColorDark, fontSize: 10.0),
+              ),
+              Text(
+                amount.toInt().toString(),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColorDark, fontSize: 20.0),
+              ),
+              Container(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: Text(
+                    (amount % 1 * 10).toInt().toString().padLeft(2, '0'),
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColorDark,
+                        fontSize: 10.0),
+                  )),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

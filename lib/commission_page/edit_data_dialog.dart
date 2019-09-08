@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import 'dart:async';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/CustomButton.dart';

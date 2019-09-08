@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 
 import 'commission_page/today_view.dart';
-import 'package:Calmission/history_page/history_view.dart';
 import 'package:Calmission/account_dialog.dart';
 import 'package:Calmission/calculator_page/calculator_page.dart';
-import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
-import 'package:Calmission/common_widgets/employer_panel.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.onSignedOut}) : super(key: key);

@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
+import 'package:flutter_picker/flutter_picker.dart';
 
 import 'package:Calmission/services/employer_service.dart';
-import 'package:Calmission/calculator_page/slivers.dart';
 import 'package:Calmission/calculator_page/small_commisison_widget.dart';
-import 'package:Calmission/calculator_page/all_commission_view.dart';
 import 'package:Calmission/calculator_page/time_range_picker_widget.dart';
 import 'package:Calmission/services/commission_service.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 import 'package:Calmission/common_widgets/custom_commission_data_view.dart';
-import 'package:Calmission/commission_page/commission_data_view.dart';
 import 'package:Calmission/common_widgets/date_time_widgets.dart';
 import 'package:Calmission/common_widgets/comission_chart.dart';
-import 'package:flutter_picker/flutter_picker.dart';
+
+class SliverTopBarDelegate extends SliverPersistentHeaderDelegate {
+  SliverTopBarDelegate(this._timeRangePicker);
+  final TimeRangePickerView _timeRangePicker;
+
+  @override
+  double get minExtent => 130.0;
+  @override
+  double get maxExtent => 130.0;
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(color: Colors.grey[200],child: _timeRangePicker);
+  }
+
+  @override
+  bool shouldRebuild(SliverTopBarDelegate oldDelegate) {
+    return true;
+  }
+}
 
 class CalculatorPage extends StatefulWidget {
   CalculatorPage({Key key}) : super(key: key);

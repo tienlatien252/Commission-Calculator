@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:Calmission/services/commission_service.dart';
-import 'package:Calmission/common_widgets/employer_panel.dart';
 //import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/history_page/history_day_mode_view.dart';
 import 'package:Calmission/history_page/history_week_mode_view.dart';
@@ -27,10 +25,6 @@ class _HistoryViewState extends State<HistoryView> {
   void initState() {
     super.initState();
     _value = _values.elementAt(0);
-  }
-
-  DateTime getDateOnly(DateTime dateAndTime) {
-    return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
   }
 
   _onChange(String value) {

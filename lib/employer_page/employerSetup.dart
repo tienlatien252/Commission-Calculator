@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-import '../services/employer_service.dart';
-import 'add_new_employer_dialog.dart';
-import 'employers_list_view.dart';
+import 'package:Calmission/services/employer_service.dart';
+import 'package:Calmission/employer_page/add_new_employer_dialog.dart';
+import 'package:Calmission/employer_page/employers_list_view.dart';
 import 'package:Calmission/common_widgets/CustomButton.dart';
 
 class EmployerSetup extends StatelessWidget {

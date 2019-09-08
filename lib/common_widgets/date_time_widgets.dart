@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+DateTime getDateOnly(DateTime dateAndTime) {
+  return DateTime(dateAndTime.year, dateAndTime.month, dateAndTime.day);
+}
+
 DateTime beginOfWeek(DateTime date) {
   return date.subtract(Duration(days: date.weekday - 1));
 }
@@ -24,7 +28,6 @@ DateTime beginOfYear(DateTime date) {
 DateTime endOfYear(DateTime date) {
   return DateTime(date.year, DateTime.december, 31);
 }
-
 
 DateTime minusToday(int number) {
   DateTime today = DateTime.now();
@@ -68,7 +71,8 @@ class SmallItalicOneDayView extends StatelessWidget {
     String formatted = formatter.format(date);
     Color realTextColor = textColor != null ? textColor : Colors.black;
     return Text(formatted,
-        style: TextStyle(fontSize: 15.0, color: realTextColor, fontStyle: FontStyle.italic));
+        style: TextStyle(
+            fontSize: 15.0, color: realTextColor, fontStyle: FontStyle.italic));
   }
 }
 
@@ -83,7 +87,8 @@ class ShortOneDayView extends StatelessWidget {
     Color realTextColor = textColor != null ? textColor : Colors.black;
     String formatted = formatter.format(date);
     return Text(formatted,
-        style: TextStyle(fontSize: 20.0, color: realTextColor, fontStyle: FontStyle.italic));
+        style: TextStyle(
+            fontSize: 20.0, color: realTextColor, fontStyle: FontStyle.italic));
   }
 }
 
@@ -116,10 +121,18 @@ class WeekStringView extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(formatter.format(beginOfWeek(date)),
-              style: TextStyle(fontSize: 20.0, color: realTextColor,fontStyle: FontStyle.italic)),
-          Text("-", style: TextStyle(color: realTextColor,fontStyle: FontStyle.italic)),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: realTextColor,
+                  fontStyle: FontStyle.italic)),
+          Text("-",
+              style:
+                  TextStyle(color: realTextColor, fontStyle: FontStyle.italic)),
           Text(formatter.format(endOfWeek(date)),
-              style: TextStyle(fontSize: 20.0, color: realTextColor,fontStyle: FontStyle.italic)),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: realTextColor,
+                  fontStyle: FontStyle.italic)),
         ],
       ),
     );
