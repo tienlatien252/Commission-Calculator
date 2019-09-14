@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'commission_page/today_view.dart';
-import 'package:Calmission/account_dialog.dart';
+import 'package:Calmission/profile_page/account_page.dart';
 import 'package:Calmission/calculator_page/calculator_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage>
   GlobalKey _scaffold = GlobalKey();
   TabController _controller;
 
-  List<Widget> _pages = [TodayView(), CalculatorPage(), AccountDialog()];
+  List<Widget> _pages = [TodayView(), CalculatorPage(), AccountPage()];
 
   void _onTabTapped(int index) {
     _controller.animateTo(index);
@@ -42,16 +42,6 @@ class _HomePageState extends State<HomePage>
   @override
   bool get wantKeepAlive => true;
 
-
-  void _openAddEntryDialog(BuildContext context) async {
-    bool justLogOut = await Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (BuildContext context) {
-              return new AccountDialog(onSignedOut: widget.onSignedOut);
-            },
-            fullscreenDialog: true));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,14 +139,6 @@ class TabIcon extends StatefulWidget {
 class _TabIconState extends State<TabIcon> {
   @override
   Widget build(BuildContext context) {
-    /*return IconButton(
-      icon: Icon(
-        widget.icon,
-        color:
-            widget.selected ? Theme.of(context).primaryColor : Colors.blueGrey,
-      ),
-      onPressed: widget.onPressed,
-    );*/
     return Expanded(
       child: InkWell(
         onTap: widget.onPressed,

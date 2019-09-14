@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-import 'employer_page/employers_list_view.dart';
-import 'employer_page/employerSetup.dart';
+import 'package:Calmission/employer_page/employers_list_view.dart';
+import 'package:Calmission/employer_page/employerSetup.dart';
 import 'package:Calmission/services/firebase_auth_service.dart';
 import 'package:Calmission/services/employer_service.dart';
 import 'package:Calmission/common_widgets/platform_alert_dialog.dart';
 import 'package:Calmission/common_widgets/platform_loading_indicator.dart';
 import 'package:Calmission/common_widgets/CustomButton.dart';
 
-class AccountDialog extends StatefulWidget {
-  AccountDialog({Key key, this.onSignedOut}) : super(key: key);
+class AccountPage extends StatefulWidget {
+  AccountPage({Key key, this.onSignedOut}) : super(key: key);
   final VoidCallback onSignedOut;
 
   @override
-  _AccountDialogState createState() => _AccountDialogState();
+  _AccountPageState createState() => _AccountPageState();
 }
 
-class _AccountDialogState extends State<AccountDialog> with AutomaticKeepAliveClientMixin {
+class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
